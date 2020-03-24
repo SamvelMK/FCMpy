@@ -12,3 +12,7 @@
 ```
 $ pip install 
 ```
+
+## License
+
+Please read LICENSE.txt in this directory.
