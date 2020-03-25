@@ -1,12 +1,12 @@
 import unittest
-from fcm_data import FcmDataProcessor
+from fcmbci.data_processor.fcm_data import FcmDataProcessor
 import itertools
+import pandas as pd 
 
 class TestDataProcessor(unittest.TestCase):
 
     def setUp(self):
         self.fcm = FcmDataProcessor()
-        self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/sample_test.xlsx')
 
     def test_read_excel(self):
         self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/sample.xlsx')
@@ -59,7 +59,6 @@ class TestDataProcessor(unittest.TestCase):
         activated = self.fcm.activate({'H': 0.16666666666666666, 'M': 0.5, 'VH': 0.3333333333333333}, mf)
         aggregated = self.fcm.aggregate(activated)
         defuzz_value = self.fcm.defuzzify(self.fcm.universe, aggregated, method = 'centroid')
-        print(defuzz_value)
         self.assertAlmostEqual(round(defuzz_value, 2), 0.61)
 
     def test_valence_check(self):
