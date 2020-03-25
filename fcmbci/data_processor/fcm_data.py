@@ -8,8 +8,9 @@ from skfuzzy import control as ctrl
 import skfuzzy
 import matplotlib.pyplot as plt
 import re
+from fcmbci.visualization.fcm_view import FcmVisualize
 
-class FcmDataProcessor:
+class FcmDataProcessor(FcmVisualize):
     ### Reading in files.
     def __init__(self):
         
@@ -71,7 +72,8 @@ class FcmDataProcessor:
         Parameters
         ----------
         linguistic_terms : lsit, 
-                            default --> ['VH','H', 'M', 'L', 'VL']
+                            default --> ['VL','L', 'M', 'H', 'VH']
+                            The passed terms should be from low to high. 
         
         Return
         ---------
@@ -103,7 +105,7 @@ class FcmDataProcessor:
         ----------
         activation_input : dict,
                             Membership function to apply the implication operation, 
-                            where the key is the linguistic term and the value is the frequency its occurence .
+                            where the key is the linguistic term and the value is the frequency its occurence.
                             Example: parameters = {'H': 0.66, 'VH': 0.33}
         mf : dict,
              membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
@@ -197,13 +199,16 @@ class FcmDataProcessor:
         Parameters
         ----------
         linguistic_terms : list,
-                            A list of Linguistic Terms; default --> ['VH','H', 'M', 'L', 'VL'] 
+                            A list of Linguistic Terms; default --> ['VL','L', 'M', 'H', 'VH']
+                            The linguistic terms should be from low to high. 
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
         """
         
         full_df = pd.concat([self.data[i] for i in self.data], sort = False)
+        self.expert_data = full_df.copy()
+
         # This is to avoid SettingWithCopyWarning. We want to modify the original full_df instead of the copy of it.
         pd.options.mode.chained_assignment = None 
 
