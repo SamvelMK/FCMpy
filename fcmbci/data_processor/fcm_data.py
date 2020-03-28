@@ -1,25 +1,28 @@
+from fcmbci.visualization.fcm_view import FcmVisualize
 import pandas as pd
-import numpy as np
 import itertools
-import functools
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import skfuzzy
 import matplotlib.pyplot as plt
+import matplotlib
 import re
-from fcmbci.visualization.fcm_view import FcmVisualize
+import networkx as nx
+import functools
 
 class FcmDataProcessor(FcmVisualize):
-    ### Reading in files.
+    """
+    Constructing FCMs based on expert data.
+    """
     def __init__(self):
         
         """ The FcmBci object initializes with a universe of discourse with a range [0,1].  """
         
         self.data = pd.DataFrame()
         self.universe = np.arange(0, 1.01, 0.01)
+        
     ### Reading in files.
-    
     def read_csv(self, file_name, sep = ','):
         '''Reads a csv file. Returns pandas data frame. 
         Note that the first column in the file is set to be the index.
@@ -72,8 +75,7 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         linguistic_terms : lsit, 
-                            default --> ['VL','L', 'M', 'H', 'VH']
-                            The passed terms should be from low to high. 
+                            default --> ['VH','H', 'M', 'L', 'VL']
         
         Return
         ---------
@@ -95,6 +97,8 @@ class FcmDataProcessor(FcmVisualize):
         for term, abc in zip(linguistic_terms, abcs):
             terms[term] = skfuzzy.trimf(self.universe, abc)
         
+        self.terms = terms
+        
         return terms
     
     def activate(self, activation_input, mf):
@@ -105,7 +109,7 @@ class FcmDataProcessor(FcmVisualize):
         ----------
         activation_input : dict,
                             Membership function to apply the implication operation, 
-                            where the key is the linguistic term and the value is the frequency its occurence.
+                            where the key is the linguistic term and the value is the frequency its occurence .
                             Example: parameters = {'H': 0.66, 'VH': 0.33}
         mf : dict,
              membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
@@ -144,7 +148,7 @@ class FcmDataProcessor(FcmVisualize):
         
         return aggregated
     
-    def defuzzify(self, universe, aggregated, method = 'centroid'):
+    def defuzzify(self, aggregated, method = 'centroid'):
         
         """ This function defuzzifies the aggregated membership functions using centroid defuzzification method as a default.
         One can pass on another defuzzification method available in scikit-fuzzy library (e.g., bisector, mom, sig)
@@ -164,7 +168,7 @@ class FcmDataProcessor(FcmVisualize):
             Defuzzified value.
         """
         
-        defuzzified_value = fuzz.defuzz(universe, aggregated, method)
+        defuzzified_value = fuzz.defuzz(self.universe, aggregated, method)
         
         return defuzzified_value
     
@@ -183,11 +187,13 @@ class FcmDataProcessor(FcmVisualize):
         y : int,
             - 1 if the Linguistic Term is negative and +1 if otherwise.
         """
-        
-        if '-' in linguistic_term:
-            return -1
+        if linguistic_term != 0:
+            if '-' in linguistic_term:
+                return -1
+            else:
+                return +1
         else:
-            return +1
+            return 0
         
     def generate_edge_weights(self,
                               linguistic_terms = ['VL','L', 'M', 'H', 'VH'],
@@ -199,8 +205,7 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         linguistic_terms : list,
-                            A list of Linguistic Terms; default --> ['VL','L', 'M', 'H', 'VH']
-                            The linguistic terms should be from low to high. 
+                            A list of Linguistic Terms; default --> ['VH','H', 'M', 'L', 'VL'] 
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
@@ -208,15 +213,14 @@ class FcmDataProcessor(FcmVisualize):
         
         full_df = pd.concat([self.data[i] for i in self.data], sort = False)
         self.expert_data = full_df.copy()
-
+        self.aggregated = {}
         # This is to avoid SettingWithCopyWarning. We want to modify the original full_df instead of the copy of it.
         pd.options.mode.chained_assignment = None 
-
+        
         for antecedent in full_df:
             # Calculates the frequency of responses for each linguistic term
             crostab = pd.crosstab(full_df[antecedent], full_df.index)/len(self.data.keys()) 
             crostab_dic = crostab.copy().to_dict() # Changes the dataframe to a dictionary.
-            
             for consequent in crostab_dic.keys():
                 # This creates the activation parameter. We need to clear the unnecessary characters and convert back to a dict format.
                 activation_parameter = eval(str(crostab_dic[consequent]).replace('+', '').replace('-','').replace('"', '')) 
@@ -224,8 +228,42 @@ class FcmDataProcessor(FcmVisualize):
                 terms = self.automf(linguistic_terms)
                 activated = self.activate(activation_parameter, terms)
                 aggregated = self.aggregate(activated)
-                value = self.defuzzify(self.universe, aggregated, method)
+                self.aggregated[f'{antecedent}{consequent}'] = aggregated
+                value = self.defuzzify(aggregated, method)
                 full_df[antecedent][consequent] = value * sign # This repopulates the original df
+                
+        # Removes the redundent dulicate concepts from the df and sets the nan to 0.
+        # Finally we transpose the df to make the reading more intuitive. The causal paths are read from rows to column. 
+        self.causal_weights = full_df.loc[~full_df.index.duplicated(keep='first')].fillna(0).T
         
-        # Removes the redundent dulicate concepts from the df and sets the nan to 0. 
-        self.causal_weights = full_df.loc[~full_df.index.duplicated(keep='first')].fillna(0)
+    def create_system(self):
+        """
+        Creates a fuzzy system based on the generated causal weights.
+        
+        Return
+        ----------
+        y : networkx object,
+        """         
+        # Generates trunkated labels if the labels include mroe then 3 characters
+        def label_gen(names):
+            text = []
+            string = names.strip('\?!\t\n')
+            if (len(string) > 3) & (len(string.split(' ')) > 1):
+                text.append("".join(e[0] for e in string.split(' ')))
+
+            elif len(string.split(' ')) == 1:
+                text.append("".join(e[:3] for e in string.split(' ')))
+
+            else:
+                text.append(string)
+            return text[0]
+        
+        # Creates a netwrokx instance.
+        G = nx.from_numpy_matrix(self.causal_weights.values, parallel_edges=True, 
+                         create_using=nx.MultiDiGraph())
+        
+        # Creates truncated labels.
+        labels = {idx: label_gen(val) for idx, val in enumerate(self.causal_weights.columns)}
+        G = nx.relabel_nodes(G, labels)
+        
+        self.system = G
