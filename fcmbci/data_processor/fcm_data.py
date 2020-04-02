@@ -12,62 +12,42 @@ import networkx as nx
 import functools
 
 class FcmDataProcessor(FcmVisualize):
-    """
-    Constructing FCMs based on expert data.
-    """
+    
     def __init__(self):
         
         """ The FcmBci object initializes with a universe of discourse with a range [0,1].  """
         
         self.data = pd.DataFrame()
-        self.universe = np.arange(0, 1.01, 0.01)
-        
-    ### Reading in files.
-    def read_csv(self, file_name, sep = ','):
-        '''Reads a csv file. Returns pandas data frame. 
-        Note that the first column in the file is set to be the index.
-        
-        Parameters
-        ----------
-        file_name : str, 
-                    ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
-        sep : str, 
-                default --> ','
-        '''
-        
-        data = pd.read_csv(file_name, sep, index_col = 0)
-        
-        # Checks if the data meets the requirments. 
-        for i in data:
-            if len(data.columns) != len(data.index):
-                raise ValueError("The number of columns != the number of rows. Check the data requirments!")
-        
-        self.data = data
+        self.universe = np.arange(-1, 1.001, 0.001)
 
     def read_xlsx(self, file_name):
-        '''Reads an excel spreadsheet. Returns an ordered dictionary.
+        
+        """ Reads an excel spreadsheet. Returns an ordered dictionary.
         Note that the first column in the file is set to be the index.
         
         Parameters
         ----------
         file_name : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
-        '''
+        """
         
-        data = pd.read_excel(file_name, index_col = 0,
-                                  sheet_name=None)
-        
-        # Checks if the data meets the requirments. 
-        for i in data:
-            if len(data[i].columns) != len(data[i].index):
-                raise ValueError("The number of columns != the number of rows. Check the data requirments!")
-        
-        self.data = data
-        
+        try:
+            data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
+            # Checks if the data meets the requirments. 
+            for i in data:
+                if len(data[i].columns) != len(data[i].index):
+                    raise ValueError("The number of columns != the number of rows. Check the data requirments!")
+            self.data = data
+        except ValueError:
+            data = pd.read_excel(file_name, sheet_name=None)
+            self.data = data
+        except:
+            print("Wrong data format. Check the data requirments.")
         
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
-    def automf(self, linguistic_terms = ['VL','L', 'M', 'H', 'VH']):
+    def automf(self, universe, 
+               linguistic_terms = ['-VH', '-H', '-M', '-L', 'VL','L', 'M', 'H', 'VH']):
         
         """ Automatically generates triangular membership functions based on the passed
         Lingustic Terms. This function was taken and modified from scikit-fuzzy.
@@ -75,7 +55,8 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         linguistic_terms : lsit, 
-                            default --> ['VH','H', 'M', 'L', 'VL']
+                            default --> ['-VH', '-H', '-M', '-L', 'VL','L', 'M', 'H', 'VH']
+                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         
         Return
         ---------
@@ -87,23 +68,30 @@ class FcmDataProcessor(FcmVisualize):
         limits = [self.universe.min(), self.universe.max()]
         universe_range = limits[1] - limits[0]
         widths = [universe_range / ((number - 1) / 2.)] * int(number)
-        centers = np.linspace(limits[0], limits[1], number)
-
+        
+        
+        # Create the centers of the mfs for each side of the x axis and then merge them together.
+        centers_pos = np.linspace(0, 1, number//2)
+        centers_neg = np.linspace(-1, 0, number//2)
+        centers = list(centers_neg)+list(centers_pos)
+        
         abcs = [[c - w / 2, c, c + w / 2] for c, w in zip(centers, widths)]
-
+        
+        abcs[number//2] = [0.01, 0.01, 0.25] # + Very low 
+        abcs[((number//2) -1)] = [-.25, -0.01, -0.01] # - Very Low
+        
         terms = dict()
 
         # Repopulate
         for term, abc in zip(linguistic_terms, abcs):
             terms[term] = skfuzzy.trimf(self.universe, abc)
         
-        self.terms = terms
-        
         return terms
+
     
     def activate(self, activation_input, mf):
         
-        """ This function is to activate the specified membership function based on the passed parameters.
+        """ Activate the specified membership function based on the passed parameters.
         
         Parameters
         ----------
@@ -130,7 +118,7 @@ class FcmDataProcessor(FcmVisualize):
     
     def aggregate(self, activated):
         
-        """ This function aggregates the activated membership function usiing fmax operator. 
+        """ Aggregate the activated membership function usiing fmax operator. 
         
         Parameters
         ----------
@@ -150,7 +138,7 @@ class FcmDataProcessor(FcmVisualize):
     
     def defuzzify(self, aggregated, method = 'centroid'):
         
-        """ This function defuzzifies the aggregated membership functions using centroid defuzzification method as a default.
+        """ Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
         One can pass on another defuzzification method available in scikit-fuzzy library (e.g., bisector, mom, sig)
         The function returns the defuzzified value.
 
@@ -180,12 +168,12 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         linguistic_term : str,
-                         A string of the linguistic term --> '±H'
+                            A string of the linguistic term --> '±H'
         
         Return
         ----------
         y : int,
-            - 1 if the Linguistic Term is negative and +1 if otherwise.
+                - 1 if the Linguistic Term is negative, +1 if its positive and 0 if otherwise.
         """
         if linguistic_term != 0:
             if '-' in linguistic_term:
@@ -196,8 +184,8 @@ class FcmDataProcessor(FcmVisualize):
             return 0
         
     def generate_edge_weights(self,
-                              linguistic_terms = ['VL','L', 'M', 'H', 'VH'],
-                              method = 'centroid'):
+                                linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
+                                method = 'centroid'):
                 
         """ This function applies fuzzy logic to obtain edge weights from FCM with qualitative inputs (i.e., where the 
         causal relationships are expressed in linguistic terms).
@@ -205,40 +193,105 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         linguistic_terms : list,
-                            A list of Linguistic Terms; default --> ['VH','H', 'M', 'L', 'VL'] 
+                            A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
+                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
         """
         
-        full_df = pd.concat([self.data[i] for i in self.data], sort = False)
-        self.expert_data = full_df.copy()
-        self.aggregated = {}
-        # This is to avoid SettingWithCopyWarning. We want to modify the original full_df instead of the copy of it.
-        pd.options.mode.chained_assignment = None 
+        # Create a flat data with all of the experts' imputs.
+        flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
+
+        # weight matrix for the final results.
+        weight_matrix = pd.DataFrame(pd.DataFrame(columns=list(flat_data.index.unique()), index=list(flat_data.index.unique())))
+        # For the freq_hist visualization
+        self.expert_data = {}
         
-        for antecedent in full_df:
-            # Calculates the frequency of responses for each linguistic term
-            crostab = pd.crosstab(full_df[antecedent], full_df.index)/len(self.data.keys()) 
-            crostab_dic = crostab.copy().to_dict() # Changes the dataframe to a dictionary.
-            for consequent in crostab_dic.keys():
-                # This creates the activation parameter. We need to clear the unnecessary characters and convert back to a dict format.
-                activation_parameter = eval(str(crostab_dic[consequent]).replace('+', '').replace('-','').replace('"', '')) 
-                sign = self.valence_check(list(crostab_dic[consequent].keys())[0]) # Sign of the edge calculated edge value.
-                terms = self.automf(linguistic_terms)
+        # A dict to store the aggregated results for the visualization purposes. 
+        self.aggregated = {}
+        
+        # Create the membership functions for the linguistic terms.
+        terms = self.automf(self.universe, linguistic_terms)
+        self.terms = terms
+        
+        # for each pair of consequnt/antecedent calculate the edge value and store it in the weight matrix.
+        for antecedent in flat_data:
+            for consequent in flat_data:
+                crostab = pd.crosstab(flat_data.loc[antecedent][consequent], flat_data.loc[antecedent][consequent].index)/len(self.data.keys())
+                # check if the ant/cons pairs exist.
+                if len(crostab) != 0:
+                    activation_parameter = eval(str(crostab[antecedent].to_dict()).replace('"', '')) # create the parameter.
+                    self.expert_data[(antecedent, consequent)] = activation_parameter # for the freq_term hist vis. 
+                    
+                    activated = self.activate(activation_parameter, self.terms) # activate the mf
+                    aggregated = self.aggregate(activated) # aggregate the activated mfs
+                    self.aggregated[f'{antecedent} {consequent}'] = aggregated # store the aggregated function for vis.
+                    value = self.defuzzify(aggregated, method) # defuzzify the values.
+                    weight_matrix.loc[antecedent][consequent] = value # populate the df with the defuzzified  weights.
+                    
+        self.causal_weights = weight_matrix.fillna(0)
+                    
+    
+    def weight_edge_list(self,
+                         linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
+                         method = 'centroid'): 
+        
+        """ Apply fuzzy logic to obtain edge weights from FCM with qualitative inputs 
+        (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format
+        
+        Parameters
+        ----------
+        linguistic_terms : list,
+                            A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
+                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+        method : str,
+                    Defuzzification method;  default --> 'centroid'. 
+                    For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
+                    
+        """        
+        
+        # Create a flat data with all of the experts' imputs.
+        flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
+        # weight matrix for the final results.
+        weight_matrix = pd.DataFrame(columns=[i for i in flat_data['From'].unique()], index=[i for i in flat_data['From'].unique()])
+        self.expert_data = {}
+        
+        # 1) Calculate term frequencies, 2) add the signes to them. 3) set the NA's to 0.
+        freq_data = pd.concat([self.data[i] for i in self.data],  ignore_index=True).groupby(['From', 'To']).count()/len(self.data.keys())
+        signed = flat_data.groupby(['From', 'To']).mean() * freq_data # adds the sign of the terms
+        final = signed.fillna(0) # sets the nan to 0
+        
+        # A dict to store the aggregated results for the visualization purposes. 
+        self.aggregated = {}
+        
+        # Create the membership functions for the linguistic terms.
+        terms = self.automf(self.universe, linguistic_terms)
+        self.terms = terms
+
+        for pair in final.index:
+            activation_parameter = {}
+            term_set = final.loc[pair[0], pair[1]].to_dict() # selects the term:freq for a pair of concepts.       
+            
+            # Attach the sign to the Linguistic Term.
+            for term in term_set.keys():
+                sign = str(np.sign(term_set[term])).strip('1\0.0\.\0') # extract the sign of the 
+                value = float(str(term_set[term]).strip('-')) # striping the sign (the activation f only takes values in the fuzzy range.)
+                key = sign + term
+                activation_parameter[key] = value
+            self.expert_data[pair] = activation_parameter
+            # Activate, aggregate, defuzzify and attach the value to the weight_matrix. 
+            if not all(x==0 for x in activation_parameter.values()): # Checks if at least one rull is activated.
                 activated = self.activate(activation_parameter, terms)
-                aggregated = self.aggregate(activated)
-                self.aggregated[f'{antecedent}{consequent}'] = aggregated
-                value = self.defuzzify(aggregated, method)
-                full_df[antecedent][consequent] = value * sign # This repopulates the original df
-                
-        # Removes the redundent dulicate concepts from the df and sets the nan to 0.
-        # Finally we transpose the df to make the reading more intuitive. The causal paths are read from rows to column. 
-        self.causal_weights = full_df.loc[~full_df.index.duplicated(keep='first')].fillna(0).T
+                aggr = self.aggregate(activated)
+                self.aggregated[f'{pair[0]} {pair[1]}'] = aggr
+                value = self.defuzzify(aggr, method)
+                weight_matrix.loc[pair[0]][pair[1]] = value
+        self.causal_weights = weight_matrix.fillna(0)
         
     def create_system(self):
-        """
-        Creates a fuzzy system based on the generated causal weights.
+        
+        """ Creates a fuzzy system based on the generated causal weights.
         
         Return
         ----------
