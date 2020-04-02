@@ -15,16 +15,18 @@ class FcmVisualize:
     Visualize different components of an FCM.
     """
     
-    def mf_view(self,
+    def mf_view(self, terms,
                 title = 'Causal Strength',
-                legend_anchor=(0.95, 0.6),
-                figsize = (10,5)):
+                figsize = (10,5),
+                legend_anchor=(0.95, 0.6)):
         
         '''Visualizes the membership function of the causal relationships between the concepts of the FCMs.
         
         Parameters
         ----------        
-        
+        terms : dict,
+                membership functions to be visualized.
+
         title : str,
                 default --> 'Causal Strength'
         
@@ -35,29 +37,28 @@ class FcmVisualize:
                         default --> (0.95, 0.6)
         '''
         
-        fig, (ax0) = plt.subplots(nrows= 1, figsize= (10, 5))
-
-
-        for i in self.terms:
-            ax0.plot(self.universe, self.terms[i], linewidth=0.4, label=str(i))
-            ax0.fill_between(self.universe, self.terms[i], alpha=0.3)
+        fig = plt.figure(figsize= (10, 5))
+        axes = plt.axes()
+        for i in terms:
+            axes.plot(self.universe, terms[i], linewidth=0.4, label=str(i))
+            axes.fill_between(self.universe, terms[i], alpha=0.3)
 
         
-        ax0.set_title(title)
-        ax0.legend(bbox_to_anchor=legend_anchor)
+        axes.set_title(title)
+        axes.legend(bbox_to_anchor=legend_anchor)
         
         
-        ax0.spines['top'].set_visible(False)
-        ax0.spines['right'].set_visible(False)
-        ax0.get_xaxis().tick_bottom()
-        ax0.get_yaxis().tick_left()
+        axes.spines['top'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+        axes.get_xaxis().tick_bottom()
+        axes.get_yaxis().tick_left()
 
         plt.tight_layout()
-
+        plt.show()
     
     def term_freq_hist(self, concept_1, concept_2,
                        width = 0.4,
-                       col = '#72a2d9',
+                       col = '#36568B',
                        title = "Experts' raitings of causal strenght",
                        figsize = (10,5)):
         
@@ -76,28 +77,36 @@ class FcmVisualize:
         col : str,
                 default --> '#72a2d9',
                 Hex code or a color string.
+        
+        title : str,
+                default --> "Experts' raitings of causal strenght"
+        
+        figsize : tuple, 
+                    default --> (10, 5)
+
         """
-
-        data = self.expert_data.loc[concept_1][concept_2].value_counts()/len(self.data.keys())
-        data = data.to_dict()
+        data = self.expert_data[concept_1, concept_2]
         
-        fig, (ax0) = plt.subplots(nrows= 1, figsize= (10, 5))
+        fig = plt.figure(figsize= (10, 5))
+        axes = plt.axes()
         
-        if data.values():
-            ax0.bar(data.keys(), data.values(),  width= width, color = col)
+        if max(list(data.values())) != 0:
+            axes.bar(data.keys(), data.values(),  width= width, color = col)
             
-            ax0.set_title(title)       
+            axes.set_title(title)       
 
-            ax0.spines['top'].set_visible(False)
-            ax0.spines['right'].set_visible(False)
-            ax0.get_xaxis().tick_bottom()
-            ax0.get_yaxis().tick_left()
+            axes.spines['top'].set_visible(False)
+            axes.spines['right'].set_visible(False)
+            axes.get_xaxis().tick_bottom()
+            axes.get_yaxis().tick_left()
 
             plt.tight_layout()
-        
+            plt.show()
+            
         else:
-            ax0.set_title(f'{concept_1} and {concept_2} are not related!')       
-        
+            axes.set_title(f'{concept_1} and {concept_2} are not related!')       
+            plt.show()
+
     
     def defuzz_view(self, 
                     concept_1, concept_2, 
@@ -115,36 +124,46 @@ class FcmVisualize:
                     default --> (10, 5),
                     the size of the figure. 
                     
-        legen_anchor : tuple,
+        legend_anchor : tuple,
                         default --> (0.95, 0.6),
                         the position of the legend.
+              
         """
         
-        fig, ax0 = plt.subplots(figsize=(10, 5))
+        fig = plt.figure(figsize=(10, 5))
+        axes = plt.axes()
         
-        defuzz = abs(fcmbci.causal_weights.loc[concept_1][concept_2])
-        if defuzz > 0:
-            y_activation = fuzz.interp_membership(self.universe, self.aggregated[f'{concept_1}{concept_2}'], defuzz)  # for plot
+        defuzz = self.causal_weights.loc[concept_1][concept_2]
+        if defuzz != 0:
+            y_activation = fuzz.interp_membership(self.universe, self.aggregated[f'{concept_1} {concept_2}'], defuzz)  # for plot
             out = np.zeros_like(self.universe) 
 
-            for i in fcmbci.terms:
-                ax0.plot(self.universe, self.terms[i], linewidth=0.4, label=str(i))
-                ax0.fill_between(self.universe, self.terms[i], alpha=0.0)
+            for i in self.terms:
+                axes.plot(self.universe, self.terms[i], linewidth=0.3, label=str(i)) # plots all the mfs. 
+                axes.fill_between(self.universe, self.terms[i], alpha=0.4)
+                
+            axes.fill_between(self.universe, out, 
+                             self.aggregated[f'{concept_1} {concept_2}'], 
+                             facecolor='#36568B', alpha=1)
+            
+            axes.plot([defuzz, defuzz], [0, y_activation], 'k', linewidth=1.5, alpha=1)
+            axes.text(defuzz-0.05, y_activation+0.02, f'{round(defuzz, 2)}',
+                     bbox=dict(facecolor='red', alpha=0.5))
 
-            ax0.fill_between(self.universe, out, self.aggregated[f'{concept_1}{concept_2}'], facecolor='#ffa500', alpha=0.7)
-            ax0.plot([defuzz, defuzz], [0, y_activation], 'k', linewidth=1.5, alpha=0.9)
-            ax0.set_title(f'Aggregated membership and result (line) for {concept_1} and {concept_2}')
+            axes.set_title(f'Aggregated membership and result (line) for {concept_1} and {concept_2}')
 
-            ax0.legend(bbox_to_anchor=legend_anchor)
-
-            ax0.spines['top'].set_visible(False)
-            ax0.spines['right'].set_visible(False)
-            ax0.get_xaxis().tick_bottom()
-            ax0.get_yaxis().tick_left()
+            axes.legend(bbox_to_anchor=legend_anchor)
+            
+            axes.spines['top'].set_visible(False)
+            axes.spines['right'].set_visible(False)
+            axes.get_xaxis().tick_bottom()
+            axes.get_yaxis().tick_left()
 
             plt.tight_layout()
+            plt.show()
         else:
-            ax0.set_title(f'{concept_1} and {concept_2} are not related!')
+            axes.set_title(f'{concept_1} and {concept_2} are not related!')
+            plt.show()
             
     def system_view(self, outcome_node=None):
         
@@ -189,7 +208,7 @@ class FcmVisualize:
                                            pos,
                                            nodelist= node_list,
                                            node_size=node_sizes, 
-                                           node_color="#cfcfe1")
+                                           node_color="#A79BB9")
 
 
             node_outcome = nx.draw_networkx_nodes(G, 
@@ -197,7 +216,7 @@ class FcmVisualize:
                                                    nodelist=outcome_node,
                                                    node_shape='o',
                                                    node_size=node_sizes, 
-                                                   node_color="#8c198c")
+                                                   node_color="#10A83D")
 
             node_outcome = nx.draw_networkx_nodes(G, 
                                                    pos,
