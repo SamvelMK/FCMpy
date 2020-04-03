@@ -201,7 +201,7 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         data : dataframe,
-                Expert imput data. The row index and the column names should be the concepts and the row inputs should be the
+                Expert input data. The row index and the column names should be the concepts and the row inputs should be the
                 linguistic terms.
                 default --> None; uses the data stored/read into the constructor.
 
@@ -214,10 +214,10 @@ class FcmDataProcessor(FcmVisualize):
         """
         if data == None:
             data = self.data
+            # Create a flat data with all of the experts' imputs.
+            flat_data = pd.concat([data[i] for i in data], sort = False)
         else:
-            data = data
-        # Create a flat data with all of the experts' imputs.
-        flat_data = pd.concat([data[i] for i in data], sort = False)
+            data = data        
 
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(pd.DataFrame(columns=list(flat_data.index.unique()), index=list(flat_data.index.unique())))
@@ -259,12 +259,14 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         data : dataframe,
-                Expert imput data.
+                Expert input data. The dataframe should have a From and To columns, followed by the linguistic terms. See an example
+                in the documentation.
                 default --> None; uses the data stored/read into the constructor.
 
         linguistic_terms : list,
                             A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
                             Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+        
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
@@ -272,10 +274,11 @@ class FcmDataProcessor(FcmVisualize):
         """        
         if data == None:
             data = self.data
+            # Create a flat data with all of the experts' imputs.
+            flat_data = pd.concat([data[i] for i in data], sort = False)
         else:
             data = data
-        # Create a flat data with all of the experts' imputs.
-        flat_data = pd.concat([data[i] for i in data], sort = False)
+        
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(columns=[i for i in flat_data['From'].unique()], index=[i for i in flat_data['From'].unique()])
         self.expert_data = {}
