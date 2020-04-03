@@ -16,7 +16,7 @@ class FcmDataProcessor(FcmVisualize):
     def __init__(self, data = None):
         
         """ The FcmBci object initializes with a universe of discourse with a range [0,1].  """
-        if len(data) != 0:
+        if data != None:
             self.data = data
         else:
             self.data = pd.DataFrame()
@@ -56,6 +56,9 @@ class FcmDataProcessor(FcmVisualize):
         
         Parameters
         ----------
+        universe : 1d array,
+                    The universe of discourse.
+                    
         linguistic_terms : lsit, 
                             default --> ['-VH', '-H', '-M', '-L', 'VL','L', 'M', 'H', 'VH']
                             Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
@@ -79,8 +82,8 @@ class FcmDataProcessor(FcmVisualize):
         
         abcs = [[c - w / 2, c, c + w / 2] for c, w in zip(centers, widths)]
         
-        abcs[number//2] = [0.01, 0.01, 0.25] # + Very low 
-        abcs[((number//2) -1)] = [-.25, -0.01, -0.01] # - Very Low
+        abcs[number//2] = [0.01, 0.01, centers_pos[1]] # + Very low 
+        abcs[((number//2) -1)] = [centers_neg[-2], -0.01, -0.01] # - Very Low
         
         terms = dict()
 
@@ -138,7 +141,7 @@ class FcmDataProcessor(FcmVisualize):
         
         return aggregated
     
-    def defuzzify(self, aggregated, method = 'centroid'):
+    def defuzzify(self, universe, aggregated, method = 'centroid'):
         
         """ Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
         One can pass on another defuzzification method available in scikit-fuzzy library (e.g., bisector, mom, sig)
@@ -146,6 +149,9 @@ class FcmDataProcessor(FcmVisualize):
 
         Parameters
         ----------
+        universe : 1d array,
+                    The universe of discourse.
+
         aggregated : 1d array,
                         Aggregated membership function to be defuzzified.
         method : str, 
@@ -158,7 +164,7 @@ class FcmDataProcessor(FcmVisualize):
             Defuzzified value.
         """
         
-        defuzzified_value = fuzz.defuzz(self.universe, aggregated, method)
+        defuzzified_value = fuzz.defuzz(universe, aggregated, method)
         
         return defuzzified_value
     
@@ -185,7 +191,7 @@ class FcmDataProcessor(FcmVisualize):
         else:
             return 0
         
-    def generate_edge_weights(self,
+    def generate_edge_weights(self, data = None,
                                 linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                                 method = 'centroid'):
                 
@@ -194,6 +200,10 @@ class FcmDataProcessor(FcmVisualize):
         
         Parameters
         ----------
+        data : dataframe,
+                Expert imput data.
+                default --> None; uses the data stored/read into the constructor.
+
         linguistic_terms : list,
                             A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
                             Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
@@ -201,9 +211,12 @@ class FcmDataProcessor(FcmVisualize):
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
         """
-        
+        if data == None:
+            data = self.data
+        else:
+            data = data
         # Create a flat data with all of the experts' imputs.
-        flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
+        flat_data = pd.concat([data[i] for i in data], sort = False)
 
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(pd.DataFrame(columns=list(flat_data.index.unique()), index=list(flat_data.index.unique())))
@@ -220,7 +233,7 @@ class FcmDataProcessor(FcmVisualize):
         # for each pair of consequnt/antecedent calculate the edge value and store it in the weight matrix.
         for antecedent in flat_data:
             for consequent in flat_data:
-                crostab = pd.crosstab(flat_data.loc[antecedent][consequent], flat_data.loc[antecedent][consequent].index)/len(self.data.keys())
+                crostab = pd.crosstab(flat_data.loc[antecedent][consequent], flat_data.loc[antecedent][consequent].index)/len(data.keys())
                 # check if the ant/cons pairs exist.
                 if len(crostab) != 0:
                     activation_parameter = eval(str(crostab[antecedent].to_dict()).replace('"', '')) # create the parameter.
@@ -229,13 +242,13 @@ class FcmDataProcessor(FcmVisualize):
                     activated = self.activate(activation_parameter, self.terms) # activate the mf
                     aggregated = self.aggregate(activated) # aggregate the activated mfs
                     self.aggregated[f'{antecedent} {consequent}'] = aggregated # store the aggregated function for vis.
-                    value = self.defuzzify(aggregated, method) # defuzzify the values.
+                    value = self.defuzzify(self.universe, aggregated, method) # defuzzify the values.
                     weight_matrix.loc[antecedent][consequent] = value # populate the df with the defuzzified  weights.
                     
         self.causal_weights = weight_matrix.fillna(0)
-                    
+            
     
-    def weight_edge_list(self,
+    def weight_edge_list(self, data = None,
                          linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                          method = 'centroid'): 
         
@@ -244,6 +257,10 @@ class FcmDataProcessor(FcmVisualize):
         
         Parameters
         ----------
+        data : dataframe,
+                Expert imput data.
+                default --> None; uses the data stored/read into the constructor.
+
         linguistic_terms : list,
                             A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
                             Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
@@ -252,15 +269,18 @@ class FcmDataProcessor(FcmVisualize):
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
                     
         """        
-        
+        if data == None:
+            data = self.data
+        else:
+            data = data
         # Create a flat data with all of the experts' imputs.
-        flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
+        flat_data = pd.concat([data[i] for i in data], sort = False)
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(columns=[i for i in flat_data['From'].unique()], index=[i for i in flat_data['From'].unique()])
         self.expert_data = {}
         
         # 1) Calculate term frequencies, 2) add the signes to them. 3) set the NA's to 0.
-        freq_data = pd.concat([self.data[i] for i in self.data],  ignore_index=True).groupby(['From', 'To']).count()/len(self.data.keys())
+        freq_data = pd.concat([data[i] for i in data],  ignore_index=True).groupby(['From', 'To']).count()/len(data.keys())
         signed = flat_data.groupby(['From', 'To']).mean() * freq_data # adds the sign of the terms
         final = signed.fillna(0) # sets the nan to 0
         
@@ -287,13 +307,20 @@ class FcmDataProcessor(FcmVisualize):
                 activated = self.activate(activation_parameter, terms)
                 aggr = self.aggregate(activated)
                 self.aggregated[f'{pair[0]} {pair[1]}'] = aggr
-                value = self.defuzzify(aggr, method)
+                value = self.defuzzify(self.universe, aggr, method)
                 weight_matrix.loc[pair[0]][pair[1]] = value
         self.causal_weights = weight_matrix.fillna(0)
         
-    def create_system(self):
+    def create_system(self, causal_weights = None):
         
         """ Creates a fuzzy system based on the generated causal weights.
+        
+        Parameters
+        ----------
+        causal_weights : dataframe,
+                            dataframe with the causal wights where the columns and rows/index represent the concepts
+                            and the rows represent the weights.
+                            default --> None; Uses the casual weights stored in the constructor. 
         
         Return
         ----------
@@ -313,12 +340,17 @@ class FcmDataProcessor(FcmVisualize):
                 text.append(string)
             return text[0]
         
+        if causal_weights == None:
+            causal_weights = self.causal_weights
+        else:
+            causal_weights = causal_weights
+
         # Creates a netwrokx instance.
-        G = nx.from_numpy_matrix(self.causal_weights.values, parallel_edges=True, 
+        G = nx.from_numpy_matrix(causal_weights.values, parallel_edges=True, 
                          create_using=nx.MultiDiGraph())
         
         # Creates truncated labels.
-        labels = {idx: label_gen(val) for idx, val in enumerate(self.causal_weights.columns)}
+        labels = {idx: label_gen(val) for idx, val in enumerate(causal_weights.columns)}
         G = nx.relabel_nodes(G, labels)
         
         self.system = G
