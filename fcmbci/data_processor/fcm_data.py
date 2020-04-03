@@ -13,11 +13,13 @@ import functools
 
 class FcmDataProcessor(FcmVisualize):
     
-    def __init__(self):
+    def __init__(self, data = None):
         
         """ The FcmBci object initializes with a universe of discourse with a range [0,1].  """
-        
-        self.data = pd.DataFrame()
+        if len(data) != 0:
+            self.data = data
+        else:
+            self.data = pd.DataFrame()
         self.universe = np.arange(-1, 1.001, 0.001)
 
     def read_xlsx(self, file_name):
@@ -47,7 +49,7 @@ class FcmDataProcessor(FcmVisualize):
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
     def automf(self, universe, 
-               linguistic_terms = ['-VH', '-H', '-M', '-L', 'VL','L', 'M', 'H', 'VH']):
+               linguistic_terms = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']):
         
         """ Automatically generates triangular membership functions based on the passed
         Lingustic Terms. This function was taken and modified from scikit-fuzzy.
@@ -65,7 +67,7 @@ class FcmDataProcessor(FcmVisualize):
         """
         
         number = len(linguistic_terms)
-        limits = [self.universe.min(), self.universe.max()]
+        limits = [universe.min(), universe.max()]
         universe_range = limits[1] - limits[0]
         widths = [universe_range / ((number - 1) / 2.)] * int(number)
         
@@ -84,7 +86,7 @@ class FcmDataProcessor(FcmVisualize):
 
         # Repopulate
         for term, abc in zip(linguistic_terms, abcs):
-            terms[term] = skfuzzy.trimf(self.universe, abc)
+            terms[term] = skfuzzy.trimf(universe, abc)
         
         return terms
 
