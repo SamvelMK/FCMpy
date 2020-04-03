@@ -71,19 +71,19 @@ class FcmDataProcessor(FcmVisualize):
         
         number = len(linguistic_terms)
         limits = [universe.min(), universe.max()]
-        universe_range = limits[1] - limits[0]
-        widths = [universe_range / ((number - 1) / 2.)] * int(number)
+        universe_range = (limits[1] - limits[0])/2
+        widths = [universe_range / (((number/2) - 1) / 2.)] * int(number)
         
         
         # Create the centers of the mfs for each side of the x axis and then merge them together.
-        centers_pos = np.linspace(0, 1, number//2)
-        centers_neg = np.linspace(-1, 0, number//2)
+        centers_pos = np.linspace(0.001, 1, number//2)
+        centers_neg = np.linspace(-1, -0.001, number//2)
         centers = list(centers_neg)+list(centers_pos)
         
         abcs = [[c - w / 2, c, c + w / 2] for c, w in zip(centers, widths)]
         
-        abcs[number//2] = [0.01, 0.01, centers_pos[1]] # + Very low 
-        abcs[((number//2) -1)] = [centers_neg[-2], -0.01, -0.01] # - Very Low
+        abcs[number//2] = [0.001, 0.001, centers_pos[1]] # + Very low 
+        abcs[((number//2) -1)] = [centers_neg[-2], -0.001, -0.001] # - Very Low
         
         terms = dict()
 
@@ -201,7 +201,8 @@ class FcmDataProcessor(FcmVisualize):
         Parameters
         ----------
         data : dataframe,
-                Expert imput data.
+                Expert imput data. The row index and the column names should be the concepts and the row inputs should be the
+                linguistic terms.
                 default --> None; uses the data stored/read into the constructor.
 
         linguistic_terms : list,
