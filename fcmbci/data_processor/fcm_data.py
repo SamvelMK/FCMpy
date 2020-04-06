@@ -1,4 +1,8 @@
-from fcmbci.visualization.fcm_view import FcmVisualize
+import sys, os
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../')
+
+from visualization.fcm_view import FcmVisualize
 import pandas as pd
 import itertools
 import numpy as np
@@ -10,6 +14,7 @@ import matplotlib
 import re
 import networkx as nx
 import functools
+from data_processor.process_functions import *
 
 class FcmDataProcessor(FcmVisualize):
     
@@ -22,7 +27,7 @@ class FcmDataProcessor(FcmVisualize):
             self.data = pd.DataFrame()
         self.universe = np.arange(-1, 1.001, 0.001)
 
-    def read_xlsx(self, file_name):
+    def read_xlsx(self, file_name, dtype):
         
         """ Reads an excel spreadsheet. Returns an ordered dictionary.
         Note that the first column in the file is set to be the index.
@@ -32,19 +37,14 @@ class FcmDataProcessor(FcmVisualize):
         file_name : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
         """
+        data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
         
-        try:
-            data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
-            # Checks if the data meets the requirments. 
-            for i in data:
-                if len(data[i].columns) != len(data[i].index):
-                    raise ValueError("The number of columns != the number of rows. Check the data requirments!")
-            self.data = data
-        except ValueError:
-            data = pd.read_excel(file_name, sheet_name=None)
-            self.data = data
-        except:
-            print("Wrong data format. Check the data requirments.")
+        if dtype == 'Matrix':
+            consistency_check('Matrix', data) # if inconsistent then it will throu
+            self.data = data 
+        else:
+            consistency_check('List', data)
+            self.data = data 
         
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
@@ -167,29 +167,6 @@ class FcmDataProcessor(FcmVisualize):
         defuzzified_value = fuzz.defuzz(universe, aggregated, method)
         
         return defuzzified_value
-    
-    def valence_check(self, linguistic_term):
-        
-        """ This function checks the valence (i.e., the sign) of the causal weight (in a linguistic Term).
-        The function returns -1 if the linguistic term is negative or +1 if otherwise.
-        
-        Parameters
-        ----------
-        linguistic_term : str,
-                            A string of the linguistic term --> '±H'
-        
-        Return
-        ----------
-        y : int,
-                - 1 if the Linguistic Term is negative, +1 if its positive and 0 if otherwise.
-        """
-        if linguistic_term != 0:
-            if '-' in linguistic_term:
-                return -1
-            else:
-                return +1
-        else:
-            return 0
         
     def generate_edge_weights(self, data = None,
                                 linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
