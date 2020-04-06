@@ -1,0 +1,81 @@
+import pandas as pd
+import itertools
+
+# These are external functions
+
+def valence_check(linguistic_term):
+        
+        """ This function checks the valence (i.e., the sign) of the causal weight (in a linguistic Term).
+        The function returns -1 if the linguistic term is negative or +1 if otherwise.
+        
+        Parameters
+        ----------
+        linguistic_term : str,
+                            A string of the linguistic term --> '±H'
+        
+        Return
+        ----------
+        y : int,
+                - 1 if the Linguistic Term is negative, +1 if its positive and 0 if otherwise.
+        """
+        if linguistic_term != 0:
+            if '-' in linguistic_term:
+                return -1
+            else:
+                return +1
+        else:
+            return 0
+
+def consistency_check(dtype, data=None):
+    
+    """
+    Checks whether the sign of the raitings the paris of the concepts
+    are consistent across all the experts.
+    
+    Parameters
+    ----------
+    data : OrderedDict,
+            default --> data stored in the constructor.
+    """
+        
+    if dtype == 'Matrix':
+        ### Check the consistency of raitings of a matrix_like data.
+        # Create a flat data with all the expert inputs and create a list of all the pairs of concepts.
+        flat_data = pd.concat([data[i] for i in data], sort = False)
+        indexes = [x for x in itertools.permutations(list(set(flat_data.index)), 2)]
+
+        # for each pair of concepts; 1) Create a list of expert raitings, 2) Check the valence of each linguistic term.
+        #                            3) Check if the max and min are equal.
+
+        for pair in indexes:
+            f = []
+            for expert in data:
+                d = data[expert]
+                l = d.loc[pair]
+                if not pd.isna(l):
+                    v = valence_check(l)
+                    f.append(float(v))
+            if len(f) > 0:
+                if min(f) != max(f):
+                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data!\
+                                                {f}')             
+    else:
+        # Obtain the pairs of concepts. 1) create a flat data file with all the expert inputs. 
+        #                               2) set the index of the data From, To.
+        flat_data = pd.concat([data[i] for i in data], sort = False)
+        flat_data = flat_data.set_index(['From', 'To'])
+        indexes = set(flat_data.index) # a set of all concept pairs.
+
+        # For each pair of concepts 1) select the expert inputs 
+        #                           2) check whether the max of the list == to the min of the list
+        for pair in indexes:
+            f = []
+            for expert in data:
+                d = data[expert].set_index(['From', 'To'])
+                l = d.loc[pair].dropna()
+                if len(l) != 0:
+                    f.append(float(l.values))
+            if len(f) > 0:
+                if min(f) != max(f):
+                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data!\
+                                                {f}')
