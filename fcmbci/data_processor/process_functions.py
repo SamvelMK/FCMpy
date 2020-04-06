@@ -1,7 +1,9 @@
+#################################################################################################
+##                                  External Functions                                         ##                                                                      
+#################################################################################################
+
 import pandas as pd
 import itertools
-
-# These are external functions
 
 def valence_check(linguistic_term):
         
@@ -26,7 +28,7 @@ def valence_check(linguistic_term):
         else:
             return 0
 
-def consistency_check(dtype, data=None):
+def consistency_check(data, dtype):
     
     """
     Checks whether the sign of the raitings the paris of the concepts
@@ -35,10 +37,14 @@ def consistency_check(dtype, data=None):
     Parameters
     ----------
     data : OrderedDict,
-            default --> data stored in the constructor.
+    dtype : str,
+            Data format: 'Matrix' or 'List'.
     """
-        
-    if dtype == 'Matrix':
+    # Checks whether the dtype is correctly specified.
+    if dtype.lower() not in ['matrix', 'list']:
+        raise ValueError(f'Unrecognized data format "{dtype}"! Check the spelling or the data type!')
+
+    if dtype.lower() == 'matrix':
         ### Check the consistency of raitings of a matrix_like data.
         # Create a flat data with all the expert inputs and create a list of all the pairs of concepts.
         flat_data = pd.concat([data[i] for i in data], sort = False)
