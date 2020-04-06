@@ -16,15 +16,14 @@ class TestDataProcessor(unittest.TestCase):
 
     def setUp(self):
         self.fcm = FcmDataProcessor()
-
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
             warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-            self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/sample_test.xlsx', 'Matrix')
+            self.fcm.read_xlsx(os.path.abspath('unittests/test_cases/sample_test.xlsx'), 'Matrix')
             self.data_mat = self.fcm.data
             
-            self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/list_format.xlsx', 'List')
+            self.fcm.read_xlsx(os.path.abspath('unittests/test_cases/list_format.xlsx'), 'List')
             self.data_lst = self.fcm.data
 
     def test_read_excel(self):
