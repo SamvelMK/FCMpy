@@ -57,8 +57,8 @@ def consistency_check(dtype, data=None):
                     f.append(float(v))
             if len(f) > 0:
                 if min(f) != max(f):
-                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data!\
-                                                {f}')             
+                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
+
     else:
         # Obtain the pairs of concepts. 1) create a flat data file with all the expert inputs. 
         #                               2) set the index of the data From, To.
@@ -77,5 +77,4 @@ def consistency_check(dtype, data=None):
                     f.append(float(l.values))
             if len(f) > 0:
                 if min(f) != max(f):
-                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data!\
-                                                {f}')
+                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
