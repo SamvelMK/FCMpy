@@ -8,7 +8,8 @@ from fcmbci.data_processor.fcm_data import FcmDataProcessor
 from fcmbci.data_processor.process_functions import *
 import itertools
 import pandas as pd 
-
+import xlrd
+import warnings
 
 
 class TestDataProcessor(unittest.TestCase):
@@ -16,11 +17,15 @@ class TestDataProcessor(unittest.TestCase):
     def setUp(self):
         self.fcm = FcmDataProcessor()
 
-        self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/sample_test.xlsx', 'Matrix')
-        self.data_mat = self.fcm.data
-        
-        self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/list_format.xlsx', 'List')
-        self.data_lst = self.fcm.data
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+            warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+            self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/sample_test.xlsx', 'Matrix')
+            self.data_mat = self.fcm.data
+            
+            self.fcm.read_xlsx('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/jupyter_prototype/list_format.xlsx', 'List')
+            self.data_lst = self.fcm.data
 
     def test_read_excel(self):
         self.assertIsNotNone(self.data_mat)
