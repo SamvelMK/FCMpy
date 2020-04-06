@@ -37,14 +37,20 @@ class FcmDataProcessor(FcmVisualize):
         file_name : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
         """
-        data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
-        
+
         if dtype == 'Matrix':
-            consistency_check('Matrix', data) # if inconsistent then it will throu
-            self.data = data 
+            data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
+            # Checks if the data meets the requirments. 
+            for i in data:
+                if len(data[i].columns) != len(data[i].index):
+                    raise ValueError("The number of columns != the number of rows. Check the data requirments!")
+                else:
+                    consistency_check('Matrix', data) # if inconsistent then it will throu
+                    self.data = data
         else:
+            data = pd.read_excel(file_name, sheet_name=None)
             consistency_check('List', data)
-            self.data = data 
+            self.data = data            
         
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
