@@ -57,7 +57,7 @@ def consistency_check(data, dtype):
             f = []
             for expert in data:
                 d = data[expert]
-                if pair in list(d.index): # In case if the concept is not present in one of the expert's map.
+                if len(set(pair) & set(list(d.index))) == len(set(pair)): # In case if the concept is not present in one of the expert's map.
                     l = d.loc[pair]
                     if not pd.isna(l):
                         v = valence_check(l)
@@ -79,7 +79,7 @@ def consistency_check(data, dtype):
             f = []
             for expert in data:
                 d = data[expert].set_index(['From', 'To'])
-                if pair in list(d.index): # In case if the concept is not present in one of the expert's map.
+                if pair in list(d.index): # In case if the concept is not present in one of the expert's map. (Note Multiindex).
                     l = d.loc[pair].dropna()
                     if len(l) != 0:
                         f.append(float(l.values))
