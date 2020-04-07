@@ -57,10 +57,11 @@ def consistency_check(data, dtype):
             f = []
             for expert in data:
                 d = data[expert]
-                l = d.loc[pair]
-                if not pd.isna(l):
-                    v = valence_check(l)
-                    f.append(float(v))
+                if pair in list(d.index): # In case if the concept is not present in one of the expert's map.
+                    l = d.loc[pair]
+                    if not pd.isna(l):
+                        v = valence_check(l)
+                        f.append(float(v))
             if len(f) > 0:
                 if min(f) != max(f):
                     raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
@@ -78,9 +79,10 @@ def consistency_check(data, dtype):
             f = []
             for expert in data:
                 d = data[expert].set_index(['From', 'To'])
-                l = d.loc[pair].dropna()
-                if len(l) != 0:
-                    f.append(float(l.values))
+                if pair in list(d.index): # In case if the concept is not present in one of the expert's map.
+                    l = d.loc[pair].dropna()
+                    if len(l) != 0:
+                        f.append(float(l.values))
             if len(f) > 0:
                 if min(f) != max(f):
                     raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
