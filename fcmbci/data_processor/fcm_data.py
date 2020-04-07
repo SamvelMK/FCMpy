@@ -40,16 +40,11 @@ class FcmDataProcessor(FcmVisualize):
         
         if dtype.lower() not in ['matrix', 'list']:
             raise ValueError(f'Unrecognized data format "{dtype}"! Check the spelling or the data type!')
-
+        
         if dtype.lower() == 'matrix':
             data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
-            # Checks if the data meets the requirments. 
-            for i in data:
-                if len(data[i].columns) != len(data[i].index):
-                    raise ValueError("The number of columns != the number of rows. Check the data requirments!")
-                else:
-                    consistency_check(data, 'Matrix') # if inconsistent then it will throu
-                    self.data = data
+            consistency_check(data, 'Matrix') # if inconsistent then it will throu
+            self.data = data
         else:
             data = pd.read_excel(file_name, sheet_name=None)
             consistency_check(data, 'List')
