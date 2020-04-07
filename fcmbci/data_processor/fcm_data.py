@@ -69,7 +69,7 @@ class FcmDataProcessor(FcmVisualize):
                     The universe of discourse.
                     
         linguistic_terms : lsit, 
-                            default --> ['-VH', '-H', '-M', '-L', 'VL','L', 'M', 'H', 'VH']
+                            default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH']
                             Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         
         Return
