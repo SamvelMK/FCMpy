@@ -93,7 +93,21 @@ class TestDataProcessor(unittest.TestCase):
         
         defuz_res = self.fcm.defuzzify(self.fcm.universe, aggr, method = 'centroid')
         self.assertAlmostEqual(defuz_res, 0.70, 2)
+    
+    def test_gen_weights_mat(self):
+        self.fcm.gen_weights_mat(self.data_mat)
+        weights = self.fcm.causal_weights
+        
+        self.assertLessEqual(max(weights.max()), 1)
+        self.assertGreaterEqual(min(weights.min()), -1)
 
+
+    def test_weight_edge_list(self):
+        self.fcm.gen_weights_list(self.data_lst)
+        weights = self.fcm.causal_weights
+        
+        self.assertLessEqual(max(weights.max()), 1)
+        self.assertGreaterEqual(min(weights.min()), -1)
 
 if __name__ == '__main__':
     unittest.main()
