@@ -177,7 +177,7 @@ class FcmDataProcessor(FcmVisualize):
         
         return defuzzified_value
         
-    def generate_edge_weights(self, data = None,
+    def gen_weights_mat(self, data = None,
                                 linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                                 method = 'centroid'):
                 
@@ -203,7 +203,9 @@ class FcmDataProcessor(FcmVisualize):
             # Create a flat data with all of the experts' imputs.
             flat_data = pd.concat([data[i] for i in data], sort = False)
         else:
-            data = data        
+            data = data      
+            flat_data = pd.concat([data[i] for i in data], sort = False)
+  
 
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(pd.DataFrame(columns=list(flat_data.index.unique()), index=list(flat_data.index.unique())))
@@ -235,7 +237,7 @@ class FcmDataProcessor(FcmVisualize):
         self.causal_weights = weight_matrix.fillna(0)
             
     
-    def weight_edge_list(self, data = None,
+    def gen_weights_list(self, data = None,
                          linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                          method = 'centroid'): 
         
@@ -264,6 +266,8 @@ class FcmDataProcessor(FcmVisualize):
             flat_data = pd.concat([data[i] for i in data], sort = False)
         else:
             data = data
+            flat_data = pd.concat([data[i] for i in data], sort = False)
+
         
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(columns=[i for i in flat_data['From'].unique()], index=[i for i in flat_data['From'].unique()])
