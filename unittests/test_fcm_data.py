@@ -46,8 +46,8 @@ class TestDataProcessor(unittest.TestCase):
         
 
     def test_atumf(self):
-        results = self.fcm.automf(self.fcm.universe, linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
-
+        results = self.fcm.automf(self.fcm.universe, 
+                                    linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
         # Checks whether the returned object is of type dict.
         self.assertEqual(type(results), dict)
 
@@ -61,11 +61,38 @@ class TestDataProcessor(unittest.TestCase):
         self.assertLessEqual(res_max, 1)
         self.assertGreaterEqual(res_min, 0)
     
-    # def test_activate(self):
-    #     mf = self.fcm.automf(linguistic_terms = ['VL', 'L'])
-    #     activated = self.fcm.activate({'VL': 0.66, 'L': 0.33}, mf)
-        
+    def test_activate(self):
+        res = self.fcm.automf(self.fcm.universe, 
+                                linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
+    
+        act = self.fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, res)
         # Checks whether the activated membership functions are within the fuzzy range 0,1.
+        
+        for i in act:
+            self.assertLessEqual(max(act[i]), 1)
+            self.assertGreaterEqual(min(act[i]), 0)
+
+    def test_aggregate(self):
+        res = self.fcm.automf(self.fcm.universe,
+                                linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
+        act = self.fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, res)
+        aggr = self.fcm.aggregate(act)
+        
+        # the length of the aggregated function should be equal to that of the universe.
+        self.assertEqual(len(aggr), len(self.fcm.universe))
+        
+        # Checks whether the aggregated function is in the fuzzy range. 
+        self.assertLessEqual(max(aggr), 1)
+        self.assertGreaterEqual(min(aggr), 0)
+
+    def test_defuzzify(self):
+        res = self.fcm.automf(self.fcm.universe,
+                                linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
+        act = self.fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, res)
+        aggr = self.fcm.aggregate(act)
+        
+        defuz_res = self.fcm.defuzzify(self.fcm.universe, aggr, method = 'centroid')
+        self.assertAlmostEqual(defuz_res, 0.70, 2)
 
 
 if __name__ == '__main__':
