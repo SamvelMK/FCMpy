@@ -109,5 +109,15 @@ class TestDataProcessor(unittest.TestCase):
         self.assertLessEqual(max(weights.max()), 1)
         self.assertGreaterEqual(min(weights.min()), -1)
 
+    def test_valence_check(self):
+        res1 = valence_check('-VH')
+        res2 = valence_check('VH')
+        res3 = valence_check(0)
+
+        self.assertEqual(res1, -1)
+        self.assertEqual(res2, 1)
+        self.assertEqual(res3, 0)   
+    
+
 if __name__ == '__main__':
     unittest.main()
