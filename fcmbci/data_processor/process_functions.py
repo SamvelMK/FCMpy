@@ -86,3 +86,16 @@ def consistency_check(data, dtype):
             if len(f) > 0:
                 if min(f) != max(f):
                     raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
+
+def check_column(data):
+    """
+    Checks whether the dataframe includes From ---> To column. It raises an error, if the columns are not found. 
+    
+    Parameters
+    ----------
+    data : OrderedDict,
+    """
+    columns = pd.concat([data[i] for i in data], sort = False).columns
+    for expert in data.keys():
+        if ('from' not in [x.lower() for x in data[expert].columns]) | ('to' not in [x.lower() for x in data[expert].columns]):
+            raise ValueError('Columns From --> To were not found. Check the data!')
