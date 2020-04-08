@@ -41,7 +41,7 @@ class FcmVisualize:
         axes = plt.axes()
         for i in terms:
             axes.plot(self.universe, terms[i], linewidth=0.4, label=str(i))
-            axes.fill_between(self.universe, terms[i], alpha=0.3)
+            axes.fill_between(self.universe, terms[i], alpha=0.5)
 
         
         axes.set_title(title)
