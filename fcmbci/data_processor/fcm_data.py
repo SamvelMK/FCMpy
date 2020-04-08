@@ -7,7 +7,6 @@ import pandas as pd
 import itertools
 import numpy as np
 import skfuzzy as fuzz
-from skfuzzy import control as ctrl
 import skfuzzy
 import matplotlib.pyplot as plt
 import matplotlib
@@ -47,6 +46,7 @@ class FcmDataProcessor(FcmVisualize):
             self.data = data
         else:
             data = pd.read_excel(file_name, sheet_name=None)
+            check_column(data)
             consistency_check(data, 'List')
             self.data = data            
         
