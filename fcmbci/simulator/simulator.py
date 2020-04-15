@@ -2,11 +2,16 @@ import pandas as pd
 import numpy as np
 from simulation_functions import *
 
-class FcmSimulator(self, init):
+class FcmSimulator:
     
-    self.results = pd.DataFrame(self.init, index=[0])
-
-    def simulate(self, initial_state, weights, iterations, inference = 'mk', 
+    def __init__(self, initial_state, weights, iterations = 50, inference = 'mk', 
+                            transform = 's', l = 1, thresh = 0.001):
+        self.scenarios = {}
+        results, last_step = self.simulate(initial_state, weights, iterations, inference, 
+                                    transform, l, thresh)
+        self.scenarios['initial_state'] = results
+        self.last_step = last_step
+    def simulate(self, initial_state, weights, iterations = 50, inference = 'mk', 
                  transform = 's', l = 1, thresh = 0.001):
         
         """ Runs simulations over the passed FCM.
@@ -41,8 +46,8 @@ class FcmSimulator(self, init):
             dataframe with the results of the simulation steps.
         """
 
+        results = pd.DataFrame(initial_state, index=[0])
 
-        initial_state = self.init
         step_count = 0
         stop = thresh
         
@@ -61,8 +66,19 @@ class FcmSimulator(self, init):
             else:
                 raise ValueError('Unrecognized transfer function!')
 
-            self.results.loc[len(self.results)] = state_vector
+            results.loc[len(results)] = state_vector
             step_count +=1
-            stop = max(self.results.loc[len(self.results)-1] - self.results.loc[len(self.results) - 2])
-        print(f'The values converged in the {step_count+1} state (e <= {tresh})')
-        return self.results
+            stop = max(results.loc[len(results)-1] - results.loc[len(results) - 2])
+        print(f'The values converged in the {step_count+1} state (e <= {thresh})')
+        return results, results.loc[len(results) - 1]
+
+    def scenario(self, scenario_name, state_vector, weights, iterations = 50, 
+                        inference = 'mk', transform = 's', l = 1, thresh = 0.001):
+
+        sv = self.last_step.to_dict()
+        sv.update(state_vector) # updated state vector
+        results, last_step = self.simulate(sv, weights, iterations = 50, inference = 'mk',
+                             transform = 's', l = 1, thresh = 0.001)
+
+        self.scenarios[scenario_name] = results
+        self.last_step = last_step
