@@ -7,10 +7,11 @@ class FcmSimulator:
     def __init__(self, initial_state, weights, iterations = 50, inference = 'mk', 
                             transform = 's', l = 1, thresh = 0.001):
         self.scenarios = {}
-        results, last_step = self.simulate(initial_state, weights, iterations, inference, 
+        results = self.simulate(initial_state, weights, iterations, inference, 
                                     transform, l, thresh)
         self.scenarios['initial_state'] = results
-        self.last_step = last_step
+        
+        self.initial_equilibrium = results.loc[len(results) - 1]
     def simulate(self, initial_state, weights, iterations = 50, inference = 'mk', 
                  transform = 's', l = 1, thresh = 0.001):
         
@@ -54,7 +55,12 @@ class FcmSimulator:
         state_vector = list(initial_state.values())
         
         while stop >= thresh and step_count <= iterations:
-            res = weights.mul(state_vector, axis=0).sum()+state_vector
+            if inference == 'mk':
+                res = weights.mul(state_vector, axis=0).sum()+state_vector
+            elif inference == 'k':
+                res = weights.mul(state_vector, axis=0).sum()
+            elif inference == 'r':
+                res = weights.mul(([2*i-1 for i in state_vector]), axis=0).sum()+([2*i-1 for i in state_vector]) 
             if transform == 's':
                 state_vector = [sig(i, l) for i in res]
             elif transform == 'h':
@@ -70,15 +76,14 @@ class FcmSimulator:
             step_count +=1
             stop = max(results.loc[len(results)-1] - results.loc[len(results) - 2])
         print(f'The values converged in the {step_count+1} state (e <= {thresh})')
-        return results, results.loc[len(results) - 1]
+        return results
 
     def scenario(self, scenario_name, state_vector, weights, iterations = 50, 
                         inference = 'mk', transform = 's', l = 1, thresh = 0.001):
 
-        sv = self.last_step.to_dict()
+        sv = self.initial_equilibrium.to_dict()
         sv.update(state_vector) # updated state vector
-        results, last_step = self.simulate(sv, weights, iterations = 50, inference = 'mk',
-                             transform = 's', l = 1, thresh = 0.001)
+        results = self.simulate(sv, weights, iterations = 50, inference = 'mk',
+                                 transform = 's', l = 1, thresh = 0.001)
 
         self.scenarios[scenario_name] = results
-        self.last_step = last_step
