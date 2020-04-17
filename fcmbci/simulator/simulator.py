@@ -5,6 +5,34 @@ import warnings
 
 class FcmSimulator:
     
+    """ Runs simulations over the passed FCM.
+        
+        Parameters
+        ----------
+        initial_state : dict,
+                        A dictionary of Concepts as keys and their initial states. ---> {'C1': 0.5, 'C2' : 0.4}.
+                        The states take only values in the range of [0,1] for the sigmoid transfer function and [-1,1] for the hperbolic tangent.
+
+        weights : Data frame with the causal weights.
+
+        iterations : int,
+                        Number of itterations to run in case if the system doesn't converge.
+        inference : str,
+                    default --> 'mk' -> modified kosko; available options: 'k' -> Kosko, 'r' -> Rescale.
+                    Method of inference.
+                    
+        transfer : str,
+                    default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
+                    transfer function.
+        l : int,
+            A parameter that determines the steepness of the sigmoid and hyperbolic tangent function at values around 0. 
+        
+        thresh : float,
+                    default -->  0.001,
+                    a thershold for convergence of the values.
+        """
+
+
     def __init__(self, initial_state, weights, iterations = 50, inference = 'mk', 
                             transfer = 's', l = 1, thresh = 0.001):
         self.scenarios = {}
@@ -25,7 +53,7 @@ class FcmSimulator:
         ----------
         State : dict,
                         A dictionary of Concepts as keys and their states. ---> {'C1': 0.5, 'C2' : 0.4}.
-                        The states take only values in the range of [0,1] for the sigmoid transfer function and [0,1] for the hperbolic tangent.
+                        The states take only values in the range of [0,1] for the sigmoid transfer function and [-1,1] for the hperbolic tangent.
 
         weights : Data frame with the causal weights.
 
@@ -54,11 +82,11 @@ class FcmSimulator:
         results = pd.DataFrame(state, index=[0])
 
         step_count = 0
-        stop = thresh
+        residual = thresh
         state_vector = list(state.values())
         
         for i in range(iterations):
-            if (stop >= thresh):
+            if (residual >= thresh):
                 # Inference
                 if inference == 'mk':
                     res = weights.mul(state_vector, axis=0).sum()+state_vector
@@ -85,7 +113,7 @@ class FcmSimulator:
                 # update the step_count
                 step_count +=1
                 # compute the residuals between the steps.
-                stop = max(abs(results.loc[len(results)-1] - results.loc[len(results) - 2]))
+                residual = max(abs(results.loc[len(results)-1] - results.loc[len(results) - 2]))
                 
                 if step_count >= iterations:
                         warnings.warn('The values have not converged. More iterations are required!')
