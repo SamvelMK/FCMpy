@@ -85,7 +85,7 @@ class FcmSimulator:
         residual = thresh
         state_vector = list(state.values())
         
-        for i in range(iterations):
+        while step_count <= iterations:
             if (residual >= thresh):
                 # Inference
                 if inference == 'mk':
