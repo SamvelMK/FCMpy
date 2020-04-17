@@ -42,7 +42,7 @@ class FcmDataProcessor(FcmVisualize):
         
         if dtype.lower() == 'matrix':
             data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
-            consistency_check(data, 'Matrix') # if inconsistent then it will throu
+            consistency_check(data, 'Matrix') # if inconsistent then it will throw an error
             self.data = data
         else:
             data = pd.read_excel(file_name, sheet_name=None)
