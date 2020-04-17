@@ -54,6 +54,9 @@ class TestFcmSimulator(unittest.TestCase):
 
         equilibrium_mk = [0.7255749, 0.7905062, 0.7691449, 0.8121284, 0.8190922, 0.839738, 0.9098928, 0.9557094]
         eql_mk = self.sim.scenarios['mk'].loc[len(self.sim.scenarios['mk']) -1]
+        
+        # check if the test_scenario equilibrium = to the one implementde in R.
+        self.assertEqual(list(round(eql_mk, 7)), equilibrium_mk)
 
 if __name__ == '__main__':
     unittest.main()
