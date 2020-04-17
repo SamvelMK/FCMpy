@@ -1,27 +1,31 @@
 import pandas as pd
 import numpy as np
 from simulation_functions import *
+import warnings
 
 class FcmSimulator:
     
     def __init__(self, initial_state, weights, iterations = 50, inference = 'mk', 
-                            transform = 's', l = 1, thresh = 0.001):
+                            transfer = 's', l = 1, thresh = 0.001):
         self.scenarios = {}
         results = self.simulate(initial_state, weights, iterations, inference, 
-                                    transform, l, thresh)
+                                    transfer, l, thresh)
+        
+        # Finding the first fixed point with the initial state vector.
         self.scenarios['initial_state'] = results
         
         self.initial_equilibrium = results.loc[len(results) - 1]
-    def simulate(self, initial_state, weights, iterations = 50, inference = 'mk', 
-                 transform = 's', l = 1, thresh = 0.001):
+        
+    def simulate(self, state, weights, iterations = 50, inference = 'mk', 
+                 transfer = 's', l = 1, thresh = 0.001):
         
         """ Runs simulations over the passed FCM.
         
         Parameters
         ----------
-        initial_state : dict,
-                        A dictionary of Concepts as keys and their initial states. ---> {'C1': 0.5, 'C2' : 0.4}.
-                        The initial states take only values in the range of [-1,1].
+        State : dict,
+                        A dictionary of Concepts as keys and their states. ---> {'C1': 0.5, 'C2' : 0.4}.
+                        The states take only values in the range of [0,1] for the sigmoid transfer function and [0,1] for the hperbolic tangent.
 
         weights : Data frame with the causal weights.
 
@@ -31,7 +35,7 @@ class FcmSimulator:
                     default --> 'mk' -> modified kosko; available options: 'k' -> Kosko, 'r' -> Rescale.
                     Method of inference.
                     
-        transform : str,
+        transfer : str,
                     default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
                     transfer function.
         l : int,
@@ -47,43 +51,55 @@ class FcmSimulator:
             dataframe with the results of the simulation steps.
         """
 
-        results = pd.DataFrame(initial_state, index=[0])
+        results = pd.DataFrame(state, index=[0])
 
         step_count = 0
         stop = thresh
+        state_vector = list(state.values())
         
-        state_vector = list(initial_state.values())
-        
-        while stop >= thresh and step_count <= iterations:
-            if inference == 'mk':
-                res = weights.mul(state_vector, axis=0).sum()+state_vector
-            elif inference == 'k':
-                res = weights.mul(state_vector, axis=0).sum()
-            elif inference == 'r':
-                res = weights.mul(([2*i-1 for i in state_vector]), axis=0).sum()+([2*i-1 for i in state_vector]) 
-            if transform == 's':
-                state_vector = [sig(i, l) for i in res]
-            elif transform == 'h':
-                state_vector = [np.tanh(l * i) for i in res]
-            elif transform == 'b':
-                state_vector = [bi(i) for i in res]
-            elif transform == 't':
-                state_vector = [tri(i) for i in res]
-            else:
-                raise ValueError('Unrecognized transfer function!')
+        for i in range(iterations):
+            if (stop >= thresh):
+                # Inference
+                if inference == 'mk':
+                    res = weights.mul(state_vector, axis=0).sum()+state_vector
+                elif inference == 'k':
+                    res = weights.mul(state_vector, axis=0).sum()
+                elif inference == 'r':
+                    res = weights.mul(([2*i-1 for i in state_vector]), axis=0).sum()+([2*i-1 for i in state_vector])                
+                else:
+                    raise ValueError('Unrecognized inference method!')
+                # Apply the transfer function    
+                if transfer == 's':
+                    state_vector = [sig(i, l) for i in res]
+                elif transfer == 'h':
+                    state_vector = [np.tanh(l * i) for i in res]
+                elif transfer == 'b':
+                    state_vector = [bi(i) for i in res]
+                elif transfer == 't':
+                    state_vector = [tri(i) for i in res]
+                else:
+                    raise ValueError('Unrecognized transfer function!')
 
-            results.loc[len(results)] = state_vector
-            step_count +=1
-            stop = max(results.loc[len(results)-1] - results.loc[len(results) - 2])
-        print(f'The values converged in the {step_count+1} state (e <= {thresh})')
+                # Append the results
+                results.loc[len(results)] = state_vector
+                # update the step_count
+                step_count +=1
+                # compute the residuals between the steps.
+                stop = max(abs(results.loc[len(results)-1] - results.loc[len(results) - 2]))
+                
+                if step_count >= iterations:
+                        warnings.warn('The values have not converged. More iterations are required!')
+            else: # if the residual < threshold print the step and exit the loop.
+                print(f'The values converged in the {step_count+1} state (e <= {thresh})')
+                break
         return results
 
-    def scenario(self, scenario_name, state_vector, weights, iterations = 50, 
-                        inference = 'mk', transform = 's', l = 1, thresh = 0.001):
+    def test_scenario(self, scenario_name, state_vector, weights, iterations = 50, 
+                        inference = 'mk', transfer = 's', l = 1, thresh = 0.001):
 
         sv = self.initial_equilibrium.to_dict()
         sv.update(state_vector) # updated state vector
-        results = self.simulate(sv, weights, iterations = 50, inference = 'mk',
-                                 transform = 's', l = 1, thresh = 0.001)
+        results = self.simulate(sv, weights, iterations, inference,
+                                 transfer, l, thresh)
 
         self.scenarios[scenario_name] = results
