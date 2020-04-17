@@ -7,7 +7,6 @@ import unittest
 from fcmbci.simulator.simulator import FcmSimulator
 import pandas as pd 
 
-
 class TestFcmSimulator(unittest.TestCase):
     
     def setUp(self):
