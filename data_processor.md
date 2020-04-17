@@ -5,11 +5,11 @@
 <div align='justify'>
 
 Once the structure of the FCM is available, we proceed with the second model-building step in which we need to identify the value of each edge. This is often done by providing a questionnaire to participants (Gray, Hilsberg, McFall, & Arlinghaus, 2015; Firmansyah, Supangkat, Arman, & Giabbanelli, 2019; Giabbanelli & Crutzen, 2014; Giabbanelli, Torsney-Weir, & Mago, 2012), who occasionally consist of (or are supplemented by) researchers leading the study (Mago, et al., 2013; Papada, Katsoulakos, Doulos, Kaliampakos, & Damigos, 2019). 
-Then, a common practice consists of counting the fraction of respondents for each membership function (e.g. 3 out of 6 participants say “low”), clipping the function accordingly (i.e. truncate the triangle “low” after 3/6 of its height), and combining the functions and finding their center. We now detail this process on the example illustrated in Figure 1.
-
+Then, a common practice consists of counting the fraction of respondents for each membership function (e.g. 3 out of 6 participants say “low”), clipping the function accordingly (i.e. truncate the triangle “low” after 3/6 of its height), and combining the functions and finding their center. We now detail this process on the example illustrated in Figure 1. <br>
+<br>
 <img src="figures\figure_1.jpg" alt="figure not found" style="float: left; margin-right: 10px;" />
-<em>Figure 1:</em> Four steps process to obtain the quantitative value of an edge’s causal strength from the qualitative evaluation of a panel of participants.
-
+<em>Figure 1:</em> Four steps process to obtain the quantitative value of an edge’s causal strength from the qualitative evaluation of a panel of participants.<br>
+<br>
 First, a questionnaire is provided, which asks participant to choose one linguistic variable for each relation (or subset of relations with which the participant is familiar). For instance, participants must evaluate the perceived causal impact of “perceived norms about sex and condom use” onto “belief that condoms must be used during sexual intercourse”. Once participants have completed the evaluation, their answers are aggregated. Here, we consider 6 participants: three chose ‘Medium’, one chose ‘Strong’, and two chose ‘Very Strong’. Then, we can use fuzzy logic per se. We define a membership function for each linguistic variable, allowing for overlaps between functions. As shown with triangular membership functions in Figure 3, there is a small possibility that a participant saying “medium” may think the same as one stating “high”. Fuzzy implications are used to take each membership function to the extent in which it was endorsed by participants. For instance, if 3 out of 6 participants (i.e. half) stated “medium”, then we project from the y-axis at 0.5 onto the membership function and preserve only the part under 0.5. This defines an implication as the minimum of the function that is triggered. After each membership function has been dealt with, we combine them to represent the judgment from the collective of participants. The combination consists of aggregating the function (i.e. taking the maximum) and using the centroid as representative value. Finally, as exemplified in Figure 4, the centroid is projected onto the fuzzy range of [0, 1] to obtain the strength of causation.
 
 Although the fuzzy range produced by the process is always [0, 1], causal connections are not necessarily positive: there are also negative causations in which case some determinants decrease the value of others (Figure 3; red edges). The polarity of the causal connection is applied at the end of this process. For instance, the questionnaire in Figure 4 asked participants to predict the strength of the increase (Figure 1; Step 1) hence the value will be positive. Conversely, if participants had to predict the strength of the decrease, the result would be made negative (i.e. multiplied by -1). 
@@ -54,7 +54,9 @@ The read xlsx function takes the same argument as pd.read_excel function.
 
 ```
 read_xlsx(file_name, dtype)
-        
+
+Parameters
+----------        
 file_name : str, 
             ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
 
@@ -80,6 +82,8 @@ Automatically generates triangular membership functions based on the passed Ling
 automf(universe, 
             linguistic_terms = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH'])
 
+Parameters
+---------- 
 universe : 1d array,
                     The universe of discourse.
                     
@@ -87,17 +91,19 @@ linguistic_terms : lsit,
                     default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH']
                     Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         
-        Return
-        ---------
-        y : dict,
-            Generated membership functions. The key is the linguistic term and the value is a 1d array. 
+Return
+---------
+y : dict,
+    Generated membership functions. The key is the linguistic term and the value is a 1d array. 
 ```
+
 The function returns a dictionary with the linguistic terms as the keys and the corresponding numerical intervals (in 1d arrays) as the values.
 
 Example:
 
 ```
 import numpy as np
+
 universe = np.arange(-1, 1.001, 0.001)
 lt = automf(universe, ['-VH', '-H', '-M', '-L', 'L', 'M', 'H', 'VH'])
 ```
@@ -111,7 +117,7 @@ Output:
 You can visualize this with the mf_view() method.
 
 <img src="figures\figure_3.png" alt="figure not found" style="float: left; margin-right: 10px;" />
-<em>Figure 3:</em> Automatically generated triangular embership function.
+<em>Figure 3:</em> Automatically generated triangular membership function.
 
 </div>
 
