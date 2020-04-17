@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from simulation_functions import *
+from fcmbci.simulator.simulation_functions import *
 import warnings
 
 class FcmSimulator:
@@ -116,7 +116,7 @@ class FcmSimulator:
                 residual = max(abs(results.loc[len(results)-1] - results.loc[len(results) - 2]))
                 
                 if step_count >= iterations:
-                        warnings.warn('The values have not converged. More iterations are required!')
+                        warnings.warn("The values didn't converged. More iterations are required!")
             else: # if the residual < threshold print the step and exit the loop.
                 print(f'The values converged in the {step_count+1} state (e <= {thresh})')
                 break
