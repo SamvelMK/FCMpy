@@ -65,10 +65,10 @@ dtype : str,
 ```
 However, the data that it expects should be in a specific shape. In the current version, the function can take either matrix-like or edge list formats.
 
-<img src="figures\figure_2.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_2.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 2:</em> Matrix like format. <br>
 <br>
-<img src="figures\figure_2_1.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_2_1.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 2.1:</em> Matrix like format.
 
 Example:
@@ -187,7 +187,7 @@ Output:
 
 You can visualize this with the mf_view() method.
 
-<img src="figures\figure_3.png" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_3.png" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 3:</em> Automatically generated triangular membership function.
 
 </div>
@@ -236,7 +236,7 @@ Essentially, the values in the activation input determine the point at which the
 ```
 fcm.mf_view(act)
 ```
-<img src="figures\figure_4.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_4.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 4:</em> The activated membership function.
 
 </div>
@@ -279,7 +279,7 @@ plt.show()
 ```
 
 
-<img src="figures\figure_5.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_5.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 5:</em> The aggregated membership function.
 
 </div>
@@ -354,7 +354,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="figures\figure_6.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_6.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 6:</em> Derived edge weight (defuzzification).
 
 </div>
@@ -409,7 +409,7 @@ One can inspect the frequency of the raitings each linguistic term for a given p
 ```
 fcm.term_freq_hist('C1', 'C2')
 ```
-<img src="figures\figure_7.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_7.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 7:</em> Expert's raitings of causal trength between C1 and C2.
 
 One can also visually inspect the deffuzification of the activated membership functions between a pair of concepts with the defuzz_view() method.
@@ -418,7 +418,7 @@ One can also visually inspect the deffuzification of the activated membership fu
 fcm.defuzz_view('C1', 'C2')
 ```
 
-<img src="figures\figure_8.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_8.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
 <em>Figure 8:</em> Deffuzification of the aggregated membership functions of concepts C1 and C2.
 
 </div>
