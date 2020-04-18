@@ -84,54 +84,54 @@ fcm.data
 ```
 ```
 Output1:
-OrderedDict([('Expert_1',             C1    C2  C3    C4
-                                C1    NaN  "VH" NaN  NaN
-                                C2  "-VH"   NaN NaN  NaN
-                                C3   "VH"   NaN NaN  "L"
-                                C4    NaN   NaN NaN  NaN), 
-('Expert_2',                          C1    C2  C3   C4
-                                C1    NaN  "VH" NaN  NaN
-                                C2  "-VH"   NaN NaN  NaN
-                                C3    "M"   NaN NaN  "L"
-                                C4    NaN   NaN NaN  NaN),
+OrderedDict([('Expert_1',         C1    C2  C3   C4
+                            C1    NaN  "VH" NaN  NaN
+                            C2  "-VH"   NaN NaN  NaN
+                            C3   "VH"   NaN NaN  "L"
+                            C4    NaN   NaN NaN  NaN), 
+              
+              ('Expert_2',        C1    C2  C3   C4
+                            C1    NaN  "VH" NaN  NaN
+                            C2  "-VH"   NaN NaN  NaN
+                            C3    "M"   NaN NaN  "L"
 ```
 ```
 Output2:
 
-OrderedDict([('Expert_1',      From  To  VL    L   M   H   VH
-                            0    C1  C1 NaN  NaN NaN NaN  NaN
-                            1    C1  C2 NaN  NaN NaN NaN -1.0
-                            2    C1  C3 NaN  NaN NaN NaN  NaN
-                            3    C1  C4 NaN  NaN NaN NaN  NaN
-                            4    C2  C1 NaN  NaN NaN NaN  1.0
-                            5    C2  C2 NaN  NaN NaN NaN  NaN
-                            6    C2  C3 NaN  NaN NaN NaN  NaN
-                            7    C2  C4 NaN  NaN NaN NaN  NaN
-                            8    C3  C1 NaN  NaN NaN NaN  1.0
-                            9    C3  C2 NaN  NaN NaN NaN  NaN
-                            10   C3  C3 NaN  NaN NaN NaN  NaN
-                            11   C3  C4 NaN  1.0 NaN NaN  NaN
-                            12   C4  C1 NaN  NaN NaN NaN  NaN
-                            13   C4  C2 NaN  NaN NaN NaN  NaN
-                            14   C4  C3 NaN  NaN NaN NaN  NaN
-                            15   C4  C4 NaN  NaN NaN NaN  NaN), 
-('Expert_2',                   From  To  VL    L    M   H   VH
-                            0    C1  C1 NaN  NaN  NaN NaN  NaN
-                            1    C1  C2 NaN  NaN  NaN NaN -1.0
-                            2    C1  C3 NaN  NaN  NaN NaN  NaN
-                            3    C1  C4 NaN  NaN  NaN NaN  NaN
-                            4    C2  C1 NaN  NaN  NaN NaN  1.0
-                            5    C2  C2 NaN  NaN  NaN NaN  NaN
-                            6    C2  C3 NaN  NaN  NaN NaN  NaN
-                            7    C2  C4 NaN  NaN  NaN NaN  NaN
-                            8    C3  C1 NaN  NaN  1.0 NaN  NaN
-                            9    C3  C2 NaN  NaN  NaN NaN  NaN
-                            10   C3  C3 NaN  NaN  NaN NaN  NaN
-                            11   C3  C4 NaN  1.0  NaN NaN  NaN
-                            12   C4  C1 NaN  NaN  NaN NaN  NaN
-                            13   C4  C2 NaN  NaN  NaN NaN  NaN
-                            14   C4  C3 NaN  NaN  NaN NaN  NaN
-                            15   C4  C4 NaN  NaN  NaN NaN  NaN),
+OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
+                              0    C1  C1 NaN  NaN NaN NaN  NaN
+                              1    C1  C2 NaN  NaN NaN NaN -1.0
+                              2    C1  C3 NaN  NaN NaN NaN  NaN
+                              3    C1  C4 NaN  NaN NaN NaN  NaN
+                              4    C2  C1 NaN  NaN NaN NaN  1.0
+                              5    C2  C2 NaN  NaN NaN NaN  NaN
+                              6    C2  C3 NaN  NaN NaN NaN  NaN
+                              7    C2  C4 NaN  NaN NaN NaN  NaN
+                              8    C3  C1 NaN  NaN NaN NaN  1.0
+                              9    C3  C2 NaN  NaN NaN NaN  NaN
+                              10   C3  C3 NaN  NaN NaN NaN  NaN
+                              11   C3  C4 NaN  1.0 NaN NaN  NaN
+                              12   C4  C1 NaN  NaN NaN NaN  NaN
+                              13   C4  C2 NaN  NaN NaN NaN  NaN
+                              14   C4  C3 NaN  NaN NaN NaN  NaN
+                              15   C4  C4 NaN  NaN NaN NaN  NaN),
+             ('Expert_2',    From  To  VL    L    M   H   VH
+                              0    C1  C1 NaN  NaN  NaN NaN  NaN
+                              1    C1  C2 NaN  NaN  NaN NaN -1.0
+                              2    C1  C3 NaN  NaN  NaN NaN  NaN
+                              3    C1  C4 NaN  NaN  NaN NaN  NaN
+                              4    C2  C1 NaN  NaN  NaN NaN  1.0
+                              5    C2  C2 NaN  NaN  NaN NaN  NaN
+                              6    C2  C3 NaN  NaN  NaN NaN  NaN
+                              7    C2  C4 NaN  NaN  NaN NaN  NaN
+                              8    C3  C1 NaN  NaN  1.0 NaN  NaN
+                              9    C3  C2 NaN  NaN  NaN NaN  NaN
+                              10   C3  C3 NaN  NaN  NaN NaN  NaN
+                              11   C3  C4 NaN  1.0  NaN NaN  NaN
+                              12   C4  C1 NaN  NaN  NaN NaN  NaN
+                              13   C4  C2 NaN  NaN  NaN NaN  NaN
+                              14   C4  C3 NaN  NaN  NaN NaN  NaN
+                              15   C4  C4 NaN  NaN  NaN NaN  NaN),
 ```
 The read_xlsx function stores the data in an ordered dictionary where <em>keys</em> are the experts (the names of the excel sheets) and the <em>values</em> are the expert inputs.
 
@@ -174,8 +174,15 @@ mf = fcm.automf(universe, ['-VH', '-H', '-M', '-L', 'L', 'M', 'H', 'VH'])
 ```
 Output:
 
-{'-VH': array([1.   , 0.997, 0.994, ..., 0.   , 0.   , 0.   ]), '-H': array([0.001, 0.004, 0.007, ..., 0.   , 0.   , 0.   ]), '-M': array([0., 0., 0., ..., 0., 0., 0.]), '-L': array([0., 0., 0., ..., 0., 0., 0.]), 'L': array([0., 0., 0., ..., 0., 0., 0.]), 'M': array([0., 0., 0., ..., 0., 0., 0.]), 'H': array([0.   , 0.   , 
-0.   , ..., 0.007, 0.004, 0.001]), 'VH': array([0.   , 0.   , 0.   , ..., 0.994, 0.997, 1.   ])}
+{'-VH': array([1.   , 0.997, 0.994, ..., 0.   , 0.   , 0.   ]),
+ '-H': array([0.001, 0.004, 0.007, ..., 0.   , 0.   , 0.   ]),
+ '-M': array([0., 0., 0., ..., 0., 0., 0.]),
+ '-L': array([0., 0., 0., ..., 0., 0., 0.]),
+ 'L': array([0., 0., 0., ..., 0., 0., 0.]),
+ 'M': array([0., 0., 0., ..., 0., 0., 0.]),
+ 'H': array([0.   , 0.   , 0.   , ..., 0.007, 0.004, 0.001]),
+ 'VH': array([0.   , 0.   , 0.   , ..., 0.994, 0.997, 1.   ])}
+ 
 ```
 
 You can visualize this with the mf_view() method.
@@ -220,12 +227,14 @@ act = fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, mf)
 ```
 Output:
 
-{'M': array([0., 0., 0., ..., 0., 0., 0.]), 'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]), 'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
+{'M': array([0., 0., 0., ..., 0., 0., 0.]),
+'H': array([0.   , 0.   , 0.   , ..., 0.007, 0.004, 0.001]),
+'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
 ```
 Essentially, the values in the activation input determine the point at which the membership function of each linguistic term is going to be cut. You can visualize it with the fcm.mf_view() method (Figure 4). 
 
 ```
-fcmbci.mf_view(act)
+fcm.mf_view(act)
 ```
 <img src="figures\figure_4.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
 <em>Figure 4:</em> The activated membership function.
@@ -249,6 +258,27 @@ Return
 y : 1d array,
         Aggregated membership function.
 ```
+You can visualize it as follows:
+
+```
+import matplotlib.pyplot as plt
+
+fig = plt.figure(figsize= (10, 5))
+axes = plt.axes()
+axes.plot(fcmbci.universe, aggr, linewidth=0.4)
+axes.fill_between(fcmbci.universe, aggr, alpha=0.5)
+
+        
+axes.spines['top'].set_visible(False)
+axes.spines['right'].set_visible(False)
+axes.get_xaxis().tick_bottom()
+axes.get_yaxis().tick_left()
+
+plt.tight_layout()
+plt.show()
+```
+
+
 <img src="figures\figure_5.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
 <em>Figure 5:</em> The aggregated membership function.
 
@@ -292,6 +322,7 @@ Output:
 This can be visualized as follows (The code is adjusted from skit-fuzzy tutorial):
 
 ```
+import matplotlib.pyplot as plt
 import skfuzzy as fuzz
 
 fig = plt.figure(figsize=(10, 5))
@@ -328,21 +359,68 @@ plt.show()
 
 </div>
 
-## gen_weights_mat()
+## gen_weights_mat(), gen_weights_list()
 <div align='justify'>
 
+The methods described above are wrapped in gen_weights_mat() and gen_weights_list() methods to allow for automatic generation of weight matrices based on qualitative inputs. One can either pass the data to the method, or the data can be taken from the constructor. 
+```
 gen_weights_mat(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                     method = 'centroid')
-</div>
-
-## gen_weights_list()
-
-<div align='justify'>
-
+```
+```
 gen_weights_list(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
-                    method = 'centroid') 
+                    method = 'centroid')
+
+```
+Example:
+
+```
+Read in the data from matrix
+fcm = FcmDataProcessor()
+fcm.read_xlsx('sample.xlsx', 'Matrix')
+
+Read in the data from list
+fcml = FcmDataProcessor()
+fcm.read_xlsx('sample.xlsx', 'List')
+```
+```
+fcm.gen_weights_mat()
+fcml.gen_weights_list()
+```
+
+The weight matrix can be inspected as follows:
+
+```
+fcm.causal_weights
+```
+```
+Output:
+
+            C1        C2    C3        C4
+    C1  0.000000 -0.702205   0  0.000000
+    C2  0.610698  0.000000   0  0.000000
+    C3  0.556908  0.000000   0  0.230423
+    C4  0.000000  0.000000   0  0.000000
+```
+One can inspect the frequency of the raitings each linguistic term for a given pair of concepts with the term_freq_hist() method.
+
+```
+fcm.term_freq_hist('C1', 'C2')
+```
+<img src="figures\figure_7.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<em>Figure 7:</em> Expert's raitings of causal trength between C1 and C2.
+
+One can also visually inspect the deffuzification of the activated membership functions between a pair of concepts with the defuzz_view() method.
+
+```
+fcm.defuzz_view('C1', 'C2')
+```
+
+<img src="figures\figure_8.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<em>Figure 8:</em> Deffuzification of the aggregated membership functions of concepts C1 and C2.
+
 </div>
 
 ## create_system()
