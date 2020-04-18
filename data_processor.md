@@ -71,6 +71,70 @@ However, the data that it expects should be in a specific shape. In the current 
 <img src="figures\figure_2_1.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
 <em>Figure 2.1:</em> Matrix like format.
 
+Example:
+
+```
+fcm.read_xlsx('sample.xlsx', 'Matrix')
+fcm.read_xlsx('list_format.xlsx', 'List')
+```
+The data is read into the constructor and can be accessed in the following way:
+
+```
+fcm.data
+```
+```
+Output1:
+OrderedDict([('Expert_1',             C1    C2  C3    C4
+                                C1    NaN  "VH" NaN  NaN
+                                C2  "-VH"   NaN NaN  NaN
+                                C3   "VH"   NaN NaN  "L"
+                                C4    NaN   NaN NaN  NaN), 
+('Expert_2',                          C1    C2  C3   C4
+                                C1    NaN  "VH" NaN  NaN
+                                C2  "-VH"   NaN NaN  NaN
+                                C3    "M"   NaN NaN  "L"
+                                C4    NaN   NaN NaN  NaN),
+```
+```
+Output2:
+
+OrderedDict([('Expert_1',      From  To  VL    L   M   H   VH
+                            0    C1  C1 NaN  NaN NaN NaN  NaN
+                            1    C1  C2 NaN  NaN NaN NaN -1.0
+                            2    C1  C3 NaN  NaN NaN NaN  NaN
+                            3    C1  C4 NaN  NaN NaN NaN  NaN
+                            4    C2  C1 NaN  NaN NaN NaN  1.0
+                            5    C2  C2 NaN  NaN NaN NaN  NaN
+                            6    C2  C3 NaN  NaN NaN NaN  NaN
+                            7    C2  C4 NaN  NaN NaN NaN  NaN
+                            8    C3  C1 NaN  NaN NaN NaN  1.0
+                            9    C3  C2 NaN  NaN NaN NaN  NaN
+                            10   C3  C3 NaN  NaN NaN NaN  NaN
+                            11   C3  C4 NaN  1.0 NaN NaN  NaN
+                            12   C4  C1 NaN  NaN NaN NaN  NaN
+                            13   C4  C2 NaN  NaN NaN NaN  NaN
+                            14   C4  C3 NaN  NaN NaN NaN  NaN
+                            15   C4  C4 NaN  NaN NaN NaN  NaN), 
+('Expert_2',                   From  To  VL    L    M   H   VH
+                            0    C1  C1 NaN  NaN  NaN NaN  NaN
+                            1    C1  C2 NaN  NaN  NaN NaN -1.0
+                            2    C1  C3 NaN  NaN  NaN NaN  NaN
+                            3    C1  C4 NaN  NaN  NaN NaN  NaN
+                            4    C2  C1 NaN  NaN  NaN NaN  1.0
+                            5    C2  C2 NaN  NaN  NaN NaN  NaN
+                            6    C2  C3 NaN  NaN  NaN NaN  NaN
+                            7    C2  C4 NaN  NaN  NaN NaN  NaN
+                            8    C3  C1 NaN  NaN  1.0 NaN  NaN
+                            9    C3  C2 NaN  NaN  NaN NaN  NaN
+                            10   C3  C3 NaN  NaN  NaN NaN  NaN
+                            11   C3  C4 NaN  1.0  NaN NaN  NaN
+                            12   C4  C1 NaN  NaN  NaN NaN  NaN
+                            13   C4  C2 NaN  NaN  NaN NaN  NaN
+                            14   C4  C3 NaN  NaN  NaN NaN  NaN
+                            15   C4  C4 NaN  NaN  NaN NaN  NaN),
+```
+The read_xlsx function returns an ordered dictionary where keys are the experts (the names of the excel sheets) and the values are the expert inputs.
+
 </div>
 
 ## automf()
