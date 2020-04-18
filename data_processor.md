@@ -133,7 +133,7 @@ OrderedDict([('Expert_1',      From  To  VL    L   M   H   VH
                             14   C4  C3 NaN  NaN  NaN NaN  NaN
                             15   C4  C4 NaN  NaN  NaN NaN  NaN),
 ```
-The read_xlsx function returns an ordered dictionary where keys are the experts (the names of the excel sheets) and the values are the expert inputs.
+The read_xlsx function stores the data in an ordered dictionary where <em>keys</em> are the experts (the names of the excel sheets) and the <em>values</em> are the expert inputs.
 
 </div>
 
@@ -169,7 +169,7 @@ Example:
 import numpy as np
 
 universe = np.arange(-1, 1.001, 0.001)
-lt = automf(universe, ['-VH', '-H', '-M', '-L', 'L', 'M', 'H', 'VH'])
+mf = fcm.automf(universe, ['-VH', '-H', '-M', '-L', 'L', 'M', 'H', 'VH'])
 ```
 ```
 Output:
@@ -186,23 +186,167 @@ You can visualize this with the mf_view() method.
 </div>
 
 ## activate()
+<div align='justify'>
+
+Activate the specified membership function based on the passed parameters.
+
+```
 activate(activation_input, mf)
 
+Parameters
+----------
+activation_input : dict,
+                    Membership function to apply the implication operation, 
+                    where the key is the linguistic term and the value is the frequency its occurence .
+                    Example: parameters = {'H': 0.66, 'VH': 0.33}
+mf : dict,
+        membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
+        and the value is a 1d array with the membership values.
+        
+Return
+---------
+y : dict,
+        Activated membership functions, where the key is the linguistic term and 
+        the value is a 1d array with the activated membership values. 
+```
+To activate the membership functions we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurance. As in the example presented in the background section, let's suppose that 1/6 experts expressed the causality between a given pair of concepts as Medium, 3/6 experts expressed it as High and 2/6 expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
+The function returns a dictionary with the activated membership function.
+
+```
+Example:
+    
+act = fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, mf)
+```
+```
+Output:
+
+{'M': array([0., 0., 0., ..., 0., 0., 0.]), 'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]), 'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
+```
+Essentially, the values in the activation input determine the point at which the membership function of each linguistic term is going to be cut. You can visualize it with the fcm.mf_view() method (Figure 4). 
+
+```
+fcmbci.mf_view(act)
+```
+<img src="figures\figure_4.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<em>Figure 4:</em> The activated membership function.
+
+</div>
+
 ## aggregate()
+<div align='justify'>
+Now that we have activated the respective membership functions, we need to aggregate them before we can derive the precise causal weight through the difuzzification process.
+
+```
 aggregate(activated)
 
+Parameters
+----------
+activated : dict,
+                A dictionary with the activated membership values to be aggregated.
+        
+Return
+---------
+y : 1d array,
+        Aggregated membership function.
+```
+<img src="figures\figure_5.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<em>Figure 5:</em> The aggregated membership function.
+
+</div>
+
 ## defuzzify()
+<div align='justify'>
+
+After aggregating the activated membership functions we can derive derive the causal weight between the given two concepts. The defuzzify() method uses the defuzz() method from python scikit-fuzzy module. 
+
+```
 defuzzify(universe, aggregated, method = 'centroid')
 
+Parameters
+----------
+universe : 1d array,
+            The universe of discourse.
+
+aggregated : 1d array,
+                Aggregated membership function to be defuzzified.
+method : str, 
+            Defuzzification method, default --> 'centroid'. 
+            For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
+        
+Return
+---------
+y : int,
+    Defuzzified value.
+```
+
+Example:
+
+```
+defuzz = fcm.defuzzify(universe, aggr)
+```
+```
+Output:
+
+0.605184314701856
+```
+This can be visualized as follows (The code is adjusted from skit-fuzzy tutorial):
+
+```
+import skfuzzy as fuzz
+
+fig = plt.figure(figsize=(10, 5))
+axes = plt.axes()
+legend_anchor=(0.95, 0.6)
+        
+y_activation = fuzz.interp_membership(universe, aggr, defuzz)  # for plot
+out = np.zeros_like(universe) 
+
+for i in mf:
+    axes.plot(universe, mf[i], linewidth=0.3, label=str(i)) # plots all the mfs. 
+    axes.fill_between(universe, mf[i], alpha=0.4)
+                
+    axes.fill_between(universe, out, 
+                             aggr, facecolor='#36568B', alpha=1)
+            
+    axes.plot([defuzz, defuzz], [0, y_activation], 'k', linewidth=1.5, alpha=1)
+
+    axes.legend(bbox_to_anchor=legend_anchor)
+    axes.text(defuzz-0.05, y_activation+0.02, f'{round(defuzz, 2)}',
+                     bbox=dict(facecolor='red', alpha=0.1))
+            
+axes.spines['top'].set_visible(False)
+axes.spines['right'].set_visible(False)
+axes.get_xaxis().tick_bottom()
+axes.get_yaxis().tick_left()
+
+plt.tight_layout()
+plt.show()
+```
+
+<img src="figures\figure_6.PNG" alt="figure not found" style="float: left; margin-right: 10px;" />
+<em>Figure 6:</em> Derived edge weight (defuzzification).
+
+</div>
+
 ## gen_weights_mat()
+<div align='justify'>
+
 gen_weights_mat(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                     method = 'centroid')
+</div>
 
 ## gen_weights_list()
+
+<div align='justify'>
+
 gen_weights_list(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                     method = 'centroid') 
+</div>
 
 ## create_system()
+<div align='justify'>
+
 create_system(causal_weights = None)
+</div>
