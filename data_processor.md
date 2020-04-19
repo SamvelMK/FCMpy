@@ -7,7 +7,7 @@
 Once the structure of the FCM is available, we proceed with the second model-building step in which we need to identify the value of each edge. This is often done by providing a questionnaire to participants (Gray, Hilsberg, McFall, & Arlinghaus, 2015; Firmansyah, Supangkat, Arman, & Giabbanelli, 2019; Giabbanelli & Crutzen, 2014; Giabbanelli, Torsney-Weir, & Mago, 2012), who occasionally consist of (or are supplemented by) researchers leading the study (Mago, et al., 2013; Papada, Katsoulakos, Doulos, Kaliampakos, & Damigos, 2019). 
 Then, a common practice consists of counting the fraction of respondents for each membership function (e.g. 3 out of 6 participants say “low”), clipping the function accordingly (i.e. truncate the triangle “low” after 3/6 of its height), and combining the functions and finding their center. We now detail this process on the example illustrated in Figure 1. <br>
 <br>
-<img src="figures\figure_1.jpg" alt="figure not found" style="float: left; margin-right: 10px;" />
+<img src="figures\figure_1.jpg" alt="figure not found" style="float: center; margin-right: 10px;" />
 <em>Figure 1:</em> Four steps process to obtain the quantitative value of an edge’s causal strength from the qualitative evaluation of a panel of participants.<br>
 <br>
 First, a questionnaire is provided, which asks participant to choose one linguistic variable for each relation (or subset of relations with which the participant is familiar). For instance, participants must evaluate the perceived causal impact of “perceived norms about sex and condom use” onto “belief that condoms must be used during sexual intercourse”. Once participants have completed the evaluation, their answers are aggregated. Here, we consider 6 participants: three chose ‘Medium’, one chose ‘Strong’, and two chose ‘Very Strong’. Then, we can use fuzzy logic per se. We define a membership function for each linguistic variable, allowing for overlaps between functions. As shown with triangular membership functions in Figure 3, there is a small possibility that a participant saying “medium” may think the same as one stating “high”. Fuzzy implications are used to take each membership function to the extent in which it was endorsed by participants. For instance, if 3 out of 6 participants (i.e. half) stated “medium”, then we project from the y-axis at 0.5 onto the membership function and preserve only the part under 0.5. This defines an implication as the minimum of the function that is triggered. After each membership function has been dealt with, we combine them to represent the judgment from the collective of participants. The combination consists of aggregating the function (i.e. taking the maximum) and using the centroid as representative value. Finally, as exemplified in Figure 4, the centroid is projected onto the fuzzy range of [0, 1] to obtain the strength of causation.
@@ -65,10 +65,10 @@ dtype : str,
 ```
 However, the data that it expects should be in a specific shape. In the current version, the function can take either matrix-like or edge list formats.
 
-<img src="figures\figure_2.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_2.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 2:</em> Matrix like format. <br>
 <br>
-<img src="figures\figure_2_1.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_2_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 2.1:</em> Matrix like format.
 
 Example:
@@ -169,25 +169,28 @@ Example:
 import numpy as np
 
 universe = np.arange(-1, 1.001, 0.001)
-mf = fcm.automf(universe, ['-VH', '-H', '-M', '-L', 'L', 'M', 'H', 'VH'])
+mf = fcm.automf(universe, ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH'])
+
 ```
 ```
 Output:
 
-{'-VH': array([1.   , 0.997, 0.994, ..., 0.   , 0.   , 0.   ]),
- '-H': array([0.001, 0.004, 0.007, ..., 0.   , 0.   , 0.   ]),
+{'-VH': array([1.   , 0.996, 0.992, ..., 0.   , 0.   , 0.   ]),
+ '-H': array([0.001, 0.005, 0.009, ..., 0.   , 0.   , 0.   ]),
  '-M': array([0., 0., 0., ..., 0., 0., 0.]),
  '-L': array([0., 0., 0., ..., 0., 0., 0.]),
+ '-VL': array([0., 0., 0., ..., 0., 0., 0.]),
+ 'VL': array([0., 0., 0., ..., 0., 0., 0.]),
  'L': array([0., 0., 0., ..., 0., 0., 0.]),
  'M': array([0., 0., 0., ..., 0., 0., 0.]),
- 'H': array([0.   , 0.   , 0.   , ..., 0.007, 0.004, 0.001]),
- 'VH': array([0.   , 0.   , 0.   , ..., 0.994, 0.997, 1.   ])}
+ 'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]),
+ 'VH': array([0.   , 0.   , 0.   , ..., 0.992, 0.996, 1.   ])}
  
 ```
 
 You can visualize this with the mf_view() method.
 
-<img src="figures\figure_3.png" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_3.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 3:</em> Automatically generated triangular membership function.
 
 </div>
@@ -228,15 +231,15 @@ act = fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, mf)
 Output:
 
 {'M': array([0., 0., 0., ..., 0., 0., 0.]),
-'H': array([0.   , 0.   , 0.   , ..., 0.007, 0.004, 0.001]),
-'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
+ 'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]),
+ 'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
 ```
 Essentially, the values in the activation input determine the point at which the membership function of each linguistic term is going to be cut. You can visualize it with the fcm.mf_view() method (Figure 4). 
 
 ```
 fcm.mf_view(act)
 ```
-<img src="figures\figure_4.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_4.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 4:</em> The activated membership function.
 
 </div>
@@ -258,6 +261,12 @@ Return
 y : 1d array,
         Aggregated membership function.
 ```
+Example:
+
+```
+aggr = fcm.aggregate(act)
+```
+
 You can visualize it as follows:
 
 ```
@@ -279,7 +288,7 @@ plt.show()
 ```
 
 
-<img src="figures\figure_5.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_5.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 5:</em> The aggregated membership function.
 
 </div>
@@ -317,7 +326,7 @@ defuzz = fcm.defuzzify(universe, aggr)
 ```
 Output:
 
-0.605184314701856
+0.703888431055232
 ```
 This can be visualized as follows (The code is adjusted from skit-fuzzy tutorial):
 
@@ -354,7 +363,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="figures\figure_6.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_6.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 6:</em> Derived edge weight (defuzzification).
 
 </div>
@@ -398,18 +407,18 @@ fcm.causal_weights
 ```
 Output:
 
-            C1        C2    C3        C4
-    C1  0.000000 -0.702205   0  0.000000
-    C2  0.610698  0.000000   0  0.000000
-    C3  0.556908  0.000000   0  0.230423
-    C4  0.000000  0.000000   0  0.000000
+        C1        C2    C3      C4
+C1  0.000000  0.702205   0  0.000000
+C2 -0.610698  0.000000   0  0.000000
+C3  0.556908  0.000000   0  0.230423
+C4  0.000000  0.000000   0  0.000000
 ```
 One can inspect the frequency of the raitings each linguistic term for a given pair of concepts with the term_freq_hist() method.
 
 ```
 fcm.term_freq_hist('C1', 'C2')
 ```
-<img src="figures\figure_7.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_7.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 7:</em> Expert's raitings of causal trength between C1 and C2.
 
 One can also visually inspect the deffuzification of the activated membership functions between a pair of concepts with the defuzz_view() method.
@@ -418,7 +427,7 @@ One can also visually inspect the deffuzification of the activated membership fu
 fcm.defuzz_view('C1', 'C2')
 ```
 
-<img src="figures\figure_8.PNG" alt="figure not found" style="float: left; margin-right: 10px;" /><br>
+<img src="figures\figure_8.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 8:</em> Deffuzification of the aggregated membership functions of concepts C1 and C2.
 
 </div>
