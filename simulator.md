@@ -62,6 +62,74 @@ Note that a (transfer) function f is applied to the result. As shown in equation
 
 </div>
 
+<div align = justify>
+
+The FcmSimulator module includes methods for runing simulations on an FCM and testing what-if scenarios. In the current version, it includes two methods: [simulate()](#simulate) and [test_scenario()](#test_scenario).
+
+## simulate()
+
+The simulate method allows one to run simulations independently. The method takes two parameters state and weights. The state is the initial state vector of the concepts in the FCM and the weights is the matrix with the edge weights. The optional arguments include the iteration steps, inference method, transfer function, lambda parameter and the threshold parameter.  
+
+```
+simulate(state, weights, iterations = 50, inference = 'mk', 
+                 transfer = 's', l = 1, thresh = 0.001)
+
+Parameters
+----------
+State : dict,
+            A dictionary of Concepts as keys and their states. ---> {'C1': 0.5, 'C2' : 0.4}.
+            The states take only values in the range of [0,1] for the sigmoid transfer function and [-1,1] for the hperbolic tangent.
+
+weights : Data frame with the causal weights.
+
+iterations : int,
+                Number of itterations to run in case if the system doesn't converge.
+inference : str,
+            default --> 'mk' -> modified kosko; available options: 'k' -> Kosko, 'r' -> Rescale.
+            Method of inference.
+                    
+transfer : str,
+            default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
+            transfer function.
+l : int,
+    A parameter that determines the steepness of the sigmoid and hyperbolic tangent function at values around 0. 
+        
+thresh : float,
+            default -->  0.001,
+            a thershold for convergence of the values.
+
+Return
+----------
+y : dataframe,
+    dataframe with the results of the simulation steps.
+
+```
+
+Example:
+
+In the example below we first define the weight matrix, the state vector and then use the simulate method to run the simulation. The example is taken from fcm package in r by Dikopoulou and Papageorgiou. 
+
+```
+C1 = [0.0, 0.0, 0.6, 0.9, 0.0, 0.0, 0.0, 0.8]
+C2 = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.5]
+C3 = [0.0, 0.7, 0.0, 0.0, 0.9, 0.0, 0.4, 0.1]
+C4 = [0.4, 0.0, 0.0, 0.0, 0.0, 0.9, 0.0, 0.0]
+C5 = [0.0, 0.0, 0.0, 0.0, 0.0, -0.9, 0.0, 0.3]
+C6 = [-0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+C7 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.4, 0.9]
+C8 =[0.1, 0.0, 0.0, 0.0, 0.0, 0.1, 0.6, 0.0]
+
+weights = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
+                    columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
+
+state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
+                        'C6': 0, 'C7': 0, 'C8': 0}
+
+sim = FcmSimulator()
+
+res = sim.simulate(state, weights, inference = 'mk')
+```
+
 </div>
 
 
