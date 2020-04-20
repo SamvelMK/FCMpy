@@ -15,7 +15,7 @@ class FcmVisualize:
     Visualize different components of an FCM.
     """
 
-    def __init__(self, fcmdata=None):
+    def __init__(self, fcmdata):
         self.fcmdata = fcmdata
     
     def mf_view(self,
