@@ -14,7 +14,7 @@ Kosko (Stach et al., 2010):
 Modified Kosko (Papageorgiou, 2011):
 <div class=container, align=center>
 
-![\mathbf{d}_i^{s+1} = f(\sum_{j=1} \mathbf{d}_j^s * \mathbf{C}_{ij})\\](https://render.githubusercontent.com/render/math?math=%5Cmathbf%7Bd%7D_i%5E%7Bs%2B1%7D%20%3D%20f(%5Csum_%7Bj%3D1%7D%20%5Cmathbf%7Bd%7D_j%5Es%20*%20%5Cmathbf%7BC%7D_%7Bij%7D)%5C%5C)
+![\mathbf{d}_i^{s+1}= f(\mathbf{d}_i+\sum_{j=1} \mathbf{d}_j^s * \mathbf{C}_{ij})\\](https://render.githubusercontent.com/render/math?math=%5Cmathbf%7Bd%7D_i%5E%7Bs%2B1%7D%3D%20f(%5Cmathbf%7Bd%7D_i%2B%5Csum_%7Bj%3D1%7D%20%5Cmathbf%7Bd%7D_j%5Es%20*%20%5Cmathbf%7BC%7D_%7Bij%7D)%5C%5C)
 
 </div>
 
