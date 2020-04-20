@@ -455,7 +455,7 @@ Example:
 vis = FcmVisualize(fcm)
 ```
 
-One can inspect the frequency of the raitings each linguistic term for a given pair of concepts with the term_freq_hist() method.
+One can inspect the frequency of the raitings of each linguistic term for a given pair of concepts with the term_freq_hist() method.
 
 ```
 vis.term_freq_hist('C1', 'C2')
