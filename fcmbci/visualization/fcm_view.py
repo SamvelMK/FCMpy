@@ -14,11 +14,17 @@ class FcmVisualize:
     """
     Visualize different components of an FCM.
     """
+
+    def __init__(self, fcmdata=None):
+        self.fcmdata = fcmdata
     
-    def mf_view(self, terms,
+    def mf_view(self,
                 title = 'Causal Strength',
                 figsize = (10,5),
                 legend_anchor=(0.95, 0.6)):
+        
+        universe = self.fcmdata.universe
+        terms = self.fcmdata.terms
         
         '''Visualizes the membership function of the causal relationships between the concepts of the FCMs.
         
@@ -40,10 +46,9 @@ class FcmVisualize:
         fig = plt.figure(figsize= (10, 5))
         axes = plt.axes()
         for i in terms:
-            axes.plot(self.universe, terms[i], linewidth=0.4, label=str(i))
-            axes.fill_between(self.universe, terms[i], alpha=0.5)
+            axes.plot(universe, terms[i], linewidth=0.4, label=str(i))
+            axes.fill_between(universe, terms[i], alpha=0.5)
 
-        
         axes.set_title(title)
         axes.legend(bbox_to_anchor=legend_anchor)
         
@@ -85,7 +90,11 @@ class FcmVisualize:
                     default --> (10, 5)
 
         """
-        data = self.expert_data[concept_1, concept_2]
+
+        expert_data = self.fcmdata.expert_data
+
+        
+        data = expert_data[concept_1, concept_2]
         
         fig = plt.figure(figsize= (10, 5))
         axes = plt.axes()
@@ -112,6 +121,7 @@ class FcmVisualize:
                     concept_1, concept_2, 
                     figsize = (10,5),
                     legend_anchor = (0.95, 0.6)):
+        
         """
         Visualize the activated output membership function of a pair of concepts with the defuzzification line.
         
@@ -129,21 +139,25 @@ class FcmVisualize:
                         the position of the legend.
               
         """
-        
+        universe = self.fcmdata.universe
+        terms = self.fcmdata.terms
+        causal_weights = self.fcmdata.causal_weights
+        aggregated = self.fcmdata.aggregated
+
         fig = plt.figure(figsize=(10, 5))
         axes = plt.axes()
         
-        defuzz = self.causal_weights.loc[concept_1][concept_2]
+        defuzz = causal_weights.loc[concept_1][concept_2]
         if defuzz != 0:
-            y_activation = fuzz.interp_membership(self.universe, self.aggregated[f'{concept_1} {concept_2}'], defuzz)  # for plot
-            out = np.zeros_like(self.universe) 
+            y_activation = fuzz.interp_membership(universe, aggregated[f'{concept_1} {concept_2}'], defuzz)  # for plot
+            out = np.zeros_like(universe) 
 
-            for i in self.terms:
-                axes.plot(self.universe, self.terms[i], linewidth=0.3, label=str(i)) # plots all the mfs. 
-                axes.fill_between(self.universe, self.terms[i], alpha=0.4)
+            for i in terms:
+                axes.plot(universe, terms[i], linewidth=0.3, label=str(i)) # plots all the mfs. 
+                axes.fill_between(universe, terms[i], alpha=0.4)
                 
-            axes.fill_between(self.universe, out, 
-                             self.aggregated[f'{concept_1} {concept_2}'], 
+            axes.fill_between(universe, out, 
+                             aggregated[f'{concept_1} {concept_2}'], 
                              facecolor='#36568B', alpha=1)
             
             axes.plot([defuzz, defuzz], [0, y_activation], 'k', linewidth=1.5, alpha=1)
@@ -184,7 +198,9 @@ class FcmVisualize:
             else:
                 return plt.cm.Blues
 
-        G = self.system
+        system = self.fcmdata.system
+
+        G = system
         plt.figure(figsize=(15, 10)) 
         pos=nx.circular_layout(G)
         edges,weights = zip(*nx.get_edge_attributes(G,'weight').items())
