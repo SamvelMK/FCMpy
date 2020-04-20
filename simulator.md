@@ -46,7 +46,7 @@ Note that a (transfer) function f is applied to the result. As shown in equation
 
 </div>
 
-* Bivalent
+* Bivalent:
 
 <div class=container, align=center>
 
@@ -54,7 +54,7 @@ Note that a (transfer) function f is applied to the result. As shown in equation
 
 </div>
 
-* Trivalent
+* Trivalent:
 
 <div class=container, align=center>
 
@@ -64,7 +64,20 @@ Note that a (transfer) function f is applied to the result. As shown in equation
 
 <div align = justify>
 
-The FcmSimulator module includes methods for runing simulations on an FCM and testing what-if scenarios. In the current version, it includes two methods: [simulate()](#simulate) and [test_scenario()](#test_scenario).
+The FcmSimulator module includes methods for runing simulations on an FCM and testing <em>what-if</em> scenarios. In the current version, it includes two methods: [simulate()](#simulate) and [test_scenario()](#test_scenario). You can create an FcmSimulator instance by either supplying an initial state vector and a weight matrix or leaving it empty.
+
+Example:
+
+```
+sim = FcmSimulator(init, weight)
+```
+In the first case, the module automatically runs an FCM simulation on the supplied initial state vector and finds the equilibrium state and stores it in the constructor to be used for testing of scenarios.
+
+If one is not interested in testing scenarios, one could leave it empty.
+
+```
+sim = FcmSimulator()
+```
 
 ## simulate()
 
@@ -105,8 +118,7 @@ y : dataframe,
 
 ```
 
-The simulation is itterated until either of the two conditions are met: 1) output (A) converges to a fixed point attractor (t1-t <= 0.001); or 2) maximum number of itterations passed to the function is reached. The latter indicates that either a cyclic or a chaotic behavior of the system (Napoles et al., 2020).
-
+The simulation is itterated until either of the two conditions are met: 1) output (A) converges to a fixed point attractor (delta(T) <= 0.001); or 2) maximum number of itterations passed to the function is reached. The latter indicates that either a cyclic or a chaotic behavior of the system (Napoles et al., 2020).
 
 Example:
 
@@ -132,6 +144,39 @@ sim = FcmSimulator()
 
 res = sim.simulate(state, weights, inference = 'mk')
 
+```
+
+## test_scenario
+The test_scenario() method allows runing FCM simulations of what-if scenarios by supplying/changing the state vectors. Changing the state vector implies turning on/off certain concepts in the system. Most of the default parameters are the same as in simulate method described above. The scenario name is the name of the scenario to be tested. The state vector is a dictionary with the keys of the concepts to be changed in the state vector that has been supplied in when creating an FcmSimulator instance.
+
+```
+test_scenario(scenario_name, state_vector, weights, 
+                iterations = 50, inference = 'mk', transfer = 's', l = 1, thresh = 0.001):
+
+Parameters
+----------
+scenario_name : str,
+                name of the tested scenario.
+state_vector : dict,
+                dictionary of the concepts that needs to be turned on or off. 
+
+weights : Data frame with the causal weights.
+
+iterations : int,
+                Number of itterations to run in case if the system doesn't converge.
+inference : str,
+            default --> 'mk' -> modified kosko; available options: 'k' -> Kosko, 'r' -> Rescale.
+            Method of inference.
+                    
+transfer : str,
+            default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
+            transfer function.
+l : int,
+    A parameter that determines the steepness of the sigmoid and hyperbolic tangent function at values around 0. 
+        
+thresh : float,
+            default -->  0.001,
+            a thershold for convergence of the values.
 ```
 
 </div>
