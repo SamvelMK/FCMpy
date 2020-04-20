@@ -33,16 +33,17 @@ class FcmSimulator:
         """
 
 
-    def __init__(self, initial_state, weights, iterations = 50, inference = 'mk', 
+    def __init__(self, initial_state=None, weights=None, iterations = 50, inference = 'mk', 
                             transfer = 's', l = 1, thresh = 0.001):
         self.scenarios = {}
-        results = self.simulate(initial_state, weights, iterations, inference, 
-                                    transfer, l, thresh)
+        if (initial_state is not None) | (weights is not None):
+            results = self.simulate(initial_state, weights, iterations, inference, 
+                                        transfer, l, thresh)
         
-        # Finding the first fixed point with the initial state vector.
-        self.scenarios['initial_state'] = results
-        
-        self.initial_equilibrium = results.loc[len(results) - 1]
+            # Finding the first fixed point with the initial state vector.
+            self.scenarios['initial_state'] = results
+            
+            self.initial_equilibrium = results.loc[len(results) - 1]
         
     def simulate(self, state, weights, iterations = 50, inference = 'mk', 
                  transfer = 's', l = 1, thresh = 0.001):
@@ -100,7 +101,7 @@ class FcmSimulator:
                 if transfer == 's':
                     state_vector = [sig(i, l) for i in res]
                 elif transfer == 'h':
-                    state_vector = [np.tanh(l * i) for i in res]
+                    state_vector = [np.tanh(i) for i in res]
                 elif transfer == 'b':
                     state_vector = [bi(i) for i in res]
                 elif transfer == 't':
