@@ -105,23 +105,7 @@ y : dataframe,
 
 ```
 
-The simulation is itterated untile either of two conditions are met: 1) system converges to a fixed point attractor (s1-s <= 0.001); or 2) maximum number of itterations passed to the function is reached. The latter indicates that either a syclic or a chaotic behavior of the system (Napoles et al., 2020). More formally:
-
-* Fixed point attractor:
-
-<div align=center>
-
-![\left ( \exists_{t\alpha}, P\in {1,2...,(T-1)} A^{{t+1}}=A^t,\forall t \geq t_\alpha \right )](https://render.githubusercontent.com/render/math?math=%5Cleft%20(%20%5Cexists_%7Bt%5Calpha%7D%2C%20P%5Cin%20%7B1%2C2...%2C(T-1)%7D%20A%5E%7B%7Bt%2B1%7D%7D%3DA%5Et%2C%5Cforall%20t%20%5Cgeq%20t_%5Calpha%20%5Cright%20))
-
-</div>
-
-* Limit cycles: 
-
-<div align=center>
-
-![\left ( \exists_{t\alpha}, P\in {1,2...,(T-1)} A^{{(t+P)}}=A^t,\forall t \geq t_\alpha \right )](https://render.githubusercontent.com/render/math?math=%5Cleft%20(%20%5Cexists_%7Bt%5Calpha%7D%2C%20P%5Cin%20%7B1%2C2...%2C(T-1)%7D%20A%5E%7B%7B(t%2BP)%7D%7D%3DA%5Et%2C%5Cforall%20t%20%5Cgeq%20t_%5Calpha%20%5Cright%20))
-
-</div>
+The simulation is itterated until either of the two conditions are met: 1) output (A) converges to a fixed point attractor (t1-t <= 0.001); or 2) maximum number of itterations passed to the function is reached. The latter indicates that either a cyclic or a chaotic behavior of the system (Napoles et al., 2020).
 
 
 Example:
