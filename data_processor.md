@@ -188,7 +188,25 @@ Output:
  
 ```
 
-You can visualize this with the mf_view() method.
+You can visualize this as follows:
+
+```
+fig = plt.figure(figsize= (10, 5))
+axes = plt.axes()
+
+for i in mf:
+    axes.plot(universe, mf[i], linewidth=0.4, label=str(i))
+    axes.fill_between(universe, mf[i], alpha=0.5)
+
+axes.legend(bbox_to_anchor=(0.95, 0.6))
+
+axes.spines['top'].set_visible(False)
+axes.spines['right'].set_visible(False)
+axes.get_xaxis().tick_bottom()
+axes.get_yaxis().tick_left()
+plt.tight_layout()
+plt.show()
+```
 
 <img src="figures\figure_3.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 3:</em> Automatically generated triangular membership function.
@@ -234,11 +252,27 @@ Output:
  'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]),
  'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
 ```
-Essentially, the values in the activation input determine the point at which the membership function of each linguistic term is going to be cut. You can visualize it with the fcm.mf_view() method (Figure 4). 
+Essentially, the values in the activation input determine the point at which the membership function of each linguistic term is going to be cut. 
+You can visualize it as follows (Figure 4). 
 
 ```
-fcm.mf_view(act)
+fig = plt.figure(figsize= (10, 5))
+axes = plt.axes()
+
+for i in act:
+    axes.plot(universe, act[i], linewidth=0.4, label=str(i))
+    axes.fill_between(universe, act[i], alpha=0.5)
+
+axes.legend(bbox_to_anchor=(0.95, 0.6))
+
+axes.spines['top'].set_visible(False)
+axes.spines['right'].set_visible(False)
+axes.get_xaxis().tick_bottom()
+axes.get_yaxis().tick_left()
+plt.tight_layout()
+plt.show()
 ```
+
 <img src="figures\figure_4.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 4:</em> The activated membership function.
 
@@ -413,10 +447,18 @@ C2 -0.610698  0.000000   0  0.000000
 C3  0.556908  0.000000   0  0.230423
 C4  0.000000  0.000000   0  0.000000
 ```
+In order to use visualization methods developed for this module we first need to create an instance of FcmVisualize class and instantiate it with the fmc object we created earlier.
+
+Example:
+
+```
+vis = FcmVisualize(fcm)
+```
+
 One can inspect the frequency of the raitings each linguistic term for a given pair of concepts with the term_freq_hist() method.
 
 ```
-fcm.term_freq_hist('C1', 'C2')
+vis.term_freq_hist('C1', 'C2')
 ```
 <img src="figures\figure_7.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 7:</em> Expert's raitings of causal trength between C1 and C2.
@@ -424,7 +466,7 @@ fcm.term_freq_hist('C1', 'C2')
 One can also visually inspect the deffuzification of the activated membership functions between a pair of concepts with the defuzz_view() method.
 
 ```
-fcm.defuzz_view('C1', 'C2')
+vis.defuzz_view('C1', 'C2')
 ```
 
 <img src="figures\figure_8.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
