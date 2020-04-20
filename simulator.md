@@ -34,7 +34,7 @@ Note that a (transfer) function f is applied to the result. As shown in equation
 
 <div class=container, align=center>
 
-![f(x)=\frac{1}{1+e^{-\lambda x}}, x\epsilon \mathbb{R}; \[0,1\]\\](https://render.githubusercontent.com/render/math?math=f(x)%3D%5Cfrac%7B1%7D%7B1%2Be%5E%7B-%5Clambda%20x%7D%7D%2C%20x%5Cepsilon%20%5Cmathbb%7BR%7D%3B%20%5B0%2C1%5D%5C%5C)
+![f(x)=\frac{1}{1+e^{-\lambda x}}, x\in\mathbb{R}; \[0,1\]](https://render.githubusercontent.com/render/math?math=f(x)%3D%5Cfrac%7B1%7D%7B1%2Be%5E%7B-%5Clambda%20x%7D%7D%2C%20x%5Cin%5Cmathbb%7BR%7D%3B%20%5B0%2C1%5D)
 
 </div>
 
@@ -42,7 +42,7 @@ Note that a (transfer) function f is applied to the result. As shown in equation
 
 <div class=container, align=center>
 
-![f(x)=tanh(x)=\frac{sinh(x)}{cosh(x)}=\frac{e^{2x}-1}{e^{2x}+1}, x\epsilon \mathbb{R}; \[-1,1\]\\](https://render.githubusercontent.com/render/math?math=f(x)%3Dtanh(x)%3D%5Cfrac%7Bsinh(x)%7D%7Bcosh(x)%7D%3D%5Cfrac%7Be%5E%7B2x%7D-1%7D%7Be%5E%7B2x%7D%2B1%7D%2C%20x%5Cepsilon%20%5Cmathbb%7BR%7D%3B%20%5B-1%2C1%5D%5C%5C)
+![f(x)=tanh(x)=\frac{sinh(x)}{cosh(x)}=\frac{e^{2x}-1}{e^{2x}+1}, x\in\mathbb{R}; \[-1,1\]\\](https://render.githubusercontent.com/render/math?math=f(x)%3Dtanh(x)%3D%5Cfrac%7Bsinh(x)%7D%7Bcosh(x)%7D%3D%5Cfrac%7Be%5E%7B2x%7D-1%7D%7Be%5E%7B2x%7D%2B1%7D%2C%20x%5Cin%5Cmathbb%7BR%7D%3B%20%5B-1%2C1%5D%5C%5C)
 
 </div>
 
@@ -68,7 +68,7 @@ The FcmSimulator module includes methods for runing simulations on an FCM and te
 
 ## simulate()
 
-The simulate method allows one to run simulations independently. The method takes two parameters state and weights. The state is the initial state vector of the concepts in the FCM and the weights is the matrix with the edge weights. The optional arguments include the iteration steps, inference method, transfer function, lambda parameter and the threshold parameter.  
+The simulate method allows one to run simulations on the defined FCM. The method takes two parameters state and weights. The state is the initial state vector of the concepts in the FCM and the weights is the matrix with the edge weights. The optional arguments include the iteration steps, inference method, transfer function, lambda parameter and the threshold parameter.  
 
 ```
 simulate(state, weights, iterations = 50, inference = 'mk', 
@@ -105,9 +105,28 @@ y : dataframe,
 
 ```
 
+The simulation is itterated untile either of two conditions are met: 1) system converges to a fixed point attractor (s1-s <= 0.001); or 2) maximum number of itterations passed to the function is reached. The latter indicates that either a syclic or a chaotic behavior of the system (Napoles et al., 2020). More formally:
+
+* Fixed point attractor:
+
+<div align=center>
+
+![\left ( \exists_{t\alpha}, P\in {1,2...,(T-1)} A^{{t+1}}=A^t,\forall t \geq t_\alpha \right )](https://render.githubusercontent.com/render/math?math=%5Cleft%20(%20%5Cexists_%7Bt%5Calpha%7D%2C%20P%5Cin%20%7B1%2C2...%2C(T-1)%7D%20A%5E%7B%7Bt%2B1%7D%7D%3DA%5Et%2C%5Cforall%20t%20%5Cgeq%20t_%5Calpha%20%5Cright%20))
+
+</div>
+
+* Limit cycles: 
+
+<div align=center>
+
+![\left ( \exists_{t\alpha}, P\in {1,2...,(T-1)} A^{{(t+P)}}=A^t,\forall t \geq t_\alpha \right )](https://render.githubusercontent.com/render/math?math=%5Cleft%20(%20%5Cexists_%7Bt%5Calpha%7D%2C%20P%5Cin%20%7B1%2C2...%2C(T-1)%7D%20A%5E%7B%7B(t%2BP)%7D%7D%3DA%5Et%2C%5Cforall%20t%20%5Cgeq%20t_%5Calpha%20%5Cright%20))
+
+</div>
+
+
 Example:
 
-In the example below we first define the weight matrix, the state vector and then use the simulate method to run the simulation. The example is taken from fcm package in r by Dikopoulou and Papageorgiou. 
+In the example below, we first define the weight matrix, the state vector and then use the simulate method to run the simulation. The example is taken from the fcm package in r by Dikopoulou and Papageorgiou. 
 
 ```
 C1 = [0.0, 0.0, 0.6, 0.9, 0.0, 0.0, 0.0, 0.8]
@@ -128,6 +147,7 @@ state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
 sim = FcmSimulator()
 
 res = sim.simulate(state, weights, inference = 'mk')
+
 ```
 
 </div>
