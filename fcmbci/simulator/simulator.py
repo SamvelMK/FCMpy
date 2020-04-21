@@ -10,13 +10,18 @@ class FcmSimulator:
         Parameters
         ----------
         initial_state : dict,
+                        default --> None,
                         A dictionary of Concepts as keys and their initial states. ---> {'C1': 0.5, 'C2' : 0.4}.
                         The states take only values in the range of [0,1] for the sigmoid transfer function and [-1,1] for the hperbolic tangent.
 
-        weights : Data frame with the causal weights.
+        weights : Data frame,
+                    default --> None,
+                    Causal weights
 
         iterations : int,
+                        default --> 50,
                         Number of itterations to run in case if the system doesn't converge.
+
         inference : str,
                     default --> 'mk' -> modified kosko; available options: 'k' -> Kosko, 'r' -> Rescale.
                     Method of inference.
@@ -25,6 +30,7 @@ class FcmSimulator:
                     default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
                     transfer function.
         l : int,
+            default --> 1,
             A parameter that determines the steepness of the sigmoid and hyperbolic tangent function at values around 0. 
         
         thresh : float,
@@ -44,7 +50,7 @@ class FcmSimulator:
             self.scenarios['initial_state'] = results
             
             self.initial_equilibrium = results.loc[len(results) - 1]
-        
+
     def simulate(self, state, weights, iterations = 50, inference = 'mk', 
                  transfer = 's', l = 1, thresh = 0.001):
         
