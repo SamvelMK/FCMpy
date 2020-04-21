@@ -504,5 +504,7 @@ vis = FcmVisualize(fcm.system)
 vis.system_view()
 plt.show()
 ```
+<img src="figures\figure_9.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 9:</em> System's view.
 
 </div>
