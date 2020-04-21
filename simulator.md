@@ -143,8 +143,45 @@ state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
 sim = FcmSimulator()
 
 res = sim.simulate(state, weights, inference = 'mk')
+```
+
+Example:
 
 ```
+# Let's first generate edge weights.
+
+fcm = FcmDataProcessor()
+fcm.read_xlsx(os.path.abspath('unittests/test_cases/sample_test.xlsx'), 'Matrix')
+fcm.gen_weights_mat()
+fcm.create_system() # create system for visualizations.
+
+init = {'C1' : 1, 'C2' : 1, 'C3' : 0, 'C4' : 0} # create the initial state vector
+sim = FcmSimulator(init, fcm.causal_weights) # instantiate the FcmSimulator object with initial state vector and the causal weights.
+```
+```
+Output:
+
+The values converged in the 7 state (e <= 0.001)
+```
+
+One can visualize the simulation steps with simulation_view() method. 
+
+```
+vis.simulation_view(sim.scenarios, 'initial_state', network_view =False)
+```
+<img src="figures\figure_10.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 10:</em> Simulation results.
+
+One could also look at the simulation results and the system simultaneously.
+
+```
+vis = FcmVisualize(fcm.system)
+vis.simulation_view(sim.scenarios, 'initial_state', network_view =True)
+```
+<img src="figures\figure_11.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 11:</em> Simulation results and the System's view.
+
+Here the intensity of the color of the nodes indicate the extent to which the nodes are active (the darker the node the more active the node is).
 
 ## test_scenario
 The test_scenario() method allows runing FCM simulations of what-if scenarios by supplying/changing the state vectors. Changing the state vector implies turning on/off certain concepts in the system. Most of the default parameters are the same as in simulate method described above. The scenario name is the name of the scenario to be tested. The state vector is a dictionary with the keys of the concepts to be changed in the state vector that has been supplied in when creating an FcmSimulator instance.
@@ -178,6 +215,28 @@ thresh : float,
             default -->  0.001,
             a thershold for convergence of the values.
 ```
+
+
+Example:
+
+Now that we instantiated the FcmSimulator object we can test <em> what-if </em> scenarios. The test_scenario() method uses the state vector derived from the fixed point equilibrium of the system state computed during the instantiation of the FcmSimulator object. Let's suppose we deactivated node C1 and activated node C2.
+
+```
+sim.test_scenario('scenario_1', {'C1' : 0, 'C2' : 1}, fcm.causal_weights)
+```
+```
+Output: 
+
+The values converged in the 7 state (e <= 0.001)
+```
+We can visualize it with the simulation_view() method. Now that we have target nodes we can include it as an argument in the method.
+
+```
+vis.simulation_view(sim.scenarios, 'scenario_1', network_view =True, outcome_node = ['C1', 'C2'])
+```
+
+<img src="figures\figure_12.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 12:</em> Simulation results for Scenario 1.
 
 </div>
 
