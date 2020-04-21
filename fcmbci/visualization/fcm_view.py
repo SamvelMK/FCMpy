@@ -13,10 +13,15 @@ import functools
 class FcmVisualize:
     """
     Visualize different components of an FCM.
+    
+    Parameters
+    ---------- 
+    system : networkx object,
+             networkx object of the FCM.
     """
 
-    def __init__(self, fcmdata):
-        self.fcmdata = fcmdata
+    def __init__(self, system):
+        self.system = system
     
     def mf_view(self,
                 title = 'Causal Strength',
@@ -186,11 +191,11 @@ class FcmVisualize:
         
         Parameters
         ----------        
-        outcome_node : str,
+        outcome_node : list,
                         default --> None,
-                        The outcome of interest.
+                        The outcome/s of interest.
         """
-        G = self.fcmdata.system
+        G = self.system
         
         # For positive and negative edges
         def col(weights):
@@ -290,7 +295,7 @@ class FcmVisualize:
     def simulation_view(self, simulation_results, scenario, network_view = True, outcome_node = None,
                        figsize = (10, 5), legend_anchor = (0.97, 0.6), title = None):
         
-            def sis():
+            def sim_view():
 
                 plt.plot(simulation_results[scenario])
                 axes = plt.gca()
@@ -308,7 +313,7 @@ class FcmVisualize:
                 plt.tight_layout()
         
             if network_view == False:
-                sis()
+                sim_view()
                 plt.show()
             else:
                 concept_states = simulation_results[scenario].loc[len(simulation_results[scenario]) -1].to_dict()            
@@ -318,5 +323,5 @@ class FcmVisualize:
                 self.system_view(outcome_node, concept_states)
 
                 plt.subplot(122)
-                sis()
+                sim_view()
                 plt.show() 
