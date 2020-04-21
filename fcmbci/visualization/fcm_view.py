@@ -43,7 +43,7 @@ class FcmVisualize:
                         default --> (0.95, 0.6)
         '''
         
-        fig = plt.figure(figsize= (10, 5))
+        fig = plt.figure(figsize= figsize)
         axes = plt.axes()
         for i in terms:
             axes.plot(universe, terms[i], linewidth=0.4, label=str(i))
@@ -179,7 +179,7 @@ class FcmVisualize:
             axes.set_title(f'{concept_1} and {concept_2} are not related!')
             plt.show()
             
-    def system_view(self, outcome_node=None):
+    def system_view(self, outcome_node=None, concept_states = None):
         
         """
         Visualize the FCM system.
@@ -190,61 +190,84 @@ class FcmVisualize:
                         default --> None,
                         The outcome of interest.
         """
+        G = self.fcmdata.system
         
         # For positive and negative edges
         def col(weights):
             if min(weights) < 0:
-                return plt.cm.RdBu
+                norm = (-1, 1)
+                color = plt.cm.RdBu
+                return norm, color
             else:
-                return plt.cm.Blues
-
-        system = self.fcmdata.system
-
-        G = system
-        plt.figure(figsize=(15, 10)) 
+                norm = (0, 1)
+                color = plt.cm.Blues
+                return norm, color
+            
+        def col_nodes(node_attr):
+            if min(node_attr) < 0:
+                norm = (-1, 1)
+                color = plt.cm.coolwarm
+                return norm, color
+            else:
+                norm = (0, 1)
+                color = plt.cm.Reds
+                return norm, color
+                
+        # if the concept_states are passed then set it as node atrb for vis.
+        if concept_states is not None:
+            nx.set_node_attributes(G, concept_states, 'concept_states')
+            edges,node_weights = zip(*nx.get_node_attributes(G,'concept_states').items())
+            norm_nodes, cmap_nodes = col_nodes(node_weights)
+        else:
+            cmap_nodes = None
+            norm_nodes = (None, None)
+            
         pos=nx.circular_layout(G)
-        edges,weights = zip(*nx.get_edge_attributes(G,'weight').items())
-
-        M = G.number_of_edges()
-
-        cmap = col(weights)
-
-        node_sizes = [len(v)*1000 for v in G.nodes()]
-        edge_colors = [i for i in weights]
-        edge_alphas = [(5 + i) / (M + 4) for i in range(M)]
+        edges,edge_weights = zip(*nx.get_edge_attributes(G,'weight').items())
+        
+        norm_edges, cmap_edges = col(edge_weights)
+        node_sizes = [len(v)*1000 for v in G.nodes()] # proportional to the len of the labels.
+        
+        # set node color
+        if (concept_states is not None) and (outcome_node is not None):
+            node_colors = [i for i in concept_states.values()]
+        elif concept_states is not None:
+            node_colors = [i for i in concept_states.values()]
+        else:
+            node_colors = '#A79BB9'
+            
+        edge_colors = [i for i in edge_weights]
         
         # to visualize the outcome node. 
         if outcome_node:
             
-            outcome_node = [outcome_node]
+            outcome_node = outcome_node
             node_list = list(G.nodes())
-            node_list.remove(outcome_node[0])
-
             nodes = nx.draw_networkx_nodes(G, 
                                            pos,
                                            nodelist= node_list,
                                            node_size=node_sizes, 
-                                           node_color="#A79BB9")
-
-
-            node_outcome = nx.draw_networkx_nodes(G, 
-                                                   pos,
-                                                   nodelist=outcome_node,
-                                                   node_shape='o',
-                                                   node_size=node_sizes, 
-                                                   node_color="#10A83D")
+                                           node_color= node_colors,
+                                           cmap = cmap_nodes,
+                                           vmin= norm_nodes[0],
+                                           vmax=norm_nodes[1])
 
             node_outcome = nx.draw_networkx_nodes(G, 
                                                    pos,
                                                    nodelist=outcome_node,
                                                    node_shape='*',
                                                    node_size=node_sizes, 
-                                                   node_color="white")
+                                                   node_color="white",
+                                                   vmin= norm_nodes[0],
+                                                   vmax=norm_nodes[1])
         else:
             nodes = nx.draw_networkx_nodes(G, 
                                            pos,
                                            node_size=node_sizes, 
-                                           node_color="#cfcfe1")
+                                           node_color=node_colors,
+                                           cmap = cmap_nodes,
+                                           vmin= norm_nodes[0],
+                                           vmax=norm_nodes[1])
             
 
         nx.draw_networkx_labels(G, pos = pos)
@@ -256,19 +279,44 @@ class FcmVisualize:
                                         arrowstyle="->",
                                         arrowsize=10,
                                         edge_color=edge_colors,
-                                        edge_cmap=cmap,
+                                        edge_cmap=cmap_edges,
                                         width=2,
-                                    )
-
-        # set alpha value for each edge
-        for i in range(M):
-            edges[i].set_alpha(edge_alphas[i])
-
-        pc = matplotlib.collections.PatchCollection(edges, cmap=cmap)
-        pc.set_array(edge_colors)
-        plt.colorbar(pc)
-
+                                        vmin= norm_edges[0],
+                                        vmax=norm_edges[1])
 
         ax = plt.gca()
         ax.set_axis_off()
-        plt.show()        
+
+    def simulation_view(self, simulation_results, scenario, network_view = True, outcome_node = None,
+                       figsize = (10, 5), legend_anchor = (0.97, 0.6), title = None):
+        
+            def sis():
+
+                plt.plot(simulation_results[scenario])
+                axes = plt.gca()
+
+                if title is None:
+                    axes.set_title(f'Simulation Results for {scenario}')
+                else:
+                    axes.set_title(title)
+                axes.legend(simulation_results[scenario].columns, bbox_to_anchor=legend_anchor)
+
+                axes.spines['top'].set_visible(False)
+                axes.spines['right'].set_visible(False)
+                axes.get_xaxis().tick_bottom()
+                axes.get_yaxis().tick_left()
+                plt.tight_layout()
+        
+            if network_view == False:
+                sis()
+                plt.show()
+            else:
+                concept_states = simulation_results[scenario].loc[len(simulation_results[scenario]) -1].to_dict()            
+                
+                plt.figure(figsize = (25,10))
+                plt.subplot(121)
+                self.system_view(outcome_node, concept_states)
+
+                plt.subplot(122)
+                sis()
+                plt.show() 
