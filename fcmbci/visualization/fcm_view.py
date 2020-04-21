@@ -149,7 +149,7 @@ class FcmVisualize:
         causal_weights = self.fcmdata.causal_weights
         aggregated = self.fcmdata.aggregated
 
-        fig = plt.figure(figsize=(10, 5))
+        fig = plt.figure(figsize=figsize)
         axes = plt.axes()
         
         defuzz = causal_weights.loc[concept_1][concept_2]
