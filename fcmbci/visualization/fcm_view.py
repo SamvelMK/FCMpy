@@ -283,6 +283,7 @@ class FcmVisualize:
                                         node_size=node_sizes,
                                         arrowstyle="->",
                                         arrowsize=10,
+                                        connectionstyle='arc3, rad=0.1',
                                         edge_color=edge_colors,
                                         edge_cmap=cmap_edges,
                                         width=2,
