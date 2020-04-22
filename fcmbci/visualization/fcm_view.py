@@ -184,14 +184,14 @@ class FcmVisualize:
             axes.set_title(f'{concept_1} and {concept_2} are not related!')
             plt.show()
             
-    def system_view(self, outcome_node=None, concept_states = None):
+    def system_view(self, target=None, concept_states = None):
         
         """
         Visualize the FCM system.
         
         Parameters
         ----------        
-        outcome_node : list,
+        target : list,
                         default --> None,
                         The outcome/s of interest.
         """
@@ -234,7 +234,7 @@ class FcmVisualize:
         node_sizes = [len(v)*1000 for v in G.nodes()] # proportional to the len of the labels.
         
         # set node color
-        if (concept_states is not None) and (outcome_node is not None):
+        if (concept_states is not None) and (target is not None):
             node_colors = [i for i in concept_states.values()]
         elif concept_states is not None:
             node_colors = [i for i in concept_states.values()]
@@ -244,9 +244,9 @@ class FcmVisualize:
         edge_colors = [i for i in edge_weights]
         
         # to visualize the outcome node. 
-        if outcome_node:
+        if target:
             
-            outcome_node = outcome_node
+            target = target
             node_list = list(G.nodes())
             nodes = nx.draw_networkx_nodes(G, 
                                            pos,
@@ -259,7 +259,7 @@ class FcmVisualize:
 
             node_outcome = nx.draw_networkx_nodes(G, 
                                                    pos,
-                                                   nodelist=outcome_node,
+                                                   nodelist=target,
                                                    node_shape='*',
                                                    node_size=node_sizes, 
                                                    node_color="white",
@@ -293,7 +293,7 @@ class FcmVisualize:
         ax = plt.gca()
         ax.set_axis_off()
 
-    def simulation_view(self, simulation_results, scenario, network_view = True, outcome_node = None,
+    def simulation_view(self, simulation_results, scenario, network_view = True, target = None,
                        figsize = (10, 5), legend_anchor = (0.97, 0.6), title = None):
         
             def sim_view():
@@ -321,7 +321,7 @@ class FcmVisualize:
                 
                 plt.figure(figsize = (25,10))
                 plt.subplot(121)
-                self.system_view(outcome_node, concept_states)
+                self.system_view(target, concept_states)
 
                 plt.subplot(122)
                 sim_view()
