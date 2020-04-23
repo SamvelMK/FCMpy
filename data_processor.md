@@ -22,14 +22,16 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 ## FcmDataProcessor
 
-To create an instance of FcmDataProcessor class you can either pass a dataframe that contains the data directly to the constructor 
+To create an instance of FcmDataProcessor class you can either pass the data (dataframe) that contains the data directly to the constructor 
 
 ```
+from fcmbci import FcmDataProcessor
+
 fcm = FcmDataProcessor(df)
 ```
-or use the [read_xlsx](#read_xlsx) method after creating the instance with no argument. 
+or create an instance with no argument and then use the [read_xlsx](#read_xlsx) method to read in the data.
 
-The instance is initialized with a universe of discourse with a range of [-1, 1].
+The instance is automatically initialized with a universe of discourse with a range of [-1, 1].
 
 ## Methods
 
@@ -42,15 +44,14 @@ The methods presented in this section are used to derive the edge weights based 
 - [activate](#activate)
 - [aggregate](#aggregate)
 - [defuzzify](#defuzzify)
-- [gen_weights_mat](#gen_weights_mat)
-- [gen_weights_list](#gen_weights_list)
+- [gen_weights_mat](#gen_weights_mat), [gen_weights_list](#gen_weights_list)
 - [create_system](#create_system)
 
 </div>
 
 ## read_xlsx()
 <div align='justify'>
-The read xlsx function takes the same argument as pd.read_excel function. 
+The read xlsx function takes the same argument as pandas' read_excel() method with an addition of dtype argument. The dtype argument indicates whether the data is in the matrix format or edge list format. 
 
 ```
 read_xlsx(file_name, dtype)
@@ -63,7 +64,7 @@ file_name : str,
 dtype : str,
         'List', 'Matrix'
 ```
-However, the data that it expects should be in a specific shape. In the current version, the function can take either matrix-like or edge list formats.
+The data that it expects should be in a specific shape. In the current version, the function can take either matrix-like or edge list formats.
 
 <img src="figures\figure_2.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 2:</em> Matrix like format. <br>
@@ -133,14 +134,14 @@ OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
                               14   C4  C3 NaN  NaN  NaN NaN  NaN
                               15   C4  C4 NaN  NaN  NaN NaN  NaN),
 ```
-The read_xlsx function stores the data in an ordered dictionary where <em>keys</em> are the experts (the names of the excel sheets) and the <em>values</em> are the expert inputs.
+The read_xlsx() method stores the data in an ordered dictionary where <em>keys</em> are the experts (the names of the excel sheets) and the <em>values</em> are the expert inputs.
 
 </div>
 
 ## automf()
 <div align='justify'>
 
-Automatically generates triangular membership functions based on the passed Lingustic Terms. This function was taken and modified from scikit-fuzzy.
+This method, automatically generates triangular membership functions based on the passed lingustic terms. This method was taken and modified from <em>scikit-fuzzy</em> package.
 
 ```
 automf(universe, 
@@ -161,7 +162,7 @@ y : dict,
     Generated membership functions. The key is the linguistic term and the value is a 1d array. 
 ```
 
-The function returns a dictionary with the linguistic terms as the keys and the corresponding numerical intervals (in 1d arrays) as the values.
+The method returns a dictionary with the linguistic terms as the keys and the corresponding numerical intervals (in 1d arrays) as the values.
 
 Example:
 
@@ -191,6 +192,8 @@ Output:
 You can visualize this as follows:
 
 ```
+import matplotlib.pyplot as plt
+
 fig = plt.figure(figsize= (10, 5))
 axes = plt.axes()
 
@@ -237,8 +240,8 @@ y : dict,
         Activated membership functions, where the key is the linguistic term and 
         the value is a 1d array with the activated membership values. 
 ```
-To activate the membership functions we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurance. As in the example presented in the background section, let's suppose that 1/6 experts expressed the causality between a given pair of concepts as Medium, 3/6 experts expressed it as High and 2/6 expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
-The function returns a dictionary with the activated membership function.
+To activate the membership functions, we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurance. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
+The method returns a dictionary with the activated membership function.
 
 ```
 Example:
@@ -280,7 +283,7 @@ plt.show()
 
 ## aggregate()
 <div align='justify'>
-Now that we have activated the respective membership functions, we need to aggregate them before we can derive the precise causal weight through the difuzzification process.
+Now that we have activated the respective membership functions, we need to aggregate them before we can derive the causal weights through the difuzzification process.
 
 ```
 aggregate(activated)
@@ -321,7 +324,6 @@ plt.tight_layout()
 plt.show()
 ```
 
-
 <img src="figures\figure_5.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 5:</em> The aggregated membership function.
 
@@ -330,7 +332,7 @@ plt.show()
 ## defuzzify()
 <div align='justify'>
 
-After aggregating the activated membership functions we can derive derive the causal weight between the given two concepts. The defuzzify() method uses the defuzz() method from python scikit-fuzzy module. 
+After aggregating the activated membership functions we can derive the causal weight between the given two concepts. The defuzzify() method uses the defuzz() method from python <em>scikit-fuzzy</em> package. 
 
 ```
 defuzzify(universe, aggregated, method = 'centroid')
@@ -362,10 +364,9 @@ Output:
 
 0.703888431055232
 ```
-This can be visualized as follows (The code is adjusted from skit-fuzzy tutorial):
+This can be visualized as follows (The code is adjusted from scikit-fuzzy tutorial):
 
 ```
-import matplotlib.pyplot as plt
 import skfuzzy as fuzz
 
 fig = plt.figure(figsize=(10, 5))
@@ -406,6 +407,7 @@ plt.show()
 <div align='justify'>
 
 The methods described above are wrapped in gen_weights_mat() and gen_weights_list() methods to allow for automatic generation of weight matrices based on qualitative inputs. One can either pass the data to the method, or the data can be taken from the constructor. 
+
 ```
 gen_weights_mat(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
@@ -447,11 +449,14 @@ C2 -0.610698  0.000000   0  0.000000
 C3  0.556908  0.000000   0  0.230423
 C4  0.000000  0.000000   0  0.000000
 ```
-In order to use visualization methods developed for this module we first need to create an instance of FcmVisualize class and instantiate it with the fmc object we created earlier.
+
+To use visualization methods developed for this module we first need to create an instance of FcmVisualize class and instantiate it with the fmc object we created earlier.
 
 Example:
 
 ```
+from fcmbci import FcmVisualize
+
 vis = FcmVisualize(fcm)
 ```
 
@@ -498,9 +503,6 @@ fcm.create_system()
 One can visualize this with the system_view() method.
 
 ```
-import matplotlib.pyplot as plt
-
-vis = FcmVisualize(fcm.system)
 vis.system_view()
 plt.show()
 ```
