@@ -2,7 +2,6 @@ import sys, os
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
-from visualization.fcm_view import FcmVisualize
 import pandas as pd
 import itertools
 import numpy as np
@@ -15,7 +14,7 @@ import networkx as nx
 import functools
 from data_processor.process_functions import *
 
-class FcmDataProcessor(FcmVisualize):
+class FcmDataProcessor:
     
     def __init__(self, data = None):
         
