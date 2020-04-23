@@ -58,7 +58,7 @@ class FcmVisualize:
                         default --> (0.95, 0.6)
         '''
         
-        fig = plt.figure(figsize= figsize)
+        plt.figure(figsize= figsize)
         axes = plt.axes()
         for i in terms:
             axes.plot(universe, terms[i], linewidth=0.4, label=str(i))
@@ -111,7 +111,7 @@ class FcmVisualize:
         
         data = expert_data[concept_1, concept_2]
         
-        fig = plt.figure(figsize= (10, 5))
+        plt.figure(figsize= figsize)
         axes = plt.axes()
         
         if max(list(data.values())) != 0:
@@ -159,7 +159,7 @@ class FcmVisualize:
         causal_weights = self.fcmdata.causal_weights
         aggregated = self.fcmdata.aggregated
 
-        fig = plt.figure(figsize=figsize)
+        plt.figure(figsize=figsize)
         axes = plt.axes()
         
         defuzz = causal_weights.loc[concept_1][concept_2]
