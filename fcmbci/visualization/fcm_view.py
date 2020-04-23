@@ -16,25 +16,35 @@ class FcmVisualize:
     
     Parameters
     ---------- 
-    fcmdata : networkx object,
-             networkx object of the FCM.
+    fcmdata : fcmdata object,
+              An istance of FcmDataProcessor class.  
     """
 
     def __init__(self, fcmdata):
         self.fcmdata = fcmdata
     
     def mf_view(self,
+                universe = None,
+                terms = None,
                 title = 'Causal Strength',
                 figsize = (10,5),
                 legend_anchor=(0.95, 0.6)):
         
-        universe = self.fcmdata.universe
-        terms = self.fcmdata.terms
+        if self.fcmdata is not None:
+            universe = self.fcmdata.universe
+            terms = self.fcmdata.terms
+        else:
+            universe = universe
+            terms = terms
         
         '''Visualizes the membership function of the causal relationships between the concepts of the FCMs.
         
         Parameters
-        ----------        
+        ---------- 
+        universe : array,
+                    default --> None,
+                    universe of discourse.
+
         terms : dict,
                 membership functions to be visualized.
 
