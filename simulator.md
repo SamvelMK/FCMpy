@@ -122,33 +122,11 @@ The simulation is itterated until either of the two conditions are met: 1) outpu
 
 Example:
 
-In the example below, we first define the weight matrix, the state vector and then use the simulate method to run the simulation. The example is taken from the fcm package in r by Dikopoulou and Papageorgiou. 
+In the example below, we first generate the causal weights based on the examples shown in the data_processor.md. 
 
 ```
-C1 = [0.0, 0.0, 0.6, 0.9, 0.0, 0.0, 0.0, 0.8]
-C2 = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.5]
-C3 = [0.0, 0.7, 0.0, 0.0, 0.9, 0.0, 0.4, 0.1]
-C4 = [0.4, 0.0, 0.0, 0.0, 0.0, 0.9, 0.0, 0.0]
-C5 = [0.0, 0.0, 0.0, 0.0, 0.0, -0.9, 0.0, 0.3]
-C6 = [-0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-C7 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.4, 0.9]
-C8 =[0.1, 0.0, 0.0, 0.0, 0.0, 0.1, 0.6, 0.0]
-
-weights = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
-                    columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
-
-state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
-                        'C6': 0, 'C7': 0, 'C8': 0}
-
-sim = FcmSimulator()
-
-res = sim.simulate(state, weights, inference = 'mk')
-```
-
-Example:
-
-```
-# Let's first generate edge weights.
+from fcmbci import FcmDataProcessor
+from fcmbci import FcmSimulator
 
 fcm = FcmDataProcessor()
 fcm.read_xlsx(os.path.abspath('unittests/test_cases/sample_test.xlsx'), 'Matrix')
