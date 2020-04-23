@@ -16,12 +16,12 @@ class FcmVisualize:
     
     Parameters
     ---------- 
-    system : networkx object,
+    fcmdata : networkx object,
              networkx object of the FCM.
     """
 
-    def __init__(self, system):
-        self.system = system
+    def __init__(self, fcmdata):
+        self.fcmdata = fcmdata
     
     def mf_view(self,
                 title = 'Causal Strength',
@@ -195,7 +195,7 @@ class FcmVisualize:
                         default --> None,
                         The outcome/s of interest.
         """
-        G = self.system
+        G = self.fcmdata.system
         
         # For positive and negative edges
         def col(weights):
