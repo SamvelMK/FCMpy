@@ -15,10 +15,14 @@ import functools
 from data_processor.process_functions import *
 
 class FcmDataProcessor:
+
+    """
+    A class of methods to derive causal weights for FCMs based on linguistic terms.
+    The FcmBci object is initialized with a universe of discourse with a range [0,1]. 
+    """
     
     def __init__(self, data = None):
         
-        """ The FcmBci object initializes with a universe of discourse with a range [0,1].  """
         if data != None:
             self.data = data
         else:
@@ -27,13 +31,16 @@ class FcmDataProcessor:
 
     def read_xlsx(self, file_name, dtype):
         
-        """ Reads an excel spreadsheet. Returns an ordered dictionary.
+        """ Reads an excel spreadsheet into the constructor.
         Note that the first column in the file is set to be the index.
         
         Parameters
         ----------
         file_name : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
+        
+        dtype: str,
+                Data type. Available options --> 'Matrix', 'List'.
         """
         
         if dtype.lower() not in ['matrix', 'list']:
@@ -148,7 +155,7 @@ class FcmDataProcessor:
         
         """ Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
         One can pass on another defuzzification method available in scikit-fuzzy library (e.g., bisector, mom, sig)
-        The function returns the defuzzified value.
+        Returns the defuzzified value.
 
         Parameters
         ----------
@@ -175,7 +182,7 @@ class FcmDataProcessor:
                                 linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                                 method = 'centroid'):
                 
-        """ This function applies fuzzy logic to obtain edge weights from FCM with qualitative inputs (i.e., where the 
+        """ This function applies fuzzy logic to obtain edge weights from FCM with qualitative inputs in a matrix format data (i.e., where the 
         causal relationships are expressed in linguistic terms).
         
         Parameters
@@ -197,6 +204,7 @@ class FcmDataProcessor:
             # Create a flat data with all of the experts' imputs.
             flat_data = pd.concat([data[i] for i in data], sort = False)
         else:
+            consistency_check(data, 'Matrix')
             data = data      
             flat_data = pd.concat([data[i] for i in data], sort = False)
   
@@ -236,7 +244,7 @@ class FcmDataProcessor:
                          method = 'centroid'): 
         
         """ Apply fuzzy logic to obtain edge weights from FCM with qualitative inputs 
-        (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format
+        (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format data.
         
         Parameters
         ----------
@@ -259,6 +267,7 @@ class FcmDataProcessor:
             # Create a flat data with all of the experts' imputs.
             flat_data = pd.concat([data[i] for i in data], sort = False)
         else:
+            consistency_check(data, 'List')
             data = data
             flat_data = pd.concat([data[i] for i in data], sort = False)
 
@@ -301,7 +310,7 @@ class FcmDataProcessor:
         
     def create_system(self, causal_weights = None):
         
-        """ Creates a fuzzy system based on the generated causal weights.
+        """ Creates a fuzzy system/network based on the generated causal weights.
         
         Parameters
         ----------
@@ -313,21 +322,8 @@ class FcmDataProcessor:
         Return
         ----------
         y : networkx object,
-        """         
-        # Generates trunkated labels if the labels include mroe then 3 characters
-        def label_gen(names):
-            text = []
-            string = names.strip('\?!\t\n')
-            if (len(string) > 3) & (len(string.split(' ')) > 1):
-                text.append("".join(e[0] for e in string.split(' ')))
+        """
 
-            elif len(string.split(' ')) == 1:
-                text.append("".join(e[:3] for e in string.split(' ')))
-
-            else:
-                text.append(string)
-            return text[0]
-        
         if causal_weights == None:
             causal_weights = self.causal_weights
         else:
