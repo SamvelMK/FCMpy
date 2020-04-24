@@ -131,6 +131,35 @@ class FcmSimulator:
 
     def test_scenario(self, scenario_name, state_vector, weights, iterations = 50, 
                         inference = 'mk', transfer = 's', l = 1, thresh = 0.001):
+        
+        """ Test scenarios over the passed FCM.
+        
+        Parameters
+        ----------
+        scenario_name : str,
+                        name of the scenario.
+        state_vector : dict,
+                        A dictionary of target concepts as keys and their states. ---> {'C1': 0, 'C2' : 1}.
+                        The states take only values in the range of [0,1] for the sigmoid transfer function and [-1,1] for the hperbolic tangent.
+
+        weights : Data frame with the causal weights.
+
+        iterations : int,
+                        Number of itterations to run in case if the system doesn't converge.
+        inference : str,
+                    default --> 'mk' -> modified kosko; available options: 'k' -> Kosko, 'r' -> Rescale.
+                    Method of inference.
+                    
+        transfer : str,
+                    default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
+                    transfer function.
+        l : int,
+            A parameter that determines the steepness of the sigmoid and hyperbolic tangent function at values around 0. 
+        
+        thresh : float,
+                    default -->  0.001,
+                    a thershold for convergence of the values.
+        """
 
         sv = self.initial_equilibrium.to_dict()
         sv.update(state_vector) # updated state vector
