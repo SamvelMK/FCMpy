@@ -182,7 +182,7 @@ class FcmDataProcessor:
                                 linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                                 method = 'centroid'):
                 
-        """ This function applies fuzzy logic to obtain edge weights from FCM with qualitative inputs in a matrix format data (i.e., where the 
+        """ This function applies fuzzy logic to obtain edge weights of an FCM with qualitative inputs in a matrix format data (i.e., where the 
         causal relationships are expressed in linguistic terms).
         
         Parameters
@@ -243,7 +243,7 @@ class FcmDataProcessor:
                          linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                          method = 'centroid'): 
         
-        """ Apply fuzzy logic to obtain edge weights from FCM with qualitative inputs 
+        """ Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
         (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format data.
         
         Parameters
