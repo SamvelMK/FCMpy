@@ -99,3 +99,19 @@ def check_column(data):
     for expert in data.keys():
         if ('from' not in [x.lower() for x in data[expert].columns]) | ('to' not in [x.lower() for x in data[expert].columns]):
             raise ValueError('Columns From --> To were not found. Check the data!')
+
+
+def label_gen(names):
+    """
+    Generates trunkated labels if the labels include mroe then 3 characters
+    """
+
+    text = []
+    string = names.strip('\?!\t\n')
+    if (len(string) > 3) & (len(string.split(' ')) > 1):
+        text.append("".join(e[0] for e in string.split(' ')))
+    elif len(string.split(' ')) == 1:
+        text.append("".join(e[:3] for e in string.split(' ')))
+    else:
+        text.append(string)
+    return text[0]
