@@ -171,9 +171,10 @@ test_scenario(scenario_name, state_vector, weights,
 Parameters
 ----------
 scenario_name : str,
-                name of the tested scenario.
+                name of the scenario.
 state_vector : dict,
-                dictionary of the concepts that needs to be turned on or off. 
+                A dictionary of target concepts as keys and their states. ---> {'C1': 0, 'C2' : 1}.
+                The states take only values in the range of [0,1] for the sigmoid transfer function and [-1,1] for the hperbolic tangent.
 
 weights : Data frame with the causal weights.
 
