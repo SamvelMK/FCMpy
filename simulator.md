@@ -105,7 +105,7 @@ transfer : str,
             default --> 's' -> sigmoid; available options: 'h' -> hyperbolic tangent; 'b' -> bivalent; 't' trivalent. 
             transfer function.
 l : int,
-    A parameter that determines the steepness of the sigmoid and hyperbolic tangent function at values around 0. 
+    A parameter that determines the steepness of the sigmoid function. 
         
 thresh : float,
             default -->  0.001,
@@ -145,6 +145,7 @@ The values converged in the 7 state (e <= 0.001)
 One can visualize the simulation steps with simulation_view() method. 
 
 ```
+vis = FcmVisualize(fcm.system)
 vis.simulation_view(sim.scenarios, 'initial_state', network_view =False)
 ```
 <img src="figures\figure_10.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
@@ -153,7 +154,6 @@ vis.simulation_view(sim.scenarios, 'initial_state', network_view =False)
 One could also look at the simulation results and the system simultaneously.
 
 ```
-vis = FcmVisualize(fcm.system)
 vis.simulation_view(sim.scenarios, 'initial_state', network_view =True)
 ```
 <img src="figures\figure_11.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
@@ -211,7 +211,7 @@ The values converged in the 7 state (e <= 0.001)
 We can visualize it with the simulation_view() method. Now that we have target nodes we can include it as an argument in the method.
 
 ```
-vis.simulation_view(sim.scenarios, 'scenario_1', network_view =True, outcome_node = ['C1', 'C2'])
+vis.simulation_view(sim.scenarios, 'scenario_1', network_view =True, target = ['C1', 'C2'])
 ```
 
 <img src="figures\figure_12.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
