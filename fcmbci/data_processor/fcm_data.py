@@ -29,14 +29,14 @@ class FcmDataProcessor:
             self.data = pd.DataFrame()
         self.universe = np.arange(-1, 1.001, 0.001)
 
-    def read_xlsx(self, file_name, dtype):
+    def read_xlsx(self, filepath, dtype):
         
         """ Reads an excel spreadsheet into the constructor.
         Note that the first column in the file is set to be the index.
         
         Parameters
         ----------
-        file_name : str, 
+        filepath : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
         
         dtype: str,
@@ -47,11 +47,11 @@ class FcmDataProcessor:
             raise ValueError(f'Unrecognized data format "{dtype}"! Check the spelling or the data type!')
         
         if dtype.lower() == 'matrix':
-            data = pd.read_excel(file_name, index_col = 0, sheet_name=None)
+            data = pd.read_excel(filepath, index_col = 0, sheet_name=None)
             consistency_check(data, 'Matrix') # if inconsistent then it will throw an error
             self.data = data
         else:
-            data = pd.read_excel(file_name, sheet_name=None)
+            data = pd.read_excel(filepath, sheet_name=None)
             check_column(data)
             consistency_check(data, 'List')
             self.data = data            
@@ -121,7 +121,7 @@ class FcmDataProcessor:
         Return
         ---------
         y : dict,
-            Activated membership functions, where the key is the linguistic term and 
+            activated membership functions, where the key is the linguistic term and 
             the value is a 1d array with the activated membership values. 
         """
         
@@ -138,7 +138,7 @@ class FcmDataProcessor:
         Parameters
         ----------
         activated : dict,
-                    A dictionary with the activated membership values to be aggregated.
+                    adictionary with the activated membership values to be aggregated.
         
         Return
         ---------

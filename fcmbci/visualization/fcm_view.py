@@ -194,16 +194,19 @@ class FcmVisualize:
             axes.set_title(f'{concept_1} and {concept_2} are not related!')
             plt.show()
             
-    def system_view(self, target=None, concept_states = None):
+    def system_view(self, concept_states = None, target=None):
         
         """
         Visualize the FCM system.
         
         Parameters
-        ----------        
+        ---------- 
+        concept_states : dict,
+                            default --> None,
+                            dictionary of concepts as keys and their initial states as values.       
         target : list,
-                        default --> None,
-                        The outcome/s of interest.
+                    default --> None,
+                    The outcome/s of interest.
         """
         G = self.fcmdata.system
         
@@ -305,6 +308,32 @@ class FcmVisualize:
 
     def simulation_view(self, simulation_results, scenario, network_view = True, target = None,
                        figsize = (10, 5), legend_anchor = (0.97, 0.6), title = None):
+            
+            """
+            Visualize the simulation results.
+            
+            Parameters
+            ---------- 
+            simulation_results : dict,
+                                    a dictioonary of the the simulation results where the keys are the names of the scenario
+                                    and the values are the simulation results. 
+
+            scenario : str,
+                        name of the scenario/results to be visualized.
+
+            network_view : bool,
+                            default --> True.
+            target : list,
+                        default --> None,
+                        The outcome/s of interest.
+
+            figsize : tuple,
+                            default --> (10, 5)
+            legend_anchor : tuple,
+                            default --> (0.97, 0.6)
+            title : str,
+                    default -->   
+            """
         
             def sim_view():
 
@@ -329,7 +358,7 @@ class FcmVisualize:
             else:
                 concept_states = simulation_results[scenario].loc[len(simulation_results[scenario]) -1].to_dict()            
                 
-                plt.figure(figsize = (25,10))
+                plt.figure(figsize = figsize)
                 plt.subplot(121)
                 self.system_view(target, concept_states)
 
