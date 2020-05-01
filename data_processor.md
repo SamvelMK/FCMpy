@@ -27,7 +27,7 @@ To create an instance of FcmDataProcessor class you can either pass the data (da
 ```
 from fcmbci import FcmDataProcessor
 
-fcm = FcmDataProcessor(df)
+fcm = FcmDataProcessor(dataframe)
 ```
 or create an instance with no argument and then use the [read_xlsx](#read_xlsx) method to read in the data.
 
@@ -54,15 +54,15 @@ The methods presented in this section are used to derive the edge weights based 
 The read xlsx function takes the same argument as pandas' read_excel() method with an addition of dtype argument. The dtype argument indicates whether the data is in the matrix format or edge list format. 
 
 ```
-read_xlsx(file_name, dtype)
+read_xlsx(filepath, dtype)
 
 Parameters
-----------        
-file_name : str, 
+----------
+filepath : str, 
             ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
-
-dtype : str,
-        'List', 'Matrix'
+        
+dtype: str,
+        Data type. Available options --> 'Matrix', 'List'.
 ```
 The data that it expects should be in a specific shape. In the current version, the function can take either matrix-like or edge list formats.
 
@@ -311,8 +311,8 @@ import matplotlib.pyplot as plt
 
 fig = plt.figure(figsize= (10, 5))
 axes = plt.axes()
-axes.plot(fcmbci.universe, aggr, linewidth=0.4)
-axes.fill_between(fcmbci.universe, aggr, alpha=0.5)
+axes.plot(fcm.universe, aggr, linewidth=0.4)
+axes.fill_between(fcm.universe, aggr, alpha=0.5)
 
         
 axes.spines['top'].set_visible(False)
@@ -422,17 +422,8 @@ gen_weights_list(data = None,
 Example:
 
 ```
-Read in the data from matrix
-fcm = FcmDataProcessor()
-fcm.read_xlsx('sample.xlsx', 'Matrix')
-
-Read in the data from list
-fcml = FcmDataProcessor()
-fcm.read_xlsx('sample.xlsx', 'List')
-```
-```
-fcm.gen_weights_mat()
-fcml.gen_weights_list()
+fcm.gen_weights_list()
+# fcm.gen_weights_mat()
 ```
 
 The weight matrix can be inspected as follows:
@@ -450,7 +441,7 @@ C3  0.556908  0.000000   0  0.230423
 C4  0.000000  0.000000   0  0.000000
 ```
 
-To use visualization methods developed for this module we first need to create an instance of FcmVisualize class and instantiate it with the fmc object we created earlier.
+To use visualization methods developed for this module we first need to create an instance of FcmVisualize class and instantiate it with the fcm object we created earlier.
 
 Example:
 
@@ -460,13 +451,13 @@ from fcmbci import FcmVisualize
 vis = FcmVisualize(fcm)
 ```
 
-One can inspect the frequency of the raitings of each linguistic term for a given pair of concepts with the term_freq_hist() method.
+One can inspect the frequency of the ratings of each linguistic term for a given pair of concepts with the term_freq_hist() method.
 
 ```
 vis.term_freq_hist('C1', 'C2')
 ```
 <img src="figures\figure_7.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 7:</em> Expert's raitings of causal trength between C1 and C2.
+<em>Figure 7:</em> Expert's ratings of causal strength between C1 and C2.
 
 One can also visually inspect the deffuzification of the activated membership functions between a pair of concepts with the defuzz_view() method.
 
