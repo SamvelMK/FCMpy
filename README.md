@@ -1,22 +1,22 @@
 # Fuzzy Cognitive Maps for Behavior Change Interventions and Evaluation (FcmBci).
 
-fcmbci is Python package for constructing fuzzy cognitive maps and testing <em>what-if</em> scnearios. The package includes the following submodules:
+fcmbci is Python package for automatically generating causal weights for fuzzy cognitive maps based on qualitative inputs (by using fuzzy logic) and testing <em>what-if</em> scnearios. The package includes the following submodules:
 * FcmDataProcessor
 * FcmSimulator
 * FcmVisualize
 
-The <a ref=fcmbci\data_processor\data_processor.md> FcmDatProcessor </a> includes methods for deriving causal weights of an FCM based on qualitative inputs from experts. 
-The <a ref=fcmbci\simulator\simulator.md> FcmSimulator </a> allows runing simulations on top of the specified FCMs and test <em>what-if</em> scenarios.
+<a ref=fcmbci\data_processor\data_processor.md> FcmDatProcessor </a> includes methods for deriving causal weights of an FCM based on qualitative inputs from experts. <br> 
+<a ref=fcmbci\simulator\simulator.md> FcmSimulator </a> allows runing simulations on top of the specified FCMs and test <em>what-if</em> scenarios. <br>
 The FcmVisualize module provides methods for visualizing different components of data processing and simulations.
 
 ## Installation
 Fcmbci requires python >=3.6 and depends on:
 
-pandas>=0.25.1
-numpy>=1.16.5
-scikit-fuzzy>=0.4.2
-networkx>=1.9.0
-matplotlib>=3.1.1
+* pandas>=0.25.1
+* numpy>=1.16.5
+* scikit-fuzzy>=0.4.2
+* networkx>=1.9.0
+* matplotlib>=3.1.1
 
 and will soon be available on PyPi! The lastest version can be installed by:
 
