@@ -51,7 +51,7 @@ The methods presented in this section are used to derive the edge weights based 
 
 ## read_xlsx()
 <div align='justify'>
-The read xlsx function takes the same argument as pandas' read_excel() method with an addition of dtype argument. The dtype argument indicates whether the data is in the matrix format or edge list format. 
+The read xlsx method takes the same argument as pandas' read_excel() method with an addition of dtype argument. The dtype argument indicates whether the data is in the matrix format or edge list format. 
 
 ```
 read_xlsx(filepath, dtype)
@@ -141,25 +141,25 @@ The read_xlsx() method stores the data in an ordered dictionary where <em>keys</
 ## automf()
 <div align='justify'>
 
-This method, automatically generates triangular membership functions based on the passed lingustic terms. This method was taken and modified from <em>scikit-fuzzy</em> package.
+This method automatically generates triangular membership functions based on the passed lingustic terms. The method was taken and modified from <em>scikit-fuzzy</em> package.
 
 ```
 automf(universe, 
             linguistic_terms = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH'])
 
 Parameters
----------- 
+----------
 universe : 1d array,
-                    The universe of discourse.
+                The universe of discourse.
                     
 linguistic_terms : lsit, 
-                    default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH']
-                    Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+                        default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH']
+                        Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         
 Return
 ---------
 y : dict,
-    Generated membership functions. The key is the linguistic term and the value is a 1d array. 
+        Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
 ```
 
 The method returns a dictionary with the linguistic terms as the keys and the corresponding numerical intervals (in 1d arrays) as the values.
@@ -227,9 +227,9 @@ activate(activation_input, mf)
 Parameters
 ----------
 activation_input : dict,
-                    Membership function to apply the implication operation, 
-                    where the key is the linguistic term and the value is the frequency its occurence .
-                    Example: parameters = {'H': 0.66, 'VH': 0.33}
+                        Membership function to apply the implication operation, 
+                        where the key is the linguistic term and the value is the frequency its occurence .
+                        Example: parameters = {'H': 0.66, 'VH': 0.33}
 mf : dict,
         membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
         and the value is a 1d array with the membership values.
@@ -237,10 +237,10 @@ mf : dict,
 Return
 ---------
 y : dict,
-        Activated membership functions, where the key is the linguistic term and 
+        activated membership functions, where the key is the linguistic term and 
         the value is a 1d array with the activated membership values. 
 ```
-To activate the membership functions, we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurance. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
+To activate the membership functions, we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurances of the terms. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
 The method returns a dictionary with the activated membership function.
 
 ```
@@ -364,7 +364,7 @@ Output:
 
 0.703888431055232
 ```
-This can be visualized as follows (The code is adjusted from scikit-fuzzy tutorial):
+This can be visualized as follows (The code was taken and adjusted from  <a href="https://pythonhosted.org/scikit-fuzzy/auto_examples/plot_tipping_problem.html">scikit-fuzzy tutorial)</a>:
 
 ```
 import skfuzzy as fuzz
@@ -412,11 +412,44 @@ The methods described above are wrapped in gen_weights_mat() and gen_weights_lis
 gen_weights_mat(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                     method = 'centroid')
+
+Parameters
+----------
+data : OrderedDict,
+        the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (Matrix format described in read_xlsx).
+        default --> None; uses the data stored/read into the constructor.
+
+        linguistic terms.
+        default --> None; uses the data stored/read into the constructor.
+
+linguistic_terms : list,
+                        A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
+                        Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+method : str,
+        Defuzzification method;  default --> 'centroid'. 
+        For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
+
 ```
 ```
 gen_weights_list(data = None,
                     linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                     method = 'centroid')
+
+Parameters
+----------
+data : OrderedDict,
+        the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (list format described in read_xlsx).
+        default --> None; uses the data stored/read into the constructor.
+
+        linguistic terms.
+        default --> None; uses the data stored/read into the constructor.
+
+linguistic_terms : list,
+                        A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
+                        Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+method : str,
+        Defuzzification method;  default --> 'centroid'. 
+        For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
 
 ```
 Example:
