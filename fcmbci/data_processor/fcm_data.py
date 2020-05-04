@@ -76,7 +76,7 @@ class FcmDataProcessor:
         Return
         ---------
         y : dict,
-            Generated membership functions. The key is the linguistic term and the value is a 1d array. 
+            Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
         """
         
         number = len(linguistic_terms)
@@ -187,9 +187,8 @@ class FcmDataProcessor:
         
         Parameters
         ----------
-        data : dataframe,
-                Expert input data. The row index and the column names should be the concepts and the row inputs should be the
-                linguistic terms.
+        data : OrderedDict,
+                the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (Matrix format described in read_xlsx).
                 default --> None; uses the data stored/read into the constructor.
 
         linguistic_terms : list,
@@ -246,17 +245,13 @@ class FcmDataProcessor:
         """ Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
         (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format data.
         
-        Parameters
-        ----------
-        data : dataframe,
-                Expert input data. The dataframe should have a From and To columns, followed by the linguistic terms. See an example
-                in the documentation.
+        data : OrderedDict,
+                the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (list format described in read_xlsx). 
                 default --> None; uses the data stored/read into the constructor.
 
         linguistic_terms : list,
                             A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
                             Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
-        
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
