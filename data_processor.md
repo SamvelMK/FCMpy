@@ -22,7 +22,7 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 ## FcmDataProcessor
 
-To create an instance of FcmDataProcessor class you can either pass the data (dataframe) that contains the data directly to the constructor 
+To create an instance of the FcmDataProcessor class you can either pass the data (dataframe) that contains the data directly to the constructor 
 
 ```
 from fcmbci import FcmDataProcessor
@@ -59,18 +59,18 @@ read_xlsx(filepath, dtype)
 Parameters
 ----------
 filepath : str, 
-            ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
+                ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
         
 dtype: str,
         Data type. Available options --> 'Matrix', 'List'.
 ```
-The data that it expects should be in a specific shape. In the current version, the function can take either matrix-like or edge list formats.
+The data that it expects should be in a specific shape. In the current version, the function can take either matrix or edge list formats.
 
 <img src="figures\figure_2.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 2:</em> Matrix like format. <br>
+<em>Figure 2:</em> Matrix format. <br>
 <br>
 <img src="figures\figure_2_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 2.1:</em> Matrix like format.
+<em>Figure 2.1:</em> List format.
 
 Example:
 
@@ -78,23 +78,23 @@ Example:
 fcm.read_xlsx('sample.xlsx', 'Matrix')
 fcm.read_xlsx('list_format.xlsx', 'List')
 ```
-The data is read into the constructor and can be accessed in the following way:
+The data can be accessed in the following way:
 
 ```
 fcm.data
 ```
 ```
 Output1:
-OrderedDict([('Expert_1',         C1    C2  C3   C4
-                            C1    NaN  "VH" NaN  NaN
-                            C2  "-VH"   NaN NaN  NaN
-                            C3   "VH"   NaN NaN  "L"
-                            C4    NaN   NaN NaN  NaN), 
-              
-              ('Expert_2',        C1    C2  C3   C4
-                            C1    NaN  "VH" NaN  NaN
-                            C2  "-VH"   NaN NaN  NaN
-                            C3    "M"   NaN NaN  "L"
+OrderedDict([('Expert_1',           C1   C2  C3   C4
+                               C1  NaN   VH NaN  NaN
+                               C2  -VH  NaN NaN  NaN
+                               C3   VH  NaN NaN    L
+                               C4  NaN  NaN NaN  NaN),
+                ('Expert_2',        C1   C2   C3   C4
+                               C1  NaN   VH NaN  NaN
+                               C2  -VH  NaN NaN  NaN
+                               C3    M  NaN NaN    L
+                               C4  NaN  NaN NaN  NaN)
 ```
 ```
 Output2:
