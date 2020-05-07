@@ -258,7 +258,6 @@ class FcmVisualize:
         
         # to visualize the outcome node. 
         if target:
-            
             target = target
             node_list = list(G.nodes())
             nodes = nx.draw_networkx_nodes(G, 
@@ -360,7 +359,7 @@ class FcmVisualize:
                 
                 plt.figure(figsize = figsize)
                 plt.subplot(121)
-                self.system_view(target, concept_states)
+                self.system_view(concept_states, target)
 
                 plt.subplot(122)
                 sim_view()
