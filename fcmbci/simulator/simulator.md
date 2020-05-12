@@ -142,11 +142,11 @@ Output:
 The values converged in the 7 state (e <= 0.001)
 ```
 
-One can visualize the simulation steps with simulation_view() method. 
+One can visualize the simulation steps with simulation_view() static method. 
 
 ```
-vis = FcmVisualize(fcm.system)
-vis.simulation_view(sim.scenarios, 'initial_state', network_view =False)
+from fcmbci import FcmVisualize as vis
+vis.simulation_view(fcm.system, sim.scenarios, 'initial_state', network_view =False)
 ```
 <img src="..\..\figures\figure_10.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 10:</em> Simulation results.
