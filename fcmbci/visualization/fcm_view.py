@@ -306,7 +306,7 @@ class FcmVisualize:
         ax.set_axis_off()
 
     @staticmethod
-    def simulation_view(nxData, simulation_results, scenario, network_view = True, target = None,
+    def simulation_view(simulation_results, scenario, nxData=None, network_view = True, target = None,
                        figsize = (10, 5), legend_anchor = (0.97, 0.6), title = None):
             
             """
@@ -355,9 +355,10 @@ class FcmVisualize:
             if network_view == False:
                 sim_view()
                 plt.show()
+            elif (network_view == True) & (nxData is None):
+                raise ValueError('Network data is missing. Network_view can be True only if Network Data is supplied.')
             else:
                 concept_states = simulation_results[scenario].loc[len(simulation_results[scenario]) -1].to_dict()            
-                
                 plt.figure(figsize = figsize)
                 plt.subplot(121)
                 FcmVisualize.system_view(nxData, concept_states, target)
