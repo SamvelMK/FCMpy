@@ -319,6 +319,7 @@ axes.spines['top'].set_visible(False)
 axes.spines['right'].set_visible(False)
 axes.get_xaxis().tick_bottom()
 axes.get_yaxis().tick_left()
+plt.ylim(0,1)
 
 plt.tight_layout()
 plt.show()
