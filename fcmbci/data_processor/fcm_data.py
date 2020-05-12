@@ -303,7 +303,7 @@ class FcmDataProcessor:
                 weight_matrix.loc[pair[0]][pair[1]] = value
         self.causal_weights = weight_matrix.fillna(0)
         
-    def create_system(self, causal_weights = None):
+    def create_system(self, causal_weights):
         
         """ Creates a fuzzy system/network based on the generated causal weights.
         
@@ -312,17 +312,12 @@ class FcmDataProcessor:
         causal_weights : dataframe,
                             dataframe with the causal wights where the columns and rows/index represent the concepts
                             and the rows represent the weights.
-                            default --> None; Uses the casual weights stored in the constructor. 
         
         Return
         ----------
         y : networkx object,
         """
-
-        if causal_weights == None:
-            causal_weights = self.causal_weights
-        else:
-            causal_weights = causal_weights
+        causal_weights = causal_weights
 
         # Creates a netwrokx instance.
         G = nx.from_numpy_matrix(causal_weights.values, parallel_edges=True, 
