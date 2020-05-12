@@ -193,8 +193,8 @@ class FcmVisualize:
         else:
             axes.set_title(f'{concept_1} and {concept_2} are not related!')
             plt.show()
-            
-    def system_view(self, concept_states = None, target=None):
+    @staticmethod        
+    def system_view(nxData, concept_states = None, target=None):
         
         """
         Visualize the FCM system.
@@ -208,7 +208,7 @@ class FcmVisualize:
                     default --> None,
                     The outcome/s of interest.
         """
-        G = self.fcmdata.system
+        G = nxData
         
         # For positive and negative edges
         def col(weights):
@@ -305,7 +305,8 @@ class FcmVisualize:
         ax = plt.gca()
         ax.set_axis_off()
 
-    def simulation_view(self, simulation_results, scenario, network_view = True, target = None,
+    @staticmethod
+    def simulation_view(nxData, simulation_results, scenario, network_view = True, target = None,
                        figsize = (10, 5), legend_anchor = (0.97, 0.6), title = None):
             
             """
@@ -359,7 +360,7 @@ class FcmVisualize:
                 
                 plt.figure(figsize = figsize)
                 plt.subplot(121)
-                self.system_view(concept_states, target)
+                FcmVisualize.system_view(nxData, concept_states, target)
 
                 plt.subplot(122)
                 sim_view()
