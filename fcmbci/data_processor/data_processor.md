@@ -509,25 +509,24 @@ vis.defuzz_view('C1', 'C2')
 The create_system method builds a networkx object of the system with the causal weights generated in the previous steps. If the causal weights are not passed as arguments the causal weights are infered from the fcm constructor.
 
 ```
-create_system(causal_weights = None)
+create_system(causal_weights)
 
 Parameters
 ----------
 causal_weights : dataframe,
                     dataframe with the causal wights where the columns and rows/index represent the concepts
                     and the rows represent the weights.
-                    default --> None; Uses the casual weights stored in the constructor. 
 ```
 
 Example:
 
 ```
-fcm.create_system()
+fcm.create_system(fcm.causal_weights)
 ```
-One can visualize this with the system_view() method.
+One can visualize this with the system_view() static method. They system_view method takes a network object as an argument.
 
 ```
-vis.system_view()
+vis.system_view(fcm.system)
 plt.show()
 ```
 <img src="..\..\figures\figure_9.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
