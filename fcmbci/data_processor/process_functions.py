@@ -53,8 +53,9 @@ def consistency_check(data, dtype):
         # for each pair of concepts; 1) Create a list of expert raitings, 2) Check the valence of each linguistic term.
         #                            3) Check if the max and min are equal.
 
+        inconsistencies = []
         for pair in indexes:
-            f = []
+            f = []   
             for expert in data:
                 d = data[expert]
                 if len(set(pair) & set(list(d.index))) == len(set(pair)): # In case if the concept is not present in one of the expert's map.
@@ -64,7 +65,10 @@ def consistency_check(data, dtype):
                         f.append(float(v))
             if len(f) > 0:
                 if min(f) != max(f):
-                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
+                     inconsistencies.append(pair)
+        # In case of inconsistencies in raiting between the concepts across the experts raise a value error.
+        if len(inconsistencies) > 0:
+            raise ValueError(f'{inconsistencies} pairs were raited inconsistently across the experts. Check the data!')             
 
     else:
         # Obtain the pairs of concepts. 1) create a flat data file with all the expert inputs. 
@@ -75,6 +79,7 @@ def consistency_check(data, dtype):
 
         # For each pair of concepts 1) select the expert inputs 
         #                           2) check whether the max of the list == to the min of the list
+        inconsistencies = []
         for pair in indexes:
             f = []
             for expert in data:
@@ -85,7 +90,11 @@ def consistency_check(data, dtype):
                         f.append(float(l.values))
             if len(f) > 0:
                 if min(f) != max(f):
-                    raise ValueError(f'{pair} were raited inconsistently across the experts. Check the data! {f}')
+                    inconsistencies.append(pair)
+        # In case of inconsistencies in raiting between the concepts across the experts raise a value error.
+        if len(inconsistencies) > 0:
+            raise ValueError(f'{inconsistencies} pairs were raited inconsistently across the experts. Check the data!')
+            
 
 def check_column(data):
     """
@@ -107,6 +116,7 @@ def label_gen(names):
     """
 
     text = []
+    names = str(names) # in case if the concept's are integers.
     string = names.strip('\?!\t\n')
     if (len(string) > 3) & (len(string.split(' ')) > 1):
         text.append("".join(e[0] for e in string.split(' ')))
@@ -115,3 +125,10 @@ def label_gen(names):
     else:
         text.append(string)
     return text[0]
+
+
+def correct_inconsistencies():
+    """
+    Correct inconsistencies in the sign of causality between the expert ratings by taking the sign of the majority ratings.
+    """
+    pass
