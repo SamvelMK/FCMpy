@@ -51,53 +51,34 @@ The methods presented in this section are used to derive the edge weights based 
 
 ## read_xlsx()
 <div align='justify'>
-The read xlsx method takes the same argument as pandas' read_excel() method with an addition of dtype argument. The dtype argument indicates whether the data is in the matrix format or edge list format. 
+The read xlsx method takes the same argument as pandas' read_excel() method.
 
 ```
-read_xlsx(filepath, dtype)
+read_xlsx(filepath)
 
 Parameters
 ----------
 filepath : str, 
                 ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
-        
-dtype: str,
-        Data type. Available options --> 'Matrix', 'List'.
 ```
-The data that it expects should be in a specific shape. In the current version, the function can take either matrix or edge list formats.
+The data that it expects should be in a specific shape. The data should be in the form of an edge list.
 
-<img src="..\..\figures\figure_2.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 2:</em> Matrix format. <br>
-<br>
 <img src="..\..\figures\figure_2_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 2.1:</em> List format.
+<em>Figure 2:</em> List format.
 
 Example:
 
 ```
-fcm.read_xlsx('sample.xlsx', 'Matrix')
-fcm.read_xlsx('list_format.xlsx', 'List')
+fcm.read_xlsx('list_format.xlsx')
 ```
 The data can be accessed in the following way:
 
 ```
 fcm.data
 ```
+
 ```
 Output1:
-OrderedDict([('Expert_1',           C1   C2  C3   C4
-                               C1  NaN   VH NaN  NaN
-                               C2  -VH  NaN NaN  NaN
-                               C3   VH  NaN NaN    L
-                               C4  NaN  NaN NaN  NaN),
-                ('Expert_2',        C1   C2   C3   C4
-                               C1  NaN   VH NaN  NaN
-                               C2  -VH  NaN NaN  NaN
-                               C3    M  NaN NaN    L
-                               C4  NaN  NaN NaN  NaN)
-```
-```
-Output2:
 
 OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
                               0    C1  C1 NaN  NaN NaN NaN  NaN

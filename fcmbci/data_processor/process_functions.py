@@ -3,6 +3,7 @@
 #################################################################################################
 
 import pandas as pd
+import numpy as np
 import itertools
 
 def valence_check(linguistic_term):
@@ -28,7 +29,42 @@ def valence_check(linguistic_term):
         else:
             return 0
 
-def consistency_check(data, dtype):
+# def consistency_check(data):
+    
+#     """
+#     Checks whether the sign of the raitings the paris of the concepts
+#     are consistent across all the experts.
+    
+#     Parameters
+#     ----------
+#     data : OrderedDict,
+#     """   
+
+#     # Obtain the pairs of concepts. 1) create a flat data file with all the expert inputs. 
+#     #                               2) set the index of the data From, To.
+#     flat_data = pd.concat([data[i] for i in data], sort = False)
+#     flat_data = flat_data.set_index(['From', 'To'])
+#     indexes = set(flat_data.index) # a set of all concept pairs.
+
+#     # For each pair of concepts 1) select the expert inputs 
+#     #                           2) check whether the max of the list == to the min of the list
+#     inconsistencies = []
+#     for pair in indexes:
+#         f = []
+#         for expert in data:
+#             d = data[expert].set_index(['From', 'To'])
+#             if pair in list(d.index): # In case if the concept is not present in one of the expert's map. (Note Multiindex).
+#                 l = d.loc[pair].dropna()
+#                 if len(l) != 0:
+#                     f.append(float(l.values))
+#         if len(f) > 0:
+#             if min(f) != max(f):
+#                 inconsistencies.append(pair)
+#     # In case of inconsistencies in raiting between the concepts across the experts raise a value error.
+#     if len(inconsistencies) > 0:
+#         raise ValueError(f'{inconsistencies} pairs were raited inconsistently across the experts. Check the data!')
+
+def consistency_check(data):
     
     """
     Checks whether the sign of the raitings the paris of the concepts
@@ -37,63 +73,27 @@ def consistency_check(data, dtype):
     Parameters
     ----------
     data : OrderedDict,
-    dtype : str,
-            Data format: 'Matrix' or 'List'.
-    """
-    # Checks whether the dtype is correctly specified.
-    if dtype.lower() not in ['matrix', 'list']:
-        raise ValueError(f'Unrecognized data format "{dtype}"! Check the spelling or the data type!')
+    """   
 
-    if dtype.lower() == 'matrix':
-        ### Check the consistency of raitings of a matrix_like data.
-        # Create a flat data with all the expert inputs and create a list of all the pairs of concepts.
-        flat_data = pd.concat([data[i] for i in data], sort = False)
-        indexes = [x for x in itertools.permutations(list(set(flat_data.index)), 2)]
+    # Obtain the pairs of concepts. 1) create a flat data file with all the expert inputs. 
+    #                               2) set the index of the data From, To.
+    flat_data = pd.concat([data[i] for i in data], sort = False)
+    flat_data.columns = [x.lower() for x in flat_data.columns]
+    flat_data = flat_data.set_index(['from', 'to'])
+    indexes = set(flat_data.index) # a set of all concept pairs.
+    
+# #     # For each pair of concepts 1) select the expert inputs 
+# #     #                           2) check whether the max of the list == to the min of the list
 
-        # for each pair of concepts; 1) Create a list of expert raitings, 2) Check the valence of each linguistic term.
-        #                            3) Check if the max and min are equal.
+    inconsistencies = []
+    for pair in indexes:
+        f = []
+        val = flat_data.loc[pair].values
+        if len(set(val[~np.isnan(val)])) > 1:
+            inconsistencies.append(pair)
+    if len(inconsistencies) > 0:
+        raise ValueError(f'{inconsistencies} pairs of concepts were raited inconsistently across the experts. Check the data!')
 
-        inconsistencies = []
-        for pair in indexes:
-            f = []   
-            for expert in data:
-                d = data[expert]
-                if len(set(pair) & set(list(d.index))) == len(set(pair)): # In case if the concept is not present in one of the expert's map.
-                    l = d.loc[pair]
-                    if not pd.isna(l):
-                        v = valence_check(l)
-                        f.append(float(v))
-            if len(f) > 0:
-                if min(f) != max(f):
-                     inconsistencies.append(pair)
-        # In case of inconsistencies in raiting between the concepts across the experts raise a value error.
-        if len(inconsistencies) > 0:
-            raise ValueError(f'{inconsistencies} pairs were raited inconsistently across the experts. Check the data!')             
-
-    else:
-        # Obtain the pairs of concepts. 1) create a flat data file with all the expert inputs. 
-        #                               2) set the index of the data From, To.
-        flat_data = pd.concat([data[i] for i in data], sort = False)
-        flat_data = flat_data.set_index(['From', 'To'])
-        indexes = set(flat_data.index) # a set of all concept pairs.
-
-        # For each pair of concepts 1) select the expert inputs 
-        #                           2) check whether the max of the list == to the min of the list
-        inconsistencies = []
-        for pair in indexes:
-            f = []
-            for expert in data:
-                d = data[expert].set_index(['From', 'To'])
-                if pair in list(d.index): # In case if the concept is not present in one of the expert's map. (Note Multiindex).
-                    l = d.loc[pair].dropna()
-                    if len(l) != 0:
-                        f.append(float(l.values))
-            if len(f) > 0:
-                if min(f) != max(f):
-                    inconsistencies.append(pair)
-        # In case of inconsistencies in raiting between the concepts across the experts raise a value error.
-        if len(inconsistencies) > 0:
-            raise ValueError(f'{inconsistencies} pairs were raited inconsistently across the experts. Check the data!')
             
 
 def check_column(data):
