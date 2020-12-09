@@ -7,27 +7,32 @@ import itertools
 import numpy as np
 import skfuzzy as fuzz
 import skfuzzy
-import matplotlib.pyplot as plt
-import matplotlib
-import re
 import networkx as nx
 import functools
-from data_processor.process_functions import *
+from data_processor.checkers import Checker
 
 class FcmDataProcessor:
-
+    
     """
     A class of methods to derive causal weights for FCMs based on linguistic terms.
-    The FcmBci object is initialized with a universe of discourse with a range [0,1]. 
+    The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1]. 
     """
     
-    def __init__(self, data = None):
+    def __init__(self, linguistic_terms, data = None):
         
+        """
+        data: ordered dict
+                qualitative expert inputs.
+        """
+        self.linguistic_terms = linguistic_terms
+        self.universe = np.arange(-1, 1.001, 0.001)
+
         if data != None:
+            Checker.columns_check(data) # check if the from ---> to columns exist.
+            Checker.consistency_check(data, linguistic_terms) # check the consistency of the data.
             self.data = data
         else:
             self.data = pd.DataFrame()
-        self.universe = np.arange(-1, 1.001, 0.001)
 
     def read_xlsx(self, filepath):
         
@@ -42,16 +47,17 @@ class FcmDataProcessor:
         """
         
         data = pd.read_excel(filepath, sheet_name=None)
-        check_column(data)
-        consistency_check(data)
-        self.data = data            
+        Checker.columns_check(data) # check if From ---> To columns exist: raise error if otherwise.
+        Checker.consistency_check(data, self.linguistic_terms) # Checks whether the sign of the raitings across the experts are consistent.
+        Checker.data = data            
         
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
     def automf(self, universe, 
                linguistic_terms = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']):
         
-        """ Automatically generates triangular membership functions based on the passed
+        """ 
+        Automatically generates triangular membership functions based on the passed
         Lingustic Terms. This function was taken and modified from scikit-fuzzy.
         
         Parameters
@@ -96,7 +102,8 @@ class FcmDataProcessor:
     
     def activate(self, activation_input, mf):
         
-        """ Activate the specified membership function based on the passed parameters.
+        """ 
+        Activate the specified membership function based on the passed parameters.
         
         Parameters
         ----------
@@ -123,7 +130,8 @@ class FcmDataProcessor:
     
     def aggregate(self, activated):
         
-        """ Aggregate the activated membership function usiing fmax operator. 
+        """ 
+        Aggregate the activated membership function usiing fmax operator. 
         
         Parameters
         ----------
@@ -143,7 +151,8 @@ class FcmDataProcessor:
     
     def defuzzify(self, universe, aggregated, method = 'centroid'):
         
-        """ Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
+        """ 
+        Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
         One can pass on another defuzzification method available in scikit-fuzzy library (e.g., bisector, mom, sig)
         Returns the defuzzified value.
 
@@ -167,72 +176,13 @@ class FcmDataProcessor:
         defuzzified_value = fuzz.defuzz(universe, aggregated, method)
         
         return defuzzified_value
-        
-    def gen_weights_mat(self, data = None,
-                                linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
-                                method = 'centroid'):
-                
-        """ This function applies fuzzy logic to obtain edge weights of an FCM with qualitative inputs in a matrix format data (i.e., where the 
-        causal relationships are expressed in linguistic terms).
-        
-        Parameters
-        ----------
-        data : OrderedDict,
-                the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (Matrix format described in read_xlsx).
-                default --> None; uses the data stored/read into the constructor.
-
-        linguistic_terms : list,
-                            A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
-                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
-        method : str,
-                    Defuzzification method;  default --> 'centroid'. 
-                    For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
-        """
-        if data == None:
-            data = self.data
-            # Create a flat data with all of the experts' imputs.
-            flat_data = pd.concat([data[i] for i in data], sort = False)
-        else:
-            consistency_check(data, 'Matrix')
-            data = data      
-            flat_data = pd.concat([data[i] for i in data], sort = False)
-  
-
-        # weight matrix for the final results.
-        weight_matrix = pd.DataFrame(pd.DataFrame(columns=list(flat_data.index.unique()), index=list(flat_data.index.unique())))
-        # For the freq_hist visualization
-        self.expert_data = {}
-        
-        # A dict to store the aggregated results for the visualization purposes. 
-        self.aggregated = {}
-        
-        # Create the membership functions for the linguistic terms.
-        terms = self.automf(self.universe, linguistic_terms)
-        self.terms = terms
-        
-        # for each pair of consequnt/antecedent calculate the edge value and store it in the weight matrix.
-        for antecedent in flat_data:
-            for consequent in flat_data:
-                crostab = pd.crosstab(flat_data.loc[antecedent][consequent], flat_data.loc[antecedent][consequent].index)/len(data.keys())
-                # check if the ant/cons pairs exist.
-                if len(crostab) != 0:
-                    activation_parameter = eval(str(crostab[antecedent].to_dict()).replace('"', '')) # create the parameter.
-                    self.expert_data[(antecedent, consequent)] = activation_parameter # for the freq_term hist vis. 
-                    
-                    activated = self.activate(activation_parameter, self.terms) # activate the mf
-                    aggregated = self.aggregate(activated) # aggregate the activated mfs
-                    self.aggregated[f'{antecedent} {consequent}'] = aggregated # store the aggregated function for vis.
-                    value = self.defuzzify(self.universe, aggregated, method) # defuzzify the values.
-                    weight_matrix.loc[antecedent][consequent] = value # populate the df with the defuzzified  weights.
-                    
-        self.causal_weights = weight_matrix.fillna(0)
             
     
-    def gen_weights_list(self, data = None,
-                         linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
+    def gen_weights(self, linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
                          method = 'centroid'): 
         
-        """ Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
+        """ 
+        Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
         (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format data.
         
         data : OrderedDict,
@@ -247,23 +197,17 @@ class FcmDataProcessor:
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
                     
         """        
-        if data == None:
-            data = self.data
-            # Create a flat data with all of the experts' imputs.
-            flat_data = pd.concat([data[i] for i in data], sort = False)
-        else:
-            consistency_check(data, 'List')
-            data = data
-            flat_data = pd.concat([data[i] for i in data], sort = False)
-
+        data = self.data
+        # Create a flat data with all of the experts' inputs.
+        flat_data = pd.concat([data[i] for i in data], sort = False)
         
         # weight matrix for the final results.
         weight_matrix = pd.DataFrame(columns=[i for i in flat_data['From'].unique()], index=[i for i in flat_data['From'].unique()])
         self.expert_data = {}
         
-        # 1) Calculate term frequencies, 2) add the signes to them. 3) set the NA's to 0.
-        freq_data = pd.concat([data[i] for i in data],  ignore_index=True).groupby(['From', 'To']).count()/len(data.keys())
-        signed = flat_data.groupby(['From', 'To']).mean() * freq_data # adds the sign of the terms
+        # 1) Calculate term proportions, 2) add the signes to them. 3) set the NA's to 0.
+        proportions = pd.concat([data[i] for i in data],  ignore_index=True).groupby(['From', 'To']).count()/len(data.keys())
+        signed = flat_data.groupby(['From', 'To']).mean() * proportions # adds the sign of the terms
         final = signed.fillna(0) # sets the nan to 0
         
         # A dict to store the aggregated results for the visualization purposes. 
@@ -295,7 +239,8 @@ class FcmDataProcessor:
         
     def create_system(self, causal_weights):
         
-        """ Creates a fuzzy system/network based on the generated causal weights.
+        """ 
+        Creates a fuzzy system/network based on the generated causal weights.
         
         Parameters
         ----------
