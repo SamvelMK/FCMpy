@@ -26,7 +26,7 @@ class FcmDataProcessor:
         data: ordered dict
                 qualitative expert inputs.
         """
-        self.linguistic_terms = linguistic_terms
+        self.linguistic_terms = [i.lower() for i in linguistic_terms]
         self.universe = np.arange(-1, 1.001, 0.001)
 
         if data != None:
@@ -48,12 +48,12 @@ class FcmDataProcessor:
         """
         
         data = pd.read_excel(filepath, sheet_name=None)
-        
+
         # check the data
         Checker.columns_check(data) # check if From ---> To columns exist: raise error if otherwise.
         Checker.consistency_check(data, self.linguistic_terms) # Checks whether the sign of the raitings across the experts are consistent.
         
-        self.data = data            
+        self.data = collections.OrderedDict(data)            
 
     def read_json(self, filepath):
         """ 
@@ -224,44 +224,69 @@ class FcmDataProcessor:
                     
         """        
         data = self.data
+        # # A dict to store the aggregated results for the visualization purposes. 
+        self.aggregated = {}
+
         # Create a flat data with all of the experts' inputs.
-        flat_data = pd.concat([data[i] for i in data], sort = False)
+        flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
+        flat_data = flat_data.set_index(['from', 'to'])
         
         # weight matrix for the final results.
-        weight_matrix = pd.DataFrame(columns=[i for i in flat_data['From'].unique()], index=[i for i in flat_data['From'].unique()])
-        self.expert_data = {}
-        
-        # 1) Calculate term proportions, 2) add the signes to them. 3) set the NA's to 0.
-        proportions = pd.concat([data[i] for i in data],  ignore_index=True).groupby(['From', 'To']).count()/len(data.keys())
-        signed = flat_data.groupby(['From', 'To']).mean() * proportions # adds the sign of the terms
-        final = signed.fillna(0) # sets the nan to 0
-        
-        # A dict to store the aggregated results for the visualization purposes. 
-        self.aggregated = {}
+        cols = set([i[0] for i in set(flat_data.index)])
+        weight_matrix = pd.DataFrame(columns=cols, index=cols)
         
         # Create the membership functions for the linguistic terms.
-        terms = self.automf(self.universe, linguistic_terms)
+        terms = self.automf(self.universe, self.linguistic_terms)
         self.terms = terms
-
-        for pair in final.index:
+        
+        for concepts in set(flat_data.index):
             activation_parameter = {}
-            term_set = final.loc[pair[0], pair[1]].to_dict() # selects the term:freq for a pair of concepts.       
-            
-            # Attach the sign to the Linguistic Term.
-            for term in term_set.keys():
-                sign = str(np.sign(term_set[term])).strip('1\0.0\.\0') # extract the sign of the 
-                value = float(str(term_set[term]).strip('-')) # striping the sign (the activation f only takes values in the fuzzy range.)
-                key = sign + term
-                activation_parameter[key] = value
-            self.expert_data[pair] = activation_parameter
-            # Activate, aggregate, defuzzify and attach the value to the weight_matrix. 
-            if not all(x==0 for x in activation_parameter.values()): # Checks if at least one rull is activated.
-                activated = self.activate(activation_parameter, terms)
+            activation_parameter = (flat_data.loc[concepts].sum()/len(self.data)).to_dict()
+            if min(activation_parameter.values()) < 0:
+                activation_parameter = {'-'+key: abs(value) for key, value in activation_parameter.items()}
+
+            activated = self.activate(activation_parameter, terms)
+            if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
-                self.aggregated[f'{pair[0]} {pair[1]}'] = aggr
+                self.aggregated[f'{concepts}'] = aggr
                 value = self.defuzzify(self.universe, aggr, method)
-                weight_matrix.loc[pair[0]][pair[1]] = value
+                weight_matrix.loc[concepts] = value
+            
         self.causal_weights = weight_matrix.fillna(0)
+        
+        # self.expert_data = {}
+        
+        # # 1) Calculate term proportions, 2) add the signes to them. 3) set the NA's to 0.
+        # proportions = pd.concat([data[i] for i in data],  ignore_index=True).groupby(['From', 'To']).count()/len(data.keys())
+        # signed = flat_data.groupby(['From', 'To']).mean() * proportions # adds the sign of the terms
+        # final = signed.fillna(0) # sets the nan to 0
+        
+        # # A dict to store the aggregated results for the visualization purposes. 
+        # self.aggregated = {}
+        
+        # # Create the membership functions for the linguistic terms.
+        # terms = self.automf(self.universe, linguistic_terms)
+        # self.terms = terms
+
+        # for pair in final.index:
+        #     activation_parameter = {}
+        #     term_set = final.loc[pair[0], pair[1]].to_dict() # selects the term:freq for a pair of concepts.       
+            
+        #     # Attach the sign to the Linguistic Term.
+        #     for term in term_set.keys():
+        #         sign = str(np.sign(term_set[term])).strip('1\0.0\.\0') # extract the sign of the 
+        #         value = float(str(term_set[term]).strip('-')) # striping the sign (the activation f only takes values in the fuzzy range.)
+        #         key = sign + term
+        #         activation_parameter[key] = value
+        #     self.expert_data[pair] = activation_parameter
+        #     # Activate, aggregate, defuzzify and attach the value to the weight_matrix. 
+        #     if not all(x==0 for x in activation_parameter.values()): # Checks if at least one rull is activated.
+        #         activated = self.activate(activation_parameter, terms)
+        #         aggr = self.aggregate(activated)
+        #         self.aggregated[f'{pair[0]} {pair[1]}'] = aggr
+        #         value = self.defuzzify(self.universe, aggr, method)
+        #         weight_matrix.loc[pair[0]][pair[1]] = value
+        # self.causal_weights = weight_matrix.fillna(0)
         
     def create_system(self, causal_weights):
         
