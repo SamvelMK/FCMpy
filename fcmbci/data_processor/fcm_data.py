@@ -9,6 +9,8 @@ import skfuzzy as fuzz
 import skfuzzy
 import networkx as nx
 import functools
+import json
+import collections
 from data_processor.checkers import Checker
 
 class FcmDataProcessor:
@@ -38,7 +40,6 @@ class FcmDataProcessor:
         
         """ 
         Reads an excel spreadsheet into the constructor.
-        Note that the first column in the file is set to be the index.
         
         Parameters
         ----------
@@ -47,10 +48,35 @@ class FcmDataProcessor:
         """
         
         data = pd.read_excel(filepath, sheet_name=None)
+        
+        # check the data
         Checker.columns_check(data) # check if From ---> To columns exist: raise error if otherwise.
         Checker.consistency_check(data, self.linguistic_terms) # Checks whether the sign of the raitings across the experts are consistent.
-        Checker.data = data            
         
+        self.data = data            
+
+    def read_json(self, filepath):
+        """ 
+        Reads a json file
+
+        Parameters
+        ----------
+        filepath : str, path object or file-like object
+        """
+        f = open(filepath) 
+        data = json.load(f)
+        f.close()
+        d = {}
+        for i in data.keys():
+            d[i] = data[i]
+        od = collections.OrderedDict([(i, pd.DataFrame(d[i])) for i in d])
+
+        # check the data
+        Checker.columns_check(od)
+        Checker.consistency_check(od, self.linguistic_terms)
+
+        self.data = od
+
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
     def automf(self, universe, 
