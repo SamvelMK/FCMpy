@@ -1,6 +1,6 @@
 # Methods for deriving FCM edge weights from qualitative inputs.
 
-## Constructing a Fuzzy Cognitive Map (Retrived from Mkhitaryan, Giabbanelli, NK de Vries & R Crutzen, 2020)
+## Constructing a Fuzzy Cognitive Map (Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020)
 
 <div align='justify'>
 
@@ -125,7 +125,7 @@ OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
                               14   C4  C3 NaN  NaN  NaN NaN  NaN
                               15   C4  C4 NaN  NaN  NaN NaN  NaN),
 ```
-The read_xlsx() method stores the data in an ordered dictionary where <em>keys</em> are the expert (i.e., the names of the excel sheets) and the <em>values</em> are pandas dataframes of the expert inputs.
+The read_xlsx() method stores the data in an ordered dictionary where <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda dataframes of the expert inputs.
 
 </div>
 
@@ -136,8 +136,8 @@ In certain cases one might have to read the data from json files. The json file 
 
 ```
 {"ExpertId": [
-                {"from": "1", "to": 1, "NA": "", "VL": "", "L": "", "M": 1, "H": "", "VH": ""}, 
-                {"from": "1", "to": 2, "NA": "", "VL": 1, "L": "", "M": "", "H": "", "VH": ""}
+                {"from": 1, "to": 1, "NA": "", "VL": "", "L": "", "M": 1, "H": "", "VH": ""}, 
+                {"from": 1, "to": 2, "NA": "", "VL": 1, "L": "", "M": "", "H": "", "VH": ""}
              ]
 }
 ```
