@@ -17,7 +17,7 @@ class Checker:
         ----------
         data : OrderedDict,
         linguistic_terms: list
-                        list of linguistic terms to be evaluated
+                            list of linguistic terms to be evaluated
         Return
         ----------
         Writes out an excel file with the inconsistencies and raises a ValueError if inconsistencies were identified
@@ -27,7 +27,8 @@ class Checker:
         flat_data = pd.concat([data[i] for i in data], sort = False)
         flat_data.columns = [x.lower() for x in flat_data.columns]
         flat_data = flat_data.set_index(['from', 'to'])
-        flat_data = flat_data[linguistic_terms]
+        columns = set([i.lower().replace(r'-', '') for i in linguistic_terms])
+        flat_data = flat_data[columns]
         pairs = set(flat_data.index) # a set of all concept pairs.
         
         incon = {}
@@ -36,7 +37,7 @@ class Checker:
             for expert in data.keys():
                 dat=data[expert]
                 dat.columns = [x.lower() for x in dat.columns]
-                dat = dat.set_index(['from', 'to'])[linguistic_terms].replace(f'', np.nan)
+                dat = dat.set_index(['from', 'to'])[columns].replace(r'', np.nan)
                 v = dat.loc[pair].values[np.logical_not(np.isnan(dat.loc[pair].values))]
                 if len(v) > 0:
                     val[expert] = int(v)
