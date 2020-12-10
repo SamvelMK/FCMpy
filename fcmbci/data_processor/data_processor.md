@@ -1,6 +1,6 @@
 # Methods for deriving FCM edge weights from qualitative inputs.
 
-## Constructing a Fuzzy Cognitive Map (Retrived from {})
+## Constructing a Fuzzy Cognitive Map (Retrived from Mkhitaryan, Giabbanelli, NK de Vries & R Crutzen, 2020)
 
 <div align='justify'>
 
@@ -22,16 +22,21 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 ## FcmDataProcessor
 
-To create an instance of the FcmDataProcessor class you can either pass the data (dataframe) that contains the data directly to the constructor 
+<div align='justify'>
+
+To create an instance of the FcmDataProcessor class you can either pass the data (collections.OrderedDict where key is the expert and the values are panda's dataframes) that contains the data directly to the constructor or create an instance with no data and then read in the data by using one of the methods of this class (i.e., [read_xlsx](#read_xlsx) or [read_json](#read_json)).
+
+To instantiate the FcmDataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. 
 
 ```
 from fcmbci import FcmDataProcessor
 
-fcm = FcmDataProcessor(dataframe)
-```
-or create an instance with no argument and then use the [read_xlsx](#read_xlsx) method to read in the data.
+lw = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
 
-The instance is automatically initialized with a universe of discourse with a range of [-1, 1].
+fcm = FcmDataProcessor(data=None, linguistic_weights = lw)
+```
+The class is automatically instantiated with a universe of discourse with a range of [-1, 1].
+<div>
 
 ## Methods
 
@@ -40,6 +45,7 @@ The instance is automatically initialized with a universe of discourse with a ra
 The methods presented in this section are used to derive the edge weights based on qualitative inputs as described above.
 
 - [read_xlsx](#read_xlsx)
+- [read_json](#read_json)
 - [automf](#automf)
 - [activate](#activate)
 - [aggregate](#aggregate)
@@ -61,16 +67,20 @@ Parameters
 filepath : str, 
                 ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
 ```
-The data that it expects should be in a specific shape. The data should be in the form of an edge list.
+The data that it expects should be in a specific shape. The data must have the following columns:
+* From: Representing antecedents
+* To: Representing concequents
+* L(n): Representing linguistic term(s) n (e.g., VL, L, M etc.).
 
 <img src="..\..\figures\figure_2_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 2:</em> List format.
+<em>Figure 2:</em> Sample data strcture.
 
 Example:
 
 ```
-fcm.read_xlsx('list_format.xlsx')
+fcm.read_xlsx('data.xlsx')
 ```
+
 The data can be accessed in the following way:
 
 ```
@@ -115,7 +125,30 @@ OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
                               14   C4  C3 NaN  NaN  NaN NaN  NaN
                               15   C4  C4 NaN  NaN  NaN NaN  NaN),
 ```
-The read_xlsx() method stores the data in an ordered dictionary where <em>keys</em> are the experts (the names of the excel sheets) and the <em>values</em> are the expert inputs.
+The read_xlsx() method stores the data in an ordered dictionary where <em>keys</em> are the expert (i.e., the names of the excel sheets) and the <em>values</em> are pandas dataframes of the expert inputs.
+
+</div>
+
+## read_json()
+<div align='justify'>
+
+In certain cases one might have to read the data from json files. The json file should have the following general structure:
+
+```
+{"ExpertId": [
+                {"from": "1", "to": 1, "NA": "", "VL": "", "L": "", "M": 1, "H": "", "VH": ""}, 
+                {"from": "1", "to": 2, "NA": "", "VL": 1, "L": "", "M": "", "H": "", "VH": ""}
+             ]
+}
+```
+
+```
+read_json(filepath)
+
+Parameters
+----------
+filepath : str, path object or file-like object       
+```
 
 </div>
 
