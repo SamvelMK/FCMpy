@@ -26,6 +26,7 @@ class FcmDataProcessor:
         Parameters
         ----------
         linguistic_terms: list
+                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         data: ordered dict
                 qualitative expert inputs.
                 default --> None
@@ -95,21 +96,11 @@ class FcmDataProcessor:
 
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
     
-    def automf(self, universe, 
-               linguistic_terms = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']):
+    def automf(self):
         
         """ 
         Automatically generates triangular membership functions based on the passed
         Lingustic Terms. This function was taken and modified from scikit-fuzzy.
-        
-        Parameters
-        ----------
-        universe : 1d array,
-                    The universe of discourse.
-                    
-        linguistic_terms : lsit, 
-                            default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH']
-                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         
         Return
         ---------
@@ -117,8 +108,8 @@ class FcmDataProcessor:
             Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
         """
         
-        number = len(linguistic_terms)
-        limits = [universe.min(), universe.max()]
+        number = len(self.linguistic_terms)
+        limits = [self.universe.min(), self.universe.max()]
         universe_range = (limits[1] - limits[0])/2
         widths = [universe_range / (((number/2) - 1) / 2.)] * int(number)
         
@@ -136,12 +127,11 @@ class FcmDataProcessor:
         terms = dict()
 
         # Repopulate
-        for term, abc in zip(linguistic_terms, abcs):
-            terms[term] = skfuzzy.trimf(universe, abc)
+        for term, abc in zip(self.linguistic_terms, abcs):
+            terms[term] = skfuzzy.trimf(self.universe, abc)
         
         return terms
-
-    
+        
     def activate(self, activation_input, mf):
         
         """ 
@@ -151,7 +141,7 @@ class FcmDataProcessor:
         ----------
         activation_input : dict,
                             Membership function to apply the implication operation, 
-                            where the key is the linguistic term and the value is the frequency its occurence .
+                            where the key is the linguistic term and the value is the frequency of its occurrence.
                             Example: parameters = {'H': 0.66, 'VH': 0.33}
         mf : dict,
              membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
@@ -163,7 +153,8 @@ class FcmDataProcessor:
             activated membership functions, where the key is the linguistic term and 
             the value is a 1d array with the activated membership values. 
         """
-        
+        activation_input = {k.lower(): v for k, v in activation_input.items()} # Make lower case.
+
         activated = {}
         for i in activation_input.keys():
             activated[i] = np.fmin(activation_input[i], mf[i])
@@ -173,12 +164,12 @@ class FcmDataProcessor:
     def aggregate(self, activated):
         
         """ 
-        Aggregate the activated membership function usiing fmax operator. 
+        Aggregate the activated membership function using fmax operator. 
         
         Parameters
         ----------
         activated : dict,
-                    adictionary with the activated membership values to be aggregated.
+                    a dictionary with the activated membership values to be aggregated.
         
         Return
         ---------
@@ -191,7 +182,7 @@ class FcmDataProcessor:
         
         return aggregated
     
-    def defuzzify(self, universe, aggregated, method = 'centroid'):
+    def defuzzify(self, aggregated, method = 'centroid'):
         
         """ 
         Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
@@ -200,9 +191,6 @@ class FcmDataProcessor:
 
         Parameters
         ----------
-        universe : 1d array,
-                    The universe of discourse.
-
         aggregated : 1d array,
                         Aggregated membership function to be defuzzified.
         method : str, 
@@ -215,32 +203,23 @@ class FcmDataProcessor:
             Defuzzified value.
         """
         
-        defuzzified_value = fuzz.defuzz(universe, aggregated, method)
+        defuzzified_value = fuzz.defuzz(self.universe, aggregated, method)
         
         return defuzzified_value
             
     
-    def gen_weights(self, linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
-                         method = 'centroid'): 
+    def gen_weights(self, method = 'centroid'): 
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
         (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format data.
-        
-        data : OrderedDict,
-                the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (list format described in read_xlsx). 
-                default --> None; uses the data stored/read into the constructor.
 
-        linguistic_terms : list,
-                            A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
-                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
                     
         """        
-        data = self.data
-        # # A dict to store the aggregated results for the visualization purposes. 
+        # A dict to store the aggregated results for the visualization purposes. 
         self.aggregated = {}
 
         # Create a flat data with all of the experts' inputs.
@@ -252,7 +231,7 @@ class FcmDataProcessor:
         weight_matrix = pd.DataFrame(columns=cols, index=cols)
         
         # Create the membership functions for the linguistic terms.
-        terms = self.automf(self.universe, self.linguistic_terms)
+        terms = self.automf()
         self.terms = terms
         
         for concepts in set(flat_data.index):
@@ -265,7 +244,7 @@ class FcmDataProcessor:
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
                 self.aggregated[f'{concepts}'] = aggr
-                value = self.defuzzify(self.universe, aggr, method)
+                value = self.defuzzify(aggr, method)
                 weight_matrix.loc[concepts] = value
             
         self.causal_weights = weight_matrix.fillna(0)
