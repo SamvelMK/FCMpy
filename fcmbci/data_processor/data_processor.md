@@ -180,20 +180,10 @@ fcm.read_json(data='data.json', keys = keys)
 ## automf()
 <div align='justify'>
 
-This method automatically generates triangular membership functions based on the passed lingustic terms. The method was taken and modified from <em>scikit-fuzzy</em> package.
+This method automatically generates triangular membership functions based on the passed linguistic terms (during the instantiation). The method was taken and modified from <em>scikit-fuzzy</em> package.
 
 ```
-automf(universe, 
-            linguistic_terms = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH'])
-
-Parameters
-----------
-universe : 1d array,
-                The universe of discourse.
-                    
-linguistic_terms : lsit, 
-                        default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH']
-                        Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+automf()
         
 Return
 ---------
@@ -208,8 +198,7 @@ Example:
 ```
 import numpy as np
 
-universe = np.arange(-1, 1.001, 0.001)
-mf = fcm.automf(universe, ['-VH', '-H', '-M', '-L', '-VL', 'VL', 'L', 'M', 'H', 'VH'])
+mf = fcm.automf()
 
 ```
 ```
@@ -237,8 +226,8 @@ fig = plt.figure(figsize= (10, 5))
 axes = plt.axes()
 
 for i in mf:
-    axes.plot(universe, mf[i], linewidth=0.4, label=str(i))
-    axes.fill_between(universe, mf[i], alpha=0.5)
+    axes.plot(fcm.universe, mf[i], linewidth=0.4, label=str(i))
+    axes.fill_between(fcm.universe, mf[i], alpha=0.5)
 
 axes.legend(bbox_to_anchor=(0.95, 0.6))
 
@@ -267,7 +256,7 @@ Parameters
 ----------
 activation_input : dict,
                         Membership function to apply the implication operation, 
-                        where the key is the linguistic term and the value is the frequency its occurence .
+                        where the key is the linguistic term and the value is the frequency of its occurrence.
                         Example: parameters = {'H': 0.66, 'VH': 0.33}
 mf : dict,
         membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
@@ -279,7 +268,7 @@ y : dict,
         activated membership functions, where the key is the linguistic term and 
         the value is a 1d array with the activated membership values. 
 ```
-To activate the membership functions, we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurances of the terms. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
+To activate the membership functions, we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurrences of the terms. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
 The method returns a dictionary with the activated membership function.
 
 ```
@@ -302,8 +291,8 @@ fig = plt.figure(figsize= (10, 5))
 axes = plt.axes()
 
 for i in act:
-    axes.plot(universe, act[i], linewidth=0.4, label=str(i))
-    axes.fill_between(universe, act[i], alpha=0.5)
+    axes.plot(fcm.universe, act[i], linewidth=0.4, label=str(i))
+    axes.fill_between(fcm.universe, act[i], alpha=0.5)
 
 axes.legend(bbox_to_anchor=(0.95, 0.6))
 
@@ -311,6 +300,7 @@ axes.spines['top'].set_visible(False)
 axes.spines['right'].set_visible(False)
 axes.get_xaxis().tick_bottom()
 axes.get_yaxis().tick_left()
+axes.set_ylim([0,1])
 plt.tight_layout()
 plt.show()
 ```
@@ -322,7 +312,7 @@ plt.show()
 
 ## aggregate()
 <div align='justify'>
-Now that we have activated the respective membership functions, we need to aggregate them before we can derive the causal weights through the difuzzification process.
+Now that we have activated the respective membership functions, we need to aggregate them before we can derive the causal weights through the defuzzification process.
 
 ```
 aggregate(activated)
@@ -379,9 +369,6 @@ defuzzify(universe, aggregated, method = 'centroid')
 
 Parameters
 ----------
-universe : 1d array,
-            The universe of discourse.
-
 aggregated : 1d array,
                 Aggregated membership function to be defuzzified.
 method : str, 
@@ -397,12 +384,12 @@ y : int,
 Example:
 
 ```
-defuzz = fcm.defuzzify(universe, aggr)
+defuzz = fcm.defuzzify(aggr)
 ```
 ```
 Output:
 
-0.703888431055232
+0.704
 ```
 This can be visualized as follows (The code was taken and adjusted from  <a href="https://pythonhosted.org/scikit-fuzzy/auto_examples/plot_tipping_problem.html">scikit-fuzzy tutorial)</a>:
 
@@ -443,60 +430,26 @@ plt.show()
 
 </div>
 
-## gen_weights_mat(), gen_weights_list()
+## gen_weights()
 <div align='justify'>
 
-The methods described above are wrapped in gen_weights_mat() and gen_weights_list() methods to allow for automatic generation of weight matrices based on qualitative inputs. One can either pass the data to the method, or the data can be taken from the constructor. 
+The methods described above are wrapped in gen_weights() method to allow for automatic generation of weight matrices based on qualitative inputs.
 
 ```
-gen_weights_mat(data = None,
-                    linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
-                    method = 'centroid')
+gen_weights(method = 'centroid')
 
 Parameters
 ----------
-data : OrderedDict,
-        the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (Matrix format described in read_xlsx).
-        default --> None; uses the data stored/read into the constructor.
-
-        linguistic terms.
-        default --> None; uses the data stored/read into the constructor.
-
-linguistic_terms : list,
-                        A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
-                        Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
 method : str,
         Defuzzification method;  default --> 'centroid'. 
         For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
 
 ```
-```
-gen_weights_list(data = None,
-                    linguistic_terms = ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'],
-                    method = 'centroid')
 
-Parameters
-----------
-data : OrderedDict,
-        the keys in of the dict are Experts and the corresponding values is a dataframe with the expert's input (list format described in read_xlsx).
-        default --> None; uses the data stored/read into the constructor.
-
-        linguistic terms.
-        default --> None; uses the data stored/read into the constructor.
-
-linguistic_terms : list,
-                        A list of Linguistic Terms; default --> ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']
-                        Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
-method : str,
-        Defuzzification method;  default --> 'centroid'. 
-        For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
-
-```
 Example:
 
 ```
-fcm.gen_weights_list()
-# fcm.gen_weights_mat()
+fcm.gen_weights()
 ```
 
 The weight matrix can be inspected as follows:
