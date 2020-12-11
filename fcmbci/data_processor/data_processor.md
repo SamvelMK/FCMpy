@@ -24,7 +24,7 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 <div align='justify'>
 
-To create an instance of the FcmDataProcessor class you can either pass the data (collections.OrderedDict where key is the expert and the values are panda's dataframes) that contains the data directly to the constructor or create an instance with no data and then read in the data by using one of the methods of this class (i.e., [read_xlsx](#read_xlsx) or [read_json](#read_json)).
+To create an instance of the FcmDataProcessor class you can either pass the data (collections.OrderedDict where the key is the expert ID and the values are panda's dataframes) to the constructor or create an instance with no data and then read in the data by using one of the methods of this class (i.e., [read_xlsx](#read_xlsx) or [read_json](#read_json)).
 
 To instantiate the FcmDataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. 
 
@@ -33,9 +33,20 @@ from fcmbci import FcmDataProcessor
 
 lw = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
 
-fcm = FcmDataProcessor(data=None, linguistic_weights = lw)
+fcm = FcmDataProcessor(linguistic_weights = lw)
 ```
+If the data is supplied directly then the column_names should also be specified. 
+```
+from fcmbci import FcmDataProcessor
+
+lw = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
+column_names = ['VL','L', 'M', 'H', 'VH']
+
+fcm = FcmDataProcessor(linguistic_weights = lw, data=data, column_names = column_names)
+```
+
 The class is automatically instantiated with a universe of discourse with a range of [-1, 1].
+
 <div>
 
 ## Methods
@@ -57,28 +68,32 @@ The methods presented in this section are used to derive the edge weights based 
 
 ## read_xlsx()
 <div align='justify'>
-The read xlsx method takes the same argument as pandas' read_excel() method.
+
+The read xlsx method takes the same argument as panda's read_excel() method. Additionally, one needs to specify the column_names that represent the linguistic terms. 
 
 ```
-read_xlsx(filepath)
+read_xlsx(filepath, column_names)
 
 Parameters
 ----------
 filepath : str, 
                 ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
+column_names: list
+                the column names of the pandas df in the ordered dictionary
 ```
 The data that it expects should be in a specific shape. The data must have the following columns:
 * From: Representing antecedents
-* To: Representing concequents
+* To: Representing consequents
 * L(n): Representing linguistic term(s) n (e.g., VL, L, M etc.).
 
 <img src="..\..\figures\figure_2_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 2:</em> Sample data strcture.
+<em>Figure 2:</em> Sample data structure.
 
 Example:
 
 ```
-fcm.read_xlsx('data.xlsx')
+column_names = ['VL', 'L', 'M', 'H', 'VH']
+fcm.read_xlsx(data='data.xlsx', column_names = column_names)
 ```
 
 The data can be accessed in the following way:
@@ -125,7 +140,7 @@ OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
                               14   C4  C3 NaN  NaN  NaN NaN  NaN
                               15   C4  C4 NaN  NaN  NaN NaN  NaN),
 ```
-The read_xlsx() method stores the data in an ordered dictionary where <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda dataframes of the expert inputs.
+The read_xlsx() method stores the data in an ordered dictionary where the <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda's dataframes of the expert inputs.
 
 </div>
 
@@ -141,13 +156,23 @@ In certain cases one might have to read the data from json files. The json file 
              ]
 }
 ```
+The read_json method takes the filepath and a list of keys as arguments. The keys argument are the keys in the json file that represent the linguistic terms. 
 
 ```
-read_json(filepath)
+read_json(filepath, keys)
 
 Parameters
 ----------
-filepath : str, path object or file-like object       
+filepath : str, path object or file-like object
+keys: list
+        the column names of the pandas df in the ordered dictionary       
+```
+
+Example:
+
+```
+keys = ['VL', 'L', 'M', 'H', 'VH']
+fcm.read_json(data='data.json', keys = keys)
 ```
 
 </div>
