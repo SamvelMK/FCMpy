@@ -17,26 +17,37 @@ class FcmDataProcessor:
     
     """
     A class of methods to derive causal weights for FCMs based on linguistic terms.
-    The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1]. 
+    The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
     """
     
-    def __init__(self, linguistic_terms, data = None):
+    def __init__(self, linguistic_terms, data = None, column_names = None):
         
         """
+        Parameters
+        ----------
+        linguistic_terms: list
         data: ordered dict
                 qualitative expert inputs.
+                default --> None
+        column_names: list
+                        the column names of the pandas df in the ordered dictionary
+                        default --> None
         """
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
         self.universe = np.arange(-1, 1.001, 0.001)
-
-        if data != None:
-            Checker.columns_check(data) # check if the from ---> to columns exist.
-            Checker.consistency_check(data, linguistic_terms) # check the consistency of the data.
-            self.data = data
+        
+        if data!= None:
+            if column_names != None:
+                column_names = [i.lower() for i in column_names]
+                Checker.columns_check(data=data) # check if the from ---> to columns exist.
+                Checker.consistency_check(data=data, column_names = column_names) # check the consistency of the data.
+                self.data = data
+            else:
+                raise ValueError('The column names are not specified!')
         else:
-            self.data = pd.DataFrame()
+            self.data = pd.DataFrame()            
 
-    def read_xlsx(self, filepath):
+    def read_xlsx(self, filepath, column_names):
         
         """ 
         Reads an excel spreadsheet into the constructor.
@@ -45,24 +56,29 @@ class FcmDataProcessor:
         ----------
         filepath : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
+        column_names: list
+                        the column names of the pandas df in the ordered dictionary
         """
-        
+        column_names = [i.lower() for i in column_names]
         data = pd.read_excel(filepath, sheet_name=None)
 
         # check the data
-        Checker.columns_check(data) # check if From ---> To columns exist: raise error if otherwise.
-        Checker.consistency_check(data, self.linguistic_terms) # Checks whether the sign of the raitings across the experts are consistent.
+        Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
+        Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
         
         self.data = collections.OrderedDict(data)            
 
-    def read_json(self, filepath):
+    def read_json(self, filepath, keys):
         """ 
-        Reads a json file
+        Reads data from a json file
 
         Parameters
         ----------
         filepath : str, path object or file-like object
+        keys: list
+                the keys in the json file that represent the linguistic terms
         """
+        keys = [i.lower() for i in keys]
         f = open(filepath) 
         data = json.load(f)
         f.close()
@@ -72,8 +88,8 @@ class FcmDataProcessor:
         od = collections.OrderedDict([(i, pd.DataFrame(d[i])) for i in d])
 
         # check the data
-        Checker.columns_check(od)
-        Checker.consistency_check(od, self.linguistic_terms)
+        Checker.columns_check(data=od)
+        Checker.consistency_check(data=od, column_names=keys)
 
         self.data = od
 
