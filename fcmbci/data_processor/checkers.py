@@ -9,26 +9,25 @@ from datetime import date
 class Checker:
 
     @staticmethod
-    def consistency_check(data, linguistic_terms):
+    def consistency_check(data, column_names):
         """
-        Extract inconsistent ratings for the given linguistic terms
+        Extract inconsistent ratings for the given linguistic terms in the supplied data.
         
         Parameters
         ----------
         data : OrderedDict,
-        linguistic_terms: list
-                            list of linguistic terms to be evaluated
+        column_names: list
+                    the column names of the pandas df in the ordered dictionary
         Return
         ----------
-        Writes out an excel file with the inconsistencies and raises a ValueError if inconsistencies were identified
+        Writes out an excel file with the inconsistencies and raises a ValueError if inconsistencies were identified.
         """
         current_date=date.today()
 
         flat_data = pd.concat([data[i] for i in data], sort = False)
         flat_data.columns = [x.lower() for x in flat_data.columns]
         flat_data = flat_data.set_index(['from', 'to'])
-        columns = set([i.lower().replace(r'-', '') for i in linguistic_terms])
-        flat_data = flat_data[columns]
+        flat_data = flat_data[column_names]
         pairs = set(flat_data.index) # a set of all concept pairs.
         
         incon = {}
@@ -37,7 +36,7 @@ class Checker:
             for expert in data.keys():
                 dat=data[expert]
                 dat.columns = [x.lower() for x in dat.columns]
-                dat = dat.set_index(['from', 'to'])[columns].replace(r'', np.nan)
+                dat = dat.set_index(['from', 'to'])[column_names].replace(r'', np.nan)
                 v = dat.loc[pair].values[np.logical_not(np.isnan(dat.loc[pair].values))]
                 if len(v) > 0:
                     val[expert] = int(v)
