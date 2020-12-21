@@ -13,7 +13,9 @@ class Transfer:
         Parameters
         ----------
         x : numpy.array,
-        l : A parameter that determines the steepness of the sigmoid function at values around 0. 
+                the results of the FCM update function.
+        l : int/float
+                A parameter that determines the steepness of the sigmoid function at values around 0. 
         
         Return
         ----------
@@ -35,6 +37,7 @@ class Transfer:
         Parameters
         ----------
         x : numpy.array,
+                the results of the FCM update function.
         
         Return
         ----------
@@ -55,6 +58,7 @@ class Transfer:
         Parameters
         ----------
         x : numpy.array,
+                the results of the FCM update function.
         
         Return
         ----------
@@ -75,6 +79,7 @@ class Transfer:
         Parameters
         ----------
         x : numpy.array
+                the results of the FCM update function.
         
         Return
         ----------
