@@ -1,5 +1,5 @@
 
 
-from .data_processor.fcm_data import FcmDataProcessor
+from .data_processor.data_processor import FcmDataProcessor
 from .visualization.fcm_view import FcmVisualize
 from .simulator.simulator import FcmSimulator
