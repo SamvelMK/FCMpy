@@ -86,7 +86,7 @@ class Transfer:
         y : numpy.array,
                 domain R,
                 range [-1,1].
-        """"
+        """
 
         return np.tanh(x)
     
@@ -100,10 +100,10 @@ class Transfer:
         self.transfer_funcs.update(func)
     
     def remove_transfer_func(self, func_name):
-        """"
+        """
         func_name: str
                     name of the function to be removed.
-        """"
+        """
         if 'Transfer.__' not in str(self.transfer_funcs[func_name]):
             del self.transfer_funcs[func_name]
         else:

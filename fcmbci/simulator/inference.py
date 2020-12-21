@@ -1,5 +1,5 @@
 import numpy as np
-from transfer import Transfer
+from simulator.transfer import Transfer
 
 class Inference(Transfer):
     def __init__(self):
@@ -82,14 +82,14 @@ class Inference(Transfer):
     
     def remove_inference_method(self, func_name):
 
-        """"
+        """
         Remove an inference method.
 
         Parameters
         ----------
         key: str
                 name of the method to be removed
-        """"
+        """
         
         if 'Inference.__' not in str(self.inference_methods[func_name]):
             del self.inference_methods[func_name]

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from inference import Inference
+from simulator.inference import Inference
 import warnings
 
 class FcmSimulator(Inference):
@@ -35,7 +35,7 @@ class FcmSimulator(Inference):
         Return
         ----------
         y: pandas.DataFrame
-                results of the simulation
+                results of the simulation.
         """
         
         results = pd.DataFrame(initial_state, index=[0])
