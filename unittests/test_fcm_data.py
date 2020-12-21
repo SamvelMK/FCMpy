@@ -4,8 +4,7 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
 import unittest
-from fcmbci.data_processor.fcm_data import FcmDataProcessor
-from fcmbci.data_processor.process_functions import *
+from fcmbci.data_processor.data_processor import FcmDataProcessor
 import itertools
 import collections
 import pandas as pd 
@@ -25,15 +24,15 @@ class TestDataProcessor(unittest.TestCase):
                                 msg='Error in the creating an instance of the class!')
 
     def test_read_excel(self):    
-        self.fcm.read_xlsx(filepath=os.path.abspath('unittests/test_cases/data_test.xlsx'), column_names=self.column_names)
+        self.fcm.read_xlsx(filepath=os.path.abspath('test_cases/data_test.xlsx'), column_names=self.column_names)
 
         self.assertIsNotNone(self.fcm.data)
         self.assertIsInstance(self.fcm.data, collections.OrderedDict)
         self.assertEqual(len(self.fcm.data), 6)
         self.assertEqual(len(self.fcm.data['Expert_1'].columns), 7)
 
-    def test_read_json(self):
-        self.fcm.read_json(filepath=os.path.abspath('unittests/test_cases/data_test.json'),
+    def test_read_json(self): 
+        self.fcm.read_json(filepath=os.path.abspath('test_cases/data_test.json'),
                                 keys=self.keys)
                                 
         self.assertIsNotNone(self.fcm.data)
