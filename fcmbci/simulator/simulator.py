@@ -12,7 +12,7 @@ class FcmSimulator(Inference):
     def __init__(self):
         super().__init__()
 
-    def simulate(self, initial_state, weight_mat, transfer, inference, thresh, iterations, **params):
+    def simulate(self, initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params):
         """
         Runs simulations over the passed FCM.
         
