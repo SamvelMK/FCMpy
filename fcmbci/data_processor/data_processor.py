@@ -26,7 +26,7 @@ class FcmDataProcessor:
         Parameters
         ----------
         linguistic_terms: list
-                            Note that the number of linguistic terms should be even. A narrow interval around 0 is added automatically.
+                            Note that the number of linguistic terms should be even. A narrow interval around 0 (for no causality option) is added automatically.
         data: ordered dict
                 qualitative expert inputs.
                 default --> None
@@ -39,9 +39,9 @@ class FcmDataProcessor:
         
         if data!= None:
             if column_names != None:
-                column_names = [i.lower() for i in column_names]
+                self.__column_names = [i.lower() for i in column_names]
                 Checker.columns_check(data=data) # check if the from ---> to columns exist.
-                Checker.consistency_check(data=data, column_names = column_names) # check the consistency of the data.
+                Checker.consistency_check(data=data, column_names = self.__column_names) # check the consistency of the data.
                 self.data = data
             else:
                 raise ValueError('The column names are not specified!')
@@ -60,12 +60,12 @@ class FcmDataProcessor:
         column_names: list
                         the column names of the pandas df in the ordered dictionary
         """
-        column_names = [i.lower() for i in column_names]
+        self.__column_names = [i.lower() for i in column_names]
         data = pd.read_excel(filepath, sheet_name=None)
 
         # check the data
         Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
-        Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
+        Checker.consistency_check(data=data, column_names = self.__column_names) # Checks whether the sign of the raitings across the experts are consistent.
         
         self.data = collections.OrderedDict(data)            
 
@@ -79,7 +79,7 @@ class FcmDataProcessor:
         keys: list
                 the keys in the json file that represent the linguistic terms
         """
-        keys = [i.lower() for i in keys]
+        self.__column_names = [i.lower() for i in keys]
         f = open(filepath) 
         data = json.load(f)
         f.close()
@@ -90,7 +90,7 @@ class FcmDataProcessor:
 
         # check the data
         Checker.columns_check(data=od)
-        Checker.consistency_check(data=od, column_names=keys)
+        Checker.consistency_check(data=od, column_names=self.__column_names)
 
         self.data = od
 
@@ -125,6 +125,10 @@ class FcmDataProcessor:
         abcs[((number//2) -1)] = [centers_neg[-2], -0.001, -0.001] # - Very Low
         
         terms = dict()
+
+        # add a narrow interval for no causality.
+        self.linguistic_terms.insert(len(self.linguistic_terms)//2, 'na')
+        abcs.insert(len(abcs)//2, np.array([-0.001, 0, 0.001]))
 
         # Repopulate
         for term, abc in zip(self.linguistic_terms, abcs):
@@ -224,7 +228,8 @@ class FcmDataProcessor:
         # Create a flat data with all of the experts' inputs.
         flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
         flat_data = flat_data.set_index(['from', 'to'])
-        
+        flat_data = flat_data.sort_index(level=['from','to'])
+
         # weight matrix for the final results.
         cols = set([i[0] for i in set(flat_data.index)])
         weight_matrix = pd.DataFrame(columns=cols, index=cols)
@@ -236,9 +241,8 @@ class FcmDataProcessor:
         for concepts in set(flat_data.index):
             activation_parameter = {}
             activation_parameter = (flat_data.loc[concepts].sum()/len(self.data)).to_dict()
-            if min(activation_parameter.values()) < 0:
-                activation_parameter = {'-'+key: abs(value) for key, value in activation_parameter.items()}
-
+            
+            activation_parameter = {('-'+k if v < 0 else k): abs(v) for (k,v) in activation_parameter.items()}
             activated = self.activate(activation_parameter, self.terms_mf)
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
