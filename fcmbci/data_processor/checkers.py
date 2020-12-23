@@ -46,7 +46,7 @@ class Checker:
             res = pd.DataFrame(incon).T
             res.index.set_names(['from', 'to'], inplace = True)
             res.to_excel(f'inconsistentRatings_{current_date.day}_{current_date.month}_{current_date.year}.xlsx', na_rep='NA')
-            raise ValueError(f'{list(res.index)} pairs of concepts were raited inconsistently across the experts. For more information check the inconsistentRatings_{current_date.day}_{current_date.month}_{current_date.year}.xlsx')
+            print(f'{list(res.index)} pairs of concepts were raited inconsistently across the experts. For more information check the inconsistentRatings_{current_date.day}_{current_date.month}_{current_date.year}.xlsx')
 
     @staticmethod
     def columns_check(data):
@@ -60,3 +60,14 @@ class Checker:
         for expert in data.keys():
             if ('from' not in [x.lower() for x in data[expert].columns]) | ('to' not in [x.lower() for x in data[expert].columns]):
                 raise ValueError('Columns From --> To were not found. Check the data!')
+    
+    @staticmethod
+    def input_check(initial_state, weights_df):
+        if len(initial_state) != len(weights_df.columns):
+            raise ValueError('The length of the initial_state.values() must == the length of the weights_df.columns')
+
+        elif min(initial_state.values()) < -1 & max(initial_state.values()) > 1:
+            raise ValueError('The values in the initial_state vector are out of the input domain (-1, 1)')
+        
+        elif weights_df.values.min() < -1 & weights_df.values.max() > 1:
+            raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
