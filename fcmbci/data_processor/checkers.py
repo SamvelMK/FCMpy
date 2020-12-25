@@ -17,7 +17,7 @@ class Checker:
         ----------
         data : OrderedDict,
         column_names: list
-                    the column names of the pandas df in the ordered dictionary
+                        the column names (linguistic terms) of the pandas df in the ordered dictionary
         Return
         ----------
         Writes out an excel file with the inconsistencies and raises a ValueError if inconsistencies were identified.
@@ -34,9 +34,11 @@ class Checker:
         for pair in pairs:
             val = {}
             for expert in data.keys():
-                dat=data[expert]
+                dat = data[expert].copy(deep=True)
+                dat = dat.set_index(['from', 'to'])
                 dat.columns = [x.lower() for x in dat.columns]
-                dat = dat.set_index(['from', 'to'])[column_names].replace(r'', np.nan)
+                dat['na'] = np.nan
+                dat[[i for i in dat if '-' in i]] = dat[[i for i in dat if '-' in i]] * -1
                 v = dat.loc[pair].values[np.logical_not(np.isnan(dat.loc[pair].values))]
                 if len(v) > 0:
                     val[expert] = int(v)
