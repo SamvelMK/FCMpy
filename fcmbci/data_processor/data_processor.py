@@ -20,7 +20,7 @@ class FcmDataProcessor:
     The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
     """
     
-    def __init__(self, linguistic_terms, data = None, column_names = None):
+    def __init__(self, linguistic_terms, data = None, check_consistency=False):
         
         """
         Parameters
@@ -37,18 +37,19 @@ class FcmDataProcessor:
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
         self.universe = np.arange(-1, 1.001, 0.001)
         
-        if data!= None:
+        if data != None:
             if column_names != None:
-                self.__column_names = [i.lower() for i in column_names]
+                column_names = [i.lower() for i in column_names]
                 Checker.columns_check(data=data) # check if the from ---> to columns exist.
-                Checker.consistency_check(data=data, column_names = self.__column_names) # check the consistency of the data.
+                if check_consistency:
+                    Checker.consistency_check(data=data, column_names = self.column_names) # check the consistency of the data.
                 self.data = data
             else:
                 raise ValueError('The column names are not specified!')
         else:
             self.data = pd.DataFrame()            
 
-    def read_xlsx(self, filepath, column_names):
+    def read_xlsx(self, filepath, check_consistency=False):
         
         """ 
         Reads an excel spreadsheet into the constructor.
@@ -60,26 +61,24 @@ class FcmDataProcessor:
         column_names: list
                         the column names of the pandas df in the ordered dictionary
         """
-        self.__column_names = [i.lower() for i in column_names]
+        column_names = [i.lower() for i in self.linguistic_terms]
         data = pd.read_excel(filepath, sheet_name=None)
 
         # check the data
         Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
-        Checker.consistency_check(data=data, column_names = self.__column_names) # Checks whether the sign of the raitings across the experts are consistent.
-        
+        if check_consistency:
+            Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
         self.data = collections.OrderedDict(data)            
 
-    def read_json(self, filepath, keys):
+    def read_json(self, filepath):
         """ 
         Reads data from a json file
 
         Parameters
         ----------
         filepath : str, path object or file-like object
-        keys: list
-                the keys in the json file that represent the linguistic terms
         """
-        self.__column_names = [i.lower() for i in keys]
+        column_names = [i.lower() for i in self.linguistic_terms]
         f = open(filepath) 
         data = json.load(f)
         f.close()
@@ -90,7 +89,7 @@ class FcmDataProcessor:
 
         # check the data
         Checker.columns_check(data=od)
-        Checker.consistency_check(data=od, column_names=self.__column_names)
+        Checker.consistency_check(data=od, column_names=column_names)
 
         self.data = od
 
