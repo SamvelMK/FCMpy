@@ -38,28 +38,26 @@ class FcmDataProcessor:
         self.universe = np.arange(-1, 1.001, 0.001)
         
         if data != None:
-            if column_names != None:
-                column_names = [i.lower() for i in linguistic_terms]
-                Checker.columns_check(data=data) # check if the from ---> to columns exist.
-                if check_consistency:
-                    Checker.consistency_check(data=data, column_names = self.column_names) # check the consistency of the data.
+            Checker.columns_check(data=data) # check if the from ---> to columns exist.
+            if check_consistency:
+                Checker.consistency_check(data=data, column_names = self.linguistic_terms) # check the consistency of the data.
                 self.data = data
-            else:
-                raise ValueError('The column names are not specified!')
         else:
             self.data = pd.DataFrame()            
 
     def read_xlsx(self, filepath, check_consistency=False):
         
         """ 
-        Reads an excel spreadsheet into the constructor.
+        Read data from an excel spreadsheet.
         
         Parameters
         ----------
         filepath : str, 
                     ExcelFile, xlrd.Book, path object or file-like object (read more in pd.read_excel)
-        column_names: list
-                        the column names of the pandas df in the ordered dictionary
+
+        check_consistency: Bool
+                            check the consistency of raitings across the experts.
+                            default --> False
         """
         column_names = [i.lower() for i in self.linguistic_terms]
         data = pd.read_excel(filepath, sheet_name=None)
@@ -70,7 +68,7 @@ class FcmDataProcessor:
             Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
         self.data = collections.OrderedDict(data)            
 
-    def read_json(self, filepath, check_consistency=True):
+    def read_json(self, filepath, check_consistency=False):
         """ 
         Reads data from a json file
 
@@ -240,7 +238,6 @@ class FcmDataProcessor:
         for concepts in set(flat_data.index):
             activation_parameter = {}
             activation_parameter = (flat_data.loc[concepts].sum()/len(self.data)).to_dict()
-            print(concepts, activation_parameter)
             activated = self.activate(activation_parameter, self.terms_mf)
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
