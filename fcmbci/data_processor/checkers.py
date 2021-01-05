@@ -5,6 +5,7 @@
 import numpy as np
 import pandas as pd
 from datetime import date 
+from tqdm import tqdm
 
 class Checker:
 
@@ -31,12 +32,12 @@ class Checker:
         pairs = set(flat_data.index) # a set of all concept pairs.
         
         incon = {}
-        for pair in pairs:
+        for pair in tqdm(pairs):
             val = {}
             for expert in data.keys():
                 dat = data[expert].copy(deep=True)
-                dat = dat.set_index(['from', 'to'])
                 dat.columns = [x.lower() for x in dat.columns]
+                dat = dat.set_index(['from', 'to']).replace(r'', np.nan)
                 dat['na'] = np.nan
                 dat[[i for i in dat if '-' in i]] = dat[[i for i in dat if '-' in i]] * -1
                 v = dat.loc[pair].values[np.logical_not(np.isnan(dat.loc[pair].values))]
