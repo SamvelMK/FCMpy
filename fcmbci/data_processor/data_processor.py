@@ -43,7 +43,9 @@ class FcmDataProcessor:
                 Checker.consistency_check(data=data, column_names = self.linguistic_terms) # check the consistency of the data.
                 self.data = data
         else:
-            self.data = pd.DataFrame()            
+            self.data = pd.DataFrame()
+
+    #### Read data            
 
     def read_xlsx(self, filepath, check_consistency=False):
         
