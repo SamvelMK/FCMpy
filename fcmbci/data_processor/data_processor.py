@@ -30,16 +30,16 @@ class FcmDataProcessor:
         data: ordered dict
                 qualitative expert inputs.
                 default --> None
-        column_names: list
-                        the column names of the pandas df in the ordered dictionary
-                        default --> None
+        check_consistency: Bool
+                            check the consistency of raitings across the experts.
+                            default --> False
         """
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
         self.universe = np.arange(-1, 1.001, 0.001)
         
         if data != None:
             if column_names != None:
-                column_names = [i.lower() for i in column_names]
+                column_names = [i.lower() for i in linguistic_terms]
                 Checker.columns_check(data=data) # check if the from ---> to columns exist.
                 if check_consistency:
                     Checker.consistency_check(data=data, column_names = self.column_names) # check the consistency of the data.
@@ -70,7 +70,7 @@ class FcmDataProcessor:
             Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
         self.data = collections.OrderedDict(data)            
 
-    def read_json(self, filepath):
+    def read_json(self, filepath, check_consistency=True):
         """ 
         Reads data from a json file
 
@@ -86,11 +86,10 @@ class FcmDataProcessor:
         for i in data.keys():
             d[i] = data[i]
         od = collections.OrderedDict([(i, pd.DataFrame(d[i])) for i in d])
-
         # check the data
         Checker.columns_check(data=od)
-        Checker.consistency_check(data=od, column_names=column_names)
-
+        if check_consistency:
+            Checker.consistency_check(data=od, column_names=column_names)
         self.data = od
 
     #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
@@ -214,7 +213,7 @@ class FcmDataProcessor:
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
-        (i.e., where the causal relationships are expressed in linguistic terms) in an edge list format data.
+        (i.e., where the causal relationships are expressed in linguistic terms)..
 
         method : str,
                     Defuzzification method;  default --> 'centroid'. 
@@ -226,6 +225,7 @@ class FcmDataProcessor:
 
         # Create a flat data with all of the experts' inputs.
         flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
+        flat_data.columns = [i.lower() for i in flat_data.columns]
         flat_data = flat_data.set_index(['from', 'to'])
         flat_data = flat_data.sort_index(level=['from','to'])
 
@@ -236,19 +236,18 @@ class FcmDataProcessor:
         # Create the membership functions for the linguistic terms.
         terms_mf = self.automf()
         self.terms_mf = terms_mf
-        
+
         for concepts in set(flat_data.index):
             activation_parameter = {}
             activation_parameter = (flat_data.loc[concepts].sum()/len(self.data)).to_dict()
-            
-            activation_parameter = {('-'+k if v < 0 else k): abs(v) for (k,v) in activation_parameter.items()}
+            print(concepts, activation_parameter)
             activated = self.activate(activation_parameter, self.terms_mf)
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
                 self.aggregated[f'{concepts}'] = aggr
                 value = self.defuzzify(aggr, method)
                 weight_matrix.loc[concepts] = value
-            
+
         self.causal_weights = weight_matrix.fillna(0)
         
     def create_system(self, causal_weights):
