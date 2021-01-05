@@ -16,29 +16,25 @@ class TestDataProcessor(unittest.TestCase):
 
     def setUp(self):
         self.fcm = FcmDataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
-        self.column_names = ['VL', 'L', 'M', 'H', 'VH']
-        self.keys = self.column_names
-
+        self.nExpert = 7
+        
     def test_instantiate(self):
         self.assertEqual(self.fcm.linguistic_terms, [i.lower() for i in ['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH']],
                                 msg='Error in the creating an instance of the class!')
 
     def test_read_excel(self):    
-        self.fcm.read_xlsx(filepath=os.path.abspath('test_cases/data_test.xlsx'), column_names=self.column_names)
+        self.fcm.read_xlsx(filepath=os.path.abspath('test_cases/expData.xlsx'), check_consistency=False)
 
         self.assertIsNotNone(self.fcm.data)
         self.assertIsInstance(self.fcm.data, collections.OrderedDict)
-        self.assertEqual(len(self.fcm.data), 6)
-        self.assertEqual(len(self.fcm.data['Expert_1'].columns), 7)
+        self.assertEqual(len(self.fcm.data), self.nExpert)
 
     def test_read_json(self): 
-        self.fcm.read_json(filepath=os.path.abspath('test_cases/data_test.json'),
-                                keys=self.keys)
+        self.fcm.read_json(filepath=os.path.abspath('test_cases/data_test.json'), check_consistency=False)
                                 
         self.assertIsNotNone(self.fcm.data)
         self.assertIsInstance(self.fcm.data, collections.OrderedDict)
         self.assertEqual(len(self.fcm.data), 2)
-        self.assertEqual(len(self.fcm.data['Expert_1'].columns), 8) # plus the NA column.
 
     def test_atumf(self):
         results = self.fcm.automf()
@@ -85,7 +81,7 @@ class TestDataProcessor(unittest.TestCase):
         self.assertAlmostEqual(defuz_res, 0.70, 2)
     
     def test_gen_weights(self):
-        self.fcm.read_xlsx(filepath=os.path.abspath('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/PyFcmBci/unittests/test_cases/data_test.xlsx'), column_names=self.column_names)
+        self.fcm.read_xlsx(filepath=os.path.abspath('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/PyFcmBci/unittests/test_cases/data_test.xlsx'), check_consistency=False)
         self.fcm.gen_weights()
         weights = self.fcm.causal_weights
         
