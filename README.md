@@ -2,14 +2,14 @@
 
 The fcmbci is Python package for automatically generating causal weights for fuzzy cognitive maps based on qualitative inputs (by using fuzzy logic), optimizing the FCM connection matrix via Machine Learning Algorithms and testing <em>what-if</em> scenarios. The package includes the following submodules:
 
-* FcmDataProcessor
-* FcmIntervention
-* FcmVisualize
+* DataProcessor
+* Intervention
+* Visualize
 * ---> (ML TBA)
 
-<a ref=fcmbci\data_processor\data_processor.md> The FcmDatProcessor module </a> includes methods for deriving causal weights of an FCM based on qualitative inputs from experts. <br> 
-<a ref=fcmbci\intervention\FcmIntervention.md> FcmIntervention module </a> allows runing simulations on top of the specified FCMs and test <em>what-if</em> scenarios. <br>
-<a ref=fcmbci\vizualization\FcmVisualize.md> The FcmVisualize module </a> provides methods for visualizing different components of data processing and simulations. <br>
+<a ref=fcmbci\data_processor\data_processor.md> The DatProcessor module </a> includes methods for deriving causal weights of an FCM based on qualitative inputs from experts. <br> 
+<a ref=fcmbci\intervention\FcmIntervention.md> Intervention module </a> allows runing simulations on top of the specified FCMs and test <em>what-if</em> scenarios. <br>
+<a ref=fcmbci\vizualization\FcmVisualize.md> The Visualize module </a> provides methods for visualizing different components of data processing and simulations. <br>
 
 ## Installation
 Fcmbci requires python >=3.6 and depends on:
