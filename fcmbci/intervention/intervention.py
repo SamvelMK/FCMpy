@@ -6,6 +6,15 @@ import warnings
 from data_processor.checkers import Checker
 
 class Intervention(FcmSimulator):
+    """
+    The class includes methods for testing interventiosn (what-if scenarios) on top of a defined FCM structure.
+
+    Methods:
+            __init__(self, initial_state, weights, transfer, inference, thresh, iterations, **params)
+            add_intervention(self, name, weights, effectiveness)
+            remove_intervention(self, name)
+            test_interventions(self, name, iterations = None)
+    """
     def __init__(self, initial_state, weights, transfer, inference, thresh, iterations, **params):
         """
         Test interventions (simulate what-if scenarios) on top of a defined FCM structure.
@@ -49,7 +58,7 @@ class Intervention(FcmSimulator):
 
     def add_intervention(self, name, weights, effectiveness):
         """
-        add an intervention node with the associated causal weights to the FCM.
+        Add an intervention node with the associated causal weights to the FCM.
 
         Parameters
         ----------
@@ -93,7 +102,7 @@ class Intervention(FcmSimulator):
     
     def remove_intervention(self, name):
         """
-        remove intervention
+        Remove intervention.
 
         Parameters
         ----------
@@ -105,7 +114,7 @@ class Intervention(FcmSimulator):
 
     def test_interventions(self, name, iterations = None):
         """
-        test intervention case.
+        Test an intervention case.
 
         Parameters
         ----------
@@ -114,6 +123,7 @@ class Intervention(FcmSimulator):
         iterations: number of iterations for the FCM simulation
                         default ---> the iterations specified in the init.
         """
+        
         if iterations:
             iterations = iterations
         else:
