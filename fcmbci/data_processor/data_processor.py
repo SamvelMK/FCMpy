@@ -7,22 +7,32 @@ import itertools
 import numpy as np
 import skfuzzy as fuzz
 import skfuzzy
-import networkx as nx
 import functools
 import json
 import collections
 from data_processor.checkers import Checker
 
 class FcmDataProcessor:
-    
     """
     A class of methods to derive causal weights for FCMs based on linguistic terms.
     The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
+    
+    Methods:
+            __init__(self, linguistic_terms, data = None, check_consistency=False)
+            read_xlsx(self, filepath, check_consistency=False)
+            read_json(self, filepath, check_consistency=False)
+            automf(self)
+            activate(self, activation_input, mf)
+            aggregate(self, activated)
+            defuzzify(self, aggregated, method = 'centroid')
+            gen_weights(self, method = 'centroid')
     """
     
     def __init__(self, linguistic_terms, data = None, check_consistency=False):
         
         """
+        The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
+
         Parameters
         ----------
         linguistic_terms: list
@@ -72,7 +82,7 @@ class FcmDataProcessor:
 
     def read_json(self, filepath, check_consistency=False):
         """ 
-        Reads data from a json file
+        Read data from a json file.
 
         Parameters
         ----------
@@ -92,17 +102,17 @@ class FcmDataProcessor:
             Checker.consistency_check(data=od, column_names=column_names)
         self.data = od
 
-    #### Obtaining (numerical) causal weights based on expert (linguistic) inputs.
+    #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
     
     def automf(self):
         
         """ 
-        Automatically generates triangular membership functions based on the passed
-        Lingustic Terms. This function was taken and modified from scikit-fuzzy.
+        Automatically generate triangular membership functions based on the passed linguistic terms (in the init).
+        This function was taken and modified from scikit-fuzzy.
         
         Return
         ---------
-        y : dict,
+        y: dict,
             Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
         """
         
@@ -141,17 +151,17 @@ class FcmDataProcessor:
         
         Parameters
         ----------
-        activation_input : dict,
+        activation_input: dict,
                             Membership function to apply the implication operation, 
-                            where the key is the linguistic term and the value is the frequency of its occurrence.
+                            where the key is the linguistic term and the value is the frequency of its occurrence
                             Example: parameters = {'H': 0.66, 'VH': 0.33}
-        mf : dict,
-             membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
-             and the value is a 1d array with the membership values.
+        mf: dict,
+            membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
+            and the value is a 1d array with the membership values
         
         Return
         ---------
-        y : dict,
+        y: dict,
             activated membership functions, where the key is the linguistic term and 
             the value is a 1d array with the activated membership values. 
         """
@@ -170,8 +180,8 @@ class FcmDataProcessor:
         
         Parameters
         ----------
-        activated : dict,
-                    a dictionary with the activated membership values to be aggregated.
+        activated: dict,
+                    a dictionary with the activated membership values to be aggregated
         
         Return
         ---------
@@ -193,9 +203,9 @@ class FcmDataProcessor:
 
         Parameters
         ----------
-        aggregated : 1d array,
+        aggregated: 1d array,
                         Aggregated membership function to be defuzzified.
-        method : str, 
+        method: str, 
                     Defuzzification method, default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
         
@@ -213,9 +223,9 @@ class FcmDataProcessor:
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
-        (i.e., where the causal relationships are expressed in linguistic terms)..
+        (i.e., where the causal relationships are expressed in linguistic terms).
 
-        method : str,
+        method: str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
                     
@@ -248,30 +258,3 @@ class FcmDataProcessor:
                 weight_matrix.loc[concepts] = value
 
         self.causal_weights = weight_matrix.fillna(0)
-        
-    def create_system(self, causal_weights):
-        
-        """ 
-        Creates a fuzzy system/network based on the generated causal weights.
-        
-        Parameters
-        ----------
-        causal_weights : dataframe,
-                            dataframe with the causal wights where the columns and rows/index represent the concepts
-                            and the rows represent the weights.
-        
-        Return
-        ----------
-        y : networkx object,
-        """
-        causal_weights = causal_weights
-
-        # Creates a netwrokx instance.
-        G = nx.from_numpy_matrix(causal_weights.values, parallel_edges=True, 
-                         create_using=nx.MultiDiGraph())
-        
-        # Creates truncated labels.
-        labels = {idx: label_gen(val) for idx, val in enumerate(causal_weights.columns)}
-        G = nx.relabel_nodes(G, labels)
-        
-        self.system = G
