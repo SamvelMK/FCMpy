@@ -8,7 +8,14 @@ from datetime import date
 from tqdm import tqdm
 
 class Checker:
+    """
+    The class includes function input checks.
 
+    Methods:
+            consistency_check(data, column_names)
+            column_check(data)
+            input_check(initial_state, weights)
+    """
     @staticmethod
     def consistency_check(data, column_names):
         """
@@ -65,12 +72,22 @@ class Checker:
                 raise ValueError('Columns From --> To were not found. Check the data!')
     
     @staticmethod
-    def input_check(initial_state, weights_df):
-        if len(initial_state) != len(weights_df.columns):
-            raise ValueError('The length of the initial_state.values() must == the length of the weights_df.columns')
+    def input_check(initial_state, weights):
+        """
+        Check the inputs for simulations.
+        
+        Parameters
+        ----------
+        initial_state: str
+                name of the intervention
+        weights: numpy.ndarray or panda.DataFrame
+                        causal weights between concepts
+        """
+        if len(initial_state) != weights.shape[0]:
+            raise ValueError('The length of the initial_state.values() must == the length of the weights')
 
-        elif min(initial_state.values()) < -1 & max(initial_state.values()) > 1:
+        elif (min(initial_state.values()) < -1) | (max(initial_state.values()) > 1):
             raise ValueError('The values in the initial_state vector are out of the input domain (-1, 1)')
         
-        elif weights_df.values.min() < -1 & weights_df.values.max() > 1:
+        elif (weights.values.min() < -1) | (weights.values.max() > 1):
             raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
