@@ -12,7 +12,7 @@ import json
 import collections
 from data_processor.checkers import Checker
 
-class FcmDataProcessor:
+class DataProcessor:
     """
     A class of methods to derive causal weights for FCMs based on linguistic terms.
     The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
