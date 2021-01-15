@@ -4,9 +4,12 @@ from simulator.inference import Inference
 import warnings
 
 class FcmSimulator(Inference):
-    
-    """ 
-    Runs simulations over the passed FCM.
+    """
+    The class includes methods for runing sumulations on top of a defined FCM.
+
+    Methods:
+            __init__(self)
+            simulate(self, initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params)
     """
 
     def __init__(self):
@@ -18,8 +21,9 @@ class FcmSimulator(Inference):
         
         Parameters
         ----------
-        initial_state: numpy.array
+        initial_state: dict
                         initial state vector of the concepts
+                        keys ---> concepts, values ---> initial state of the associated concept
         weight_mat: numpy.ndarray
                         N*N weight matrix of the FCM.
         transfer: str
@@ -40,7 +44,6 @@ class FcmSimulator(Inference):
         
         results = pd.DataFrame(initial_state, index=[0])
         state_vector = np.array(list(initial_state.values()))
-        weight_mat = weight_mat.T
         
         __infer = self.inference_methods[inference]
         __transfer = self.transfer_funcs[transfer]

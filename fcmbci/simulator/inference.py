@@ -2,6 +2,17 @@ import numpy as np
 from simulator.transfer import Transfer
 
 class Inference(Transfer):
+        """
+        The class includes inference methods for FCM update function.
+
+        Methods:
+                __init__(self)
+                __mKosko(initial_state, weight_mat, **params)
+                __kosko(initial_state, weight_mat, **params)
+                __rescaled(initial_state, weight_mat, **params)
+                add_inference_methods(self, func)
+                remove_inference_methods(self, func_name)
+        """
     def __init__(self):
         super().__init__()
         self.inference_methods = {"kosko" : self.__kosko, "mKosko" : self.__mKosko, "rescaled" : self.__rescaled}
@@ -23,6 +34,7 @@ class Inference(Transfer):
         y: numpy.array
                 updated state vector
         """
+        weight_mat = weight_mat.T
         res = weight_mat.dot(initial_state) + initial_state
         
         return res
@@ -34,7 +46,7 @@ class Inference(Transfer):
 
         Parameters
         ----------
-        initial_state: np.array
+        initial_state:  numpy.array
                             initial state vector of the concepts
         weight_mat: numpy.ndarray
                         N*N weight matrix of the FCM.
@@ -44,6 +56,7 @@ class Inference(Transfer):
         y: numpy.array
                 updated state vector
         """
+        weight_mat = weight_mat.T
         res = weight_mat.dot(initial_state)
         
         return res
@@ -65,6 +78,8 @@ class Inference(Transfer):
         y: numpy.array
                 updated state vector
         """
+        weight_mat = weight_mat.T
+
         res = weight_mat.dot(([2*i-1 for i in initial_state]))+([2*i-1 for i in initial_state])
         
         return res
