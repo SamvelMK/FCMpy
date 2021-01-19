@@ -19,6 +19,9 @@ class DataProcessor:
     
     Methods:
             __init__(self, linguistic_terms, data = None, check_consistency=False)
+            __flatData(self, data)
+            __activationParameter(self, flat_data, conceptPair)
+            __entropy(self, data)
             read_xlsx(self, filepath, check_consistency=False)
             read_json(self, filepath, check_consistency=False)
             automf(self)
@@ -52,8 +55,94 @@ class DataProcessor:
             if check_consistency:
                 Checker.consistency_check(data=data, column_names = self.linguistic_terms) # check the consistency of the data.
                 self.data = data
+                
+                # calculate the entropy of the expert raitings.
+                self.entropy = self.__entropy(self.data)
         else:
             self.data = pd.DataFrame()
+
+    def __flatData(self, data):
+        """
+        Create a flat data from an ordered dictionary.
+
+        Parameters
+        ----------
+        data: dict,
+                keys ---> expertId, values ---> pandasDf
+        
+        Return
+        ---------
+        y: pandas.DataFrame
+            data with all the expert inputs in one dataframe.
+        """
+        # Create a flat data with all of the experts' inputs.
+        flat_data = pd.concat([data[i] for i in data], sort = False)
+        flat_data.columns = [i.lower() for i in flat_data.columns]
+        flat_data = flat_data.set_index(['from', 'to'])
+        flat_data = flat_data.sort_index(level=['from','to'])
+
+        return flat_data
+
+    def __activationParameter(self, flat_data, conceptPair):
+        """
+        Create an activation parameter based on the expert inputs.
+
+        Parameters
+        ----------
+        flat_data: pandas.DataFrame
+                    flat data file
+        
+        conceptPair: tuple,
+                        concept pair for which the activation parameter should be constructed.
+
+        Return
+        ---------
+        y: dict,
+            keys ---> linguistic terms, values ---> proportion of expert raitings.
+        """
+        
+        activation_parameter = {}
+        activation_parameter = (flat_data.loc[conceptPair].sum()/len(self.data)).to_dict()
+
+        return activation_parameter
+
+    def __entropy(self, data):
+        """
+        Calculate the entropy of the expert raitings.
+
+        Parameters
+        ----------
+        data: collections.OrderedDict
+                qualitative expert inputs.
+        
+        Return
+        ---------
+        y: pandas.DataFrame,
+            entropy of the concept pairs in expert raitings.
+        """
+
+        flat_data = self.__flatData(data)
+        prop = {}
+        for concepts in set(flat_data.index):
+            activation_parameter = self.__activationParameter(flat_data, concepts) 
+            prop[concepts] = activation_parameter
+
+        entropy_concept = {}
+        for concept in prop.keys():
+            p = prop[concept].values()
+            res = -sum([i*np.log2(i) for i in p if i != 0])
+            if res == 0: # to avoide -0 reports.
+                res = abs(res)
+            entropy_concept[concept] = res
+        
+        # Prepare a formated dataframe
+        entropy_concept = {k:[v] for k,v in entropy_concept.items()}
+        entropy_concept = pd.DataFrame(entropy_concept).T
+        entropy_concept.index.set_names(['From','To'], inplace=True)
+        entropy_concept.columns = ['Entropy']
+        entropy_concept = entropy_concept.sort_index(level=[0,1])
+
+        return entropy_concept
 
     #### Read data            
 
@@ -78,7 +167,10 @@ class DataProcessor:
         Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
         if check_consistency:
             Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
-        self.data = collections.OrderedDict(data)            
+        self.data = collections.OrderedDict(data)
+        
+        # calculate the entropy of the expert raitings.
+        self.entropy = self.__entropy(self.data)           
 
     def read_json(self, filepath, check_consistency=False):
         """ 
@@ -101,6 +193,9 @@ class DataProcessor:
         if check_consistency:
             Checker.consistency_check(data=od, column_names=column_names)
         self.data = od
+        
+        # calculate the entropy of the expert raitings.
+        self.entropy = self.__entropy(self.data)
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
     
@@ -218,7 +313,7 @@ class DataProcessor:
         defuzzified_value = fuzz.defuzz(self.universe, aggregated, method)
         
         return defuzzified_value           
-    
+        
     def gen_weights(self, method = 'centroid'): 
         
         """ 
@@ -232,29 +327,21 @@ class DataProcessor:
         """        
         # A dict to store the aggregated results for the visualization purposes. 
         self.aggregated = {}
-
-        # Create a flat data with all of the experts' inputs.
-        flat_data = pd.concat([self.data[i] for i in self.data], sort = False)
-        flat_data.columns = [i.lower() for i in flat_data.columns]
-        flat_data = flat_data.set_index(['from', 'to'])
-        flat_data = flat_data.sort_index(level=['from','to'])
-
+        flat_data = self.__flatData(self.data)
+        
         # weight matrix for the final results.
         cols = set([i[0] for i in set(flat_data.index)])
         weight_matrix = pd.DataFrame(columns=cols, index=cols)
         
         # Create the membership functions for the linguistic terms.
-        terms_mf = self.automf()
-        self.terms_mf = terms_mf
-
+        self.terms_mf = self.automf()
+        
         for concepts in set(flat_data.index):
-            activation_parameter = {}
-            activation_parameter = (flat_data.loc[concepts].sum()/len(self.data)).to_dict()
+            activation_parameter = self.__activationParameter(flat_data, concepts) 
             activated = self.activate(activation_parameter, self.terms_mf)
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
                 self.aggregated[f'{concepts}'] = aggr
                 value = self.defuzzify(aggr, method)
                 weight_matrix.loc[concepts] = value
-
         self.causal_weights = weight_matrix.fillna(0)
