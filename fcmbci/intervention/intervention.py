@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from simulator.inference import Inference
-from simulator.simulator import FcmSimulator
+from simulator.simulator import Simulator
 import warnings
 from data_processor.checkers import Checker
 
-class Intervention(FcmSimulator):
+class Intervention(Simulator):
     """
     The class includes methods for testing interventiosn (what-if scenarios) on top of a defined FCM structure.
 
