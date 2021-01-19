@@ -2,17 +2,17 @@ import numpy as np
 from simulator.transfer import Transfer
 
 class Inference(Transfer):
-        """
-        The class includes inference methods for FCM update function.
+    """
+    The class includes inference methods for FCM update function.
 
-        Methods:
-                __init__(self)
-                __mKosko(initial_state, weight_mat, **params)
-                __kosko(initial_state, weight_mat, **params)
-                __rescaled(initial_state, weight_mat, **params)
-                add_inference_methods(self, func)
-                remove_inference_methods(self, func_name)
-        """
+    Methods:
+            __init__(self)
+            __mKosko(initial_state, weight_mat, **params)
+            __kosko(initial_state, weight_mat, **params)
+            __rescaled(initial_state, weight_mat, **params)
+            add_inference_methods(self, func)
+            remove_inference_methods(self, func_name)
+    """
     def __init__(self):
         super().__init__()
         self.inference_methods = {"kosko" : self.__kosko, "mKosko" : self.__mKosko, "rescaled" : self.__rescaled}

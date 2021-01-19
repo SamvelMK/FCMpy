@@ -3,7 +3,7 @@ import numpy as np
 from simulator.inference import Inference
 import warnings
 
-class FcmSimulator(Inference):
+class Simulator(Inference):
     """
     The class includes methods for runing sumulations on top of a defined FCM.
 

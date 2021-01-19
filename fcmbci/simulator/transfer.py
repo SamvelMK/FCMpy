@@ -1,17 +1,18 @@
 import numpy as np
 
 class Transfer:
-        """
-        The class includes transfer methods for FCM update function.
+    """
+    The class includes transfer methods for FCM update function.
 
-        Methods:
-                __init__(self)
-                __sig(x, **params)
-                __tri(x, **params)
-                __tanh(x, **params)
-                add_transfer_func(self, func)
-                remove_transfer_func(self, func_name)
-        """
+    Methods:
+            __init__(self)
+            __sig(x, **params)
+            __tri(x, **params)
+            __tanh(x, **params)
+            add_transfer_func(self, func)
+            remove_transfer_func(self, func_name)
+    """
+    
     def __init__(self):
         self.transfer_funcs = {"sigmoid" : self.__sig, "bivalent" : self.__bi, "trivalent" : self.__tri, "tanh" : self.__tanh}
 
