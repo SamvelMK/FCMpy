@@ -37,7 +37,53 @@ fcm = DataProcessor(linguistic_terms=lt)
 ```
 Note that the class is automatically instantiated with a universe of discourse with a range of [-1, 1].
 
-When supplying the data one can also specify whether there is a need to check for the consistency in the data. The <em>consistency_check</em> argument checks the consistency of the raitings (mainly the valency of the raitings) of each pari of concepts across all the experts. If inconsistencies are identified then an inconsistencies_current_date.xlsx file is generated. In this file you can find the pair of concepts that were rated inconsistently across the experts.
+When supplying the data one can also specify whether there is a need to check for the consistency in the data. The <em>consistency_check</em> argument checks the consistency of the raitings (mainly the valence of the raitings (positive or negative)) of each pari of concepts across all the experts. If inconsistencies are identified then an inconsistencies_current_date.xlsx file is generated. In this file one can find the pair of concepts that were rated inconsistently across the experts.
+
+When data is supplied to the constructor, the algorithm atomatically calculates the entropy of the expert raitings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
+
+<div class=container, align=center>
+
+$$ R=-\sum_{i=1}^np_ilog_2(p_i) $$
+
+</div>
+
+Where $p_i$ is the proportion of the answers (per linguistic term) about the causal relationship R (i.e., $C_{ij}$)
+
+The entropy of the concepts can be inspected as follows:
+
+```
+from fcmbci import DataProcessor
+
+lt = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
+
+fcm = DataProcessor(linguistic_terms=lt, data)
+
+fcm.entropy
+```
+
+```
+Output1:
+
+Entropy
+From To
+C1   C1  0.000000
+     C2  1.459148
+     C3  0.000000
+     C4  0.000000
+C2   C1  1.459148
+     C2  0.000000
+     C3  0.000000
+     C4  0.000000
+C3   C1  0.820802
+     C2  0.000000
+     C3  0.000000
+     C4  0.930827
+C4   C1  0.000000
+     C2  0.000000
+     C3  0.000000
+     C4  0.000000
+```
+
 <div>
 
 ## Methods
@@ -48,6 +94,7 @@ The methods presented in this section are used to derive the edge weights based 
 
 - [read_xlsx](#read_xlsx)
 - [read_json](#read_json)
+- [read_csv](#read_csv)
 - [automf](#automf)
 - [activate](#activate)
 - [aggregate](#aggregate)
@@ -59,7 +106,7 @@ The methods presented in this section are used to derive the edge weights based 
 ## read_xlsx()
 <div align='justify'>
 
-The read xlsx method takes two arguments: <em> filepath </em>, <em> check_consistency </em>.
+The read_xlsx method takes two arguments: <em> filepath </em>, <em> check_consistency </em>.
 
 ```
 read_xlsx(filepath, check_consistency=False)
@@ -95,74 +142,83 @@ fcm.data
 ```
 Output1:
 
-OrderedDict([('Expert_1',    From  To  VL    L   M   H   VH
-                              0    C1  C1 NaN  NaN NaN NaN  NaN
-                              1    C1  C2 NaN  NaN NaN NaN -1.0
-                              2    C1  C3 NaN  NaN NaN NaN  NaN
-                              3    C1  C4 NaN  NaN NaN NaN  NaN
-                              4    C2  C1 NaN  NaN NaN NaN  1.0
-                              5    C2  C2 NaN  NaN NaN NaN  NaN
-                              6    C2  C3 NaN  NaN NaN NaN  NaN
-                              7    C2  C4 NaN  NaN NaN NaN  NaN
-                              8    C3  C1 NaN  NaN NaN NaN  1.0
-                              9    C3  C2 NaN  NaN NaN NaN  NaN
-                              10   C3  C3 NaN  NaN NaN NaN  NaN
-                              11   C3  C4 NaN  1.0 NaN NaN  NaN
-                              12   C4  C1 NaN  NaN NaN NaN  NaN
-                              13   C4  C2 NaN  NaN NaN NaN  NaN
-                              14   C4  C3 NaN  NaN NaN NaN  NaN
-                              15   C4  C4 NaN  NaN NaN NaN  NaN),
-             ('Expert_2',    From  To  VL    L    M   H   VH
-                              0    C1  C1 NaN  NaN  NaN NaN  NaN
-                              1    C1  C2 NaN  NaN  NaN NaN -1.0
-                              2    C1  C3 NaN  NaN  NaN NaN  NaN
-                              3    C1  C4 NaN  NaN  NaN NaN  NaN
-                              4    C2  C1 NaN  NaN  NaN NaN  1.0
-                              5    C2  C2 NaN  NaN  NaN NaN  NaN
-                              6    C2  C3 NaN  NaN  NaN NaN  NaN
-                              7    C2  C4 NaN  NaN  NaN NaN  NaN
-                              8    C3  C1 NaN  NaN  1.0 NaN  NaN
-                              9    C3  C2 NaN  NaN  NaN NaN  NaN
-                              10   C3  C3 NaN  NaN  NaN NaN  NaN
-                              11   C3  C4 NaN  1.0  NaN NaN  NaN
-                              12   C4  C1 NaN  NaN  NaN NaN  NaN
-                              13   C4  C2 NaN  NaN  NaN NaN  NaN
-                              14   C4  C3 NaN  NaN  NaN NaN  NaN
-                              15   C4  C4 NaN  NaN  NaN NaN  NaN),
+OrderedDict([('Expert_1',    From  To  -VL  -L  -M  -H  -VH  NA   VL   L   M    H
+                          0    C1  C1  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          1    C1  C2  NaN NaN NaN NaN  1.0 NaN  NaN NaN NaN  NaN
+                          2    C1  C3  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          3    C1  C4  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          4    C2  C1  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  1.0
+                          5    C2  C2  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          6    C2  C3  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          7    C2  C4  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          8    C3  C1  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  1.0
+                          9    C3  C2  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          10   C3  C3  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          11   C3  C4  NaN NaN NaN NaN  NaN NaN  1.0 NaN NaN  NaN
+                          12   C4  C1  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          13   C4  C2  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          14   C4  C3  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN
+                          15   C4  C4  NaN NaN NaN NaN  NaN NaN  NaN NaN NaN  NaN), 
+
+        ('Expert_2',    From  To  -VL  -L  -M  -H  -VH  NA  VL    L    M   H   VH
+                     0    C1  C1  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     1    C1  C2  NaN NaN NaN NaN  1.0 NaN NaN  NaN  NaN NaN  NaN
+                     2    C1  C3  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     3    C1  C4  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     4    C2  C1  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  1.0
+                     5    C2  C2  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     6    C2  C3  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     7    C2  C4  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     8    C3  C1  NaN NaN NaN NaN  NaN NaN NaN  NaN  1.0 NaN  NaN
+                     9    C3  C2  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     10   C3  C3  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     11   C3  C4  NaN NaN NaN NaN  NaN NaN NaN  1.0  NaN NaN  NaN
+                     12   C4  C1  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     13   C4  C2  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     14   C4  C3  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN
+                     15   C4  C4  NaN NaN NaN NaN  NaN NaN NaN  NaN  NaN NaN  NaN)
 ```
 The read_xlsx() method stores the data in an ordered dictionary where the <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda's dataframes of the expert inputs.
+
+If the <em>check_consistency</em> is set to <em>True</em> then the method will check for inconsistencies in the expert raitings. More specifically, the method will identify the concepts for which the sign of the causal relationships was indicated inconsistently across the experts. If such inconsistencies are identified, a notification will appear in the console:
+```
+[('C1', 'C2')] pairs of concepts were raited inconsistently across the experts. For more information check the inconsistentRatings_XX_X_XXXX.xlsx
+```
+and a file called inconsistentRatings_{current_date}.xlsx will be created (Figure 3).
+
+<img src="..\..\figures\figure_3.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 3:</em> Inconsistencies in the expert raitings.
 
 </div>
 
 ## read_json()
 <div align='justify'>
 
-In certain cases one might have to read the data from json files. The json file should have the following general structure:
+In certain cases one might have to read the data from json files. The read_json method takes two arguments: <em> filepath </em>, <em> check_consistency </em>.
 
-```
-{"ExpertId": [
-                {"from": 1, "to": 1, "NA": "", "VL": "", "L": "", "M": 1, "H": "", "VH": ""}, 
-                {"from": 1, "to": 2, "NA": "", "VL": 1, "L": "", "M": "", "H": "", "VH": ""}
-             ]
-}
-```
-The read_json method takes the filepath and a list of keys as arguments. The keys argument are the keys in the json file that represent the linguistic terms. 
 
-```
-read_json(filepath, keys)
+````
+read_json(filepath, check_consistency=False)
+ 
+Read data from a json file.
 
 Parameters
 ----------
 filepath : str, path object or file-like object
-keys: list
-        the column names of the pandas df in the ordered dictionary       
-```
+````
 
-Example:
+The json file should have the following general structure:
 
 ```
-keys = ['VL', 'L', 'M', 'H', 'VH']
-fcm.read_json(data='data.json', keys = keys)
+{"Expert_1": [
+    {"from": "C1", "to": "C1", "NA": "", "VL": "", "L": "", "M": 1, "H": "", "VH": "", "-VL": "", "-L": "", "-M": "", "-H": "", "-VH": ""}, 
+    {"from": "C1", "to": "C2", "NA": "", "VL": "", "L": "", "M": "", "H": "", "VH": "", "-VL": 1, "-L": "", "-M": "", "-H": "", "-VH": ""}
+ ],
+ "Expert_2": [
+   {"from": "C1", "to": "C1", "NA": "", "VL": "", "L": 1, "M": "", "H": "", "VH": "", "-VL": "", "-L": "", "-M": "", "-H": "", "-VH": ""}, 
+   {"from": "C1", "to": "C2", "NA": "", "VL": 1, "L": "", "M": "", "H": "", "VH": "", "-VL": "", "-L": "", "-M": "", "-H": "", "-VH": ""}
+ ]
+}
 ```
 
 </div>
@@ -170,14 +226,14 @@ fcm.read_json(data='data.json', keys = keys)
 ## automf()
 <div align='justify'>
 
-This method automatically generates triangular membership functions based on the passed linguistic terms (during the instantiation). The method was taken and modified from <em>scikit-fuzzy</em> package.
+This method automatically generates triangular membership functions based on the passed linguistic terms. The method was taken and modified from <em>scikit-fuzzy</em> package.
 
 ```
 automf()
-        
+               
 Return
 ---------
-y : dict,
+y: dict,
         Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
 ```
 
@@ -186,11 +242,15 @@ The method returns a dictionary with the linguistic terms as the keys and the co
 Example:
 
 ```
-import numpy as np
+from fcmbci import DataProcessor
+
+lt = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
+
+fcm = DataProcessor(linguistic_terms=lt)
 
 mf = fcm.automf()
-
 ```
+
 ```
 Output:
 
@@ -204,7 +264,6 @@ Output:
  'M': array([0., 0., 0., ..., 0., 0., 0.]),
  'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]),
  'VH': array([0.   , 0.   , 0.   , ..., 0.992, 0.996, 1.   ])}
- 
 ```
 
 You can visualize this as follows:
@@ -229,15 +288,15 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="..\..\figures\figure_3.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 3:</em> Automatically generated triangular membership function.
+<img src="..\..\figures\figure_4.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 4:</em> Automatically generated triangular membership functions.
 
 </div>
 
 ## activate()
 <div align='justify'>
 
-Activate the specified membership function based on the passed parameters.
+Activate the specified membership functions based on the passed parameters.
 
 ```
 activate(activation_input, mf)
@@ -269,7 +328,7 @@ act = fcm.activate({'M': 0.16, 'H': 0.5, 'VH': 0.33}, mf)
 ```
 Output:
 
-{'M': array([0., 0., 0., ..., 0., 0., 0.]),
+{'M': array([0., 0., 0., ..., 0., 0., 0.]), 
  'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]),
  'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
 ```
