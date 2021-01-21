@@ -31,11 +31,20 @@ To instantiate the FcmDataProcessor class one needs to pass a list of linguistic
 ```
 from fcmbci import DataProcessor
 
-lt = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
+lt = ['-VH', '-H', '-M', '-L','-VL', 'VL', 'L', 'M', 'H', 'VH']
 
 fcm = DataProcessor(linguistic_terms=lt)
 ```
 Note that the class is automatically instantiated with a universe of discourse with a range of [-1, 1].
+One should also specify the column name (in the data) that expresses no causality between the concept pair. The default argument is set to be 'No-Causality'. However, one cance change this by modifying the default argument:
+
+```
+from fcmbci import DataProcessor
+
+lt = ['-VH', '-H', '-M', '-L','-VL', 'VL', 'L', 'M', 'H', 'VH']
+
+fcm = DataProcessor(linguistic_terms=lt, no_causality='No-Causality')
+```
 
 When supplying the data one can also specify whether there is a need to check for the consistency in the data. The <em>consistency_check</em> argument checks the consistency of the raitings (mainly the valence of the raitings (positive or negative)) of each pari of concepts across all the experts. If inconsistencies are identified then an inconsistencies_current_date.xlsx file is generated. In this file one can find the pair of concepts that were rated inconsistently across the experts.
 

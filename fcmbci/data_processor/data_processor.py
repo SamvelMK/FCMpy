@@ -31,7 +31,7 @@ class DataProcessor:
             gen_weights(self, method = 'centroid')
     """
     
-    def __init__(self, linguistic_terms, data = None, check_consistency=False):
+    def __init__(self, linguistic_terms, no_causality='No-Causality', data = None, check_consistency=False):
         
         """
         The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
@@ -40,6 +40,9 @@ class DataProcessor:
         ----------
         linguistic_terms: list
                             Note that the number of linguistic terms should be even. A narrow interval around 0 (for no causality option) is added automatically.
+        no_causality: str
+                        name of the column that expresses no causality
+                        default ---> 'No-Causality'
         data: ordered dict
                 qualitative expert inputs.
                 default --> None
@@ -49,7 +52,8 @@ class DataProcessor:
         """
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
         self.universe = np.arange(-1, 1.001, 0.001)
-        
+        self.__noCausality = no_causality.lower()
+
         if data != None:
             Checker.columns_check(data=data) # check if the from ---> to columns exist.
             if check_consistency:
@@ -198,7 +202,19 @@ class DataProcessor:
         self.entropy = self.__entropy(self.data)
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
-    
+
+    def read_csv(self, filepath, check_consistency=False):
+        """ 
+        Read data from a csv file.
+
+        Parameters
+        ----------
+        filepath : str, path object or file-like object
+
+
+        """
+        pass
+
     def automf(self):
         
         """ 
@@ -230,7 +246,7 @@ class DataProcessor:
         terms = dict()
 
         # add a narrow interval for no causality.
-        self.linguistic_terms.insert(len(self.linguistic_terms)//2, 'na')
+        self.linguistic_terms.insert(len(self.linguistic_terms)//2, self.__noCausality)
         abcs.insert(len(abcs)//2, np.array([-0.001, 0, 0.001]))
 
         # Repopulate
