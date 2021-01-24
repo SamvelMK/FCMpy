@@ -10,6 +10,7 @@ import skfuzzy
 import functools
 import json
 import collections
+import re
 from data_processor.checkers import Checker
 
 class DataProcessor:
@@ -51,7 +52,7 @@ class DataProcessor:
                             default --> False
         """
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
-        self.universe = np.arange(-1, 1.001, 0.001)
+        self.universe = np.arange(-1, 1.05, 0.05) # changed from 0.001 to .05 based on Gib.
         self.__noCausality = no_causality.lower()
 
         if data != None:
@@ -87,6 +88,76 @@ class DataProcessor:
 
         return flat_data
 
+    def __concept_parser(self, string, sepConcept):
+        """
+        Parse the csv file column names. Extract the antecedent, concequent pairs and the polarity of the causal relationship.
+
+        Parameters
+        ----------
+        string: str
+                the column names that need to be parsed
+        
+        sepConcept: str
+                    the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
+        
+        Return
+        ---------
+        y: dict
+            keys --> antecedent, concequent, polarity
+
+        """
+        dt = {}
+        pattern = f'[a-zA-Z]+.[a-zA-Z]+.{sepConcept}.+.(\(\+\)|\(\-\))'
+        patterMatch = bool(re.search(pattern, string))
+        
+        if patterMatch:
+            dt['polarity'] = re.search(r'\((.*?)\)', string).group(1)
+            concepts = string.split(sepConcept)
+            dt['antecedent'] = re.sub(r'\([^)]*\)', '', concepts[0]).strip() 
+            dt['concequent'] = re.sub(r'\([^)]*\)', '', concepts[1]).strip()
+            return dt
+        else:
+            raise ValueError('The $antecedent$ $->$ $concequent (sign)$ format is not detected! Check the data format!') 
+
+    def __extractExpertData(self, data, sepConcept, linguistic_terms, noCausality):
+        """
+        Convert csv data fromat to a dataframe with columns representing the linguistic terms (see more in the doc.).
+
+        Parameters
+        ----------        
+        sepConcept: str
+                    the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
+        
+        linguistic_terms: list
+                            list of linguistic terms
+        
+        noCausality: str,
+                        the term used to express noCausality
+
+        Return
+        ---------
+        y: pandas.DataFrame
+        """
+
+        dict_data = []
+        for i in data.keys():
+            _ = {i: 0 for i in linguistic_terms}
+            concepts = self.__concept_parser(i, sepConcept=sepConcept)
+            _['From'] = concepts['antecedent']
+            _['To'] = concepts['concequent']
+
+            if data[i].lower() in self.linguistic_terms:
+                # no causality cases
+                if data[i].lower() == noCausality:
+                    _[data[i].lower()] = 1
+                else:        
+                    if concepts['polarity'] == '+':
+                        _[data[i].lower()] = 1
+                    else:
+                        _[str('-'+data[i].lower())] = 1
+                dict_data.append(_)
+        return pd.DataFrame(dict_data)
+
     def __activationParameter(self, flat_data, conceptPair):
         """
         Create an activation parameter based on the expert inputs.
@@ -107,7 +178,6 @@ class DataProcessor:
         
         activation_parameter = {}
         activation_parameter = (flat_data.loc[conceptPair].sum()/len(self.data)).to_dict()
-
         return activation_parameter
 
     def __entropy(self, data):
@@ -183,6 +253,10 @@ class DataProcessor:
         Parameters
         ----------
         filepath : str, path object or file-like object
+
+        check_consistency: Bool
+                            check the consistency of raitings across the experts.
+                            default --> False
         """
         column_names = [i.lower() for i in self.linguistic_terms]
         f = open(filepath) 
@@ -201,9 +275,7 @@ class DataProcessor:
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(self.data)
 
-    #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
-
-    def read_csv(self, filepath, check_consistency=False):
+    def read_csv(self, filePath, sepConcept, csv_sep=',', check_consistency=False):
         """ 
         Read data from a csv file.
 
@@ -211,9 +283,33 @@ class DataProcessor:
         ----------
         filepath : str, path object or file-like object
 
+        sepConcept: str
+                    the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
+        
+        linguistic_terms: list
+                            list of linguistic terms
+        
+        noCausality: str,
+                        the term used to express noCausality
+        
+        csv_sep: str,
+                    separator of the csv file (read more in pandas.read_csv)
 
+        check_consistency: Bool
+                            check the consistency of raitings across the experts.
+                            default --> False
         """
-        pass
+        data = pd.read_csv(filePath, sep=csv_sep)
+        dataOd = collections.OrderedDict()
+        for i in range(len(data)):
+            _ = data.iloc[i].to_dict()
+
+            expertData = self.__extractExpertData(data=_, sepConcept=sepConcept, linguistic_terms=self.linguistic_terms, noCausality=self.__noCausality)
+            dataOd[f'Expert{i}'] = expertData
+        
+        self.data = dataOd
+
+    #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
 
     def automf(self):
         
@@ -234,8 +330,8 @@ class DataProcessor:
         
         
         # Create the centers of the mfs for each side of the x axis and then merge them together.
-        centers_pos = np.linspace(0.001, 1, number//2)
-        centers_neg = np.linspace(-1, -0.001, number//2)
+        centers_pos = np.linspace(0.001, 1, number//2).round(2)
+        centers_neg = np.linspace(-1, -0.001, number//2).round(2)
         centers = list(centers_neg)+list(centers_pos)
         
         abcs = [[c - w / 2, c, c + w / 2] for c, w in zip(centers, widths)]
@@ -245,9 +341,9 @@ class DataProcessor:
         
         terms = dict()
 
-        # add a narrow interval for no causality.
+        # add a narrow interval for no causality (based on Giab).
         self.linguistic_terms.insert(len(self.linguistic_terms)//2, self.__noCausality)
-        abcs.insert(len(abcs)//2, np.array([-0.001, 0, 0.001]))
+        abcs.insert(len(abcs)//2, np.array([-0.01, 0, 0.01])) 
 
         # Repopulate
         for term, abc in zip(self.linguistic_terms, abcs):
@@ -353,7 +449,7 @@ class DataProcessor:
         self.terms_mf = self.automf()
         
         for concepts in set(flat_data.index):
-            activation_parameter = self.__activationParameter(flat_data, concepts) 
+            activation_parameter = self.__activationParameter(flat_data, concepts)
             activated = self.activate(activation_parameter, self.terms_mf)
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
