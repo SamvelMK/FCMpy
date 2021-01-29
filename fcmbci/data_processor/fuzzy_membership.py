@@ -18,6 +18,25 @@ class FuzzyMembership:
 
     @staticmethod
     def __trimf(universe, linguistic_terms, noCausality):
+        
+        """
+        Generate triangular membership functions.
+
+        Parameters
+        ----------
+        linguistic_terms: list,
+                           List of linguistic terms used to express causality between concepts.
+                           Note that the number of linguistic terms should be even. A narrow interval around 0 (for no causality option) is added automatically.
+        
+        noCausality: str,
+                        the term used in the data to expresses no causality
+                        default ---> 'No-Causality'
+
+        Return
+        ---------
+        y: dict,
+        Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
+        """
 
         number = len(linguistic_terms)
         limits = [universe.min(), universe.max()]
