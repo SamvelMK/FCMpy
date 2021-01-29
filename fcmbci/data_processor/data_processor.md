@@ -229,7 +229,9 @@ The json file should have the following general structure:
  ]
 }
 ```
+The read_json() method stores the data in an ordered dictionary where the <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda's dataframes of the expert inputs.
 
+If the <em>check_consistency</em> is set to <em>True</em> then the method will check for inconsistencies in the expert raitings. More specifically, the method will identify the concepts for which the sign of the causal relationships was indicated inconsistently across the experts. If such inconsistencies are identified, a notification will appear in the console:
 </div>
 
 ## read_csv()
@@ -257,12 +259,13 @@ csv_sep: str,
 The csv file should have the following general structure:
 
 <img src="..\..\figures\figure_3_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 4:</em> Sample data structure.
+<em>Figure 4:</em> Sample data structure (CSV).
 
 Each <em>column</em> represents a pair of connected concepts. The column heads should follow the following format: antecedent sepConcept concequent (polarity) (e.g., 'C1 -> C2 (+)').
 If the pattern is not detected the method will throw an error.
 Each <em>row</em> in the file represents the inputs of an expert. Each cell of the file represents a linguistic term expressing causality between the respective concepts.
 
+The read_csv() method stores the data in an ordered dictionary where the <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda's dataframes of the expert inputs.
 </div>
 
 ## automf()
