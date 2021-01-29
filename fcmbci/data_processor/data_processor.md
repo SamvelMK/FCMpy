@@ -258,7 +258,7 @@ csv_sep: str,
 
 The csv file should have the following general structure:
 
-<img src="..\..\figures\figure_3_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<img src="..\..\figures\figure_4.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 4:</em> Sample data structure (CSV).
 
 Each <em>column</em> represents a pair of connected concepts. The column heads should follow the following format: antecedent sepConcept concequent (polarity) (e.g., 'C1 -> C2 (+)').
@@ -271,15 +271,26 @@ The read_csv() method stores the data in an ordered dictionary where the <em>key
 ## automf()
 <div align='justify'>
 
-This method automatically generates triangular membership functions based on the passed linguistic terms. The method was taken and modified from <em>scikit-fuzzy</em> package.
+This method automatically generates membership functions based on the passed linguistic terms. The methods were taken and modified from <em>scikit-fuzzy</em> package. The method takes one required argument <em> membership_function </em>. At the moment the method only implements triangular membership function ('trimf').
 
 ```
-automf()
+automf(membership_function = 'trimf', **params)
                
+Automatically generate membership functions based on the passed linguistic terms (in the init).
+
+This functions were taken and modified from scikit-fuzzy.
+
+Parameters
+----------
+membership_function: str,
+                        fuzzy membership function. --> "trimf" 
+
+**params: additional arguments for the fuzzy membership functions.
+
 Return
 ---------
 y: dict,
-        Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
+        Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
 ```
 
 The method returns a dictionary with the linguistic terms as the keys and the corresponding numerical intervals (in 1d arrays) as the values.
@@ -333,37 +344,72 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="..\..\figures\figure_4.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 4:</em> Automatically generated triangular membership functions.
+<img src="..\..\figures\figure_5.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 5:</em> Automatically generated triangular membership functions.
+
+New membership functions can also be added to the constructor by add_membership_func() method.
+
+```
+def add_membership_func(func):
+        
+
+Add a fuzzy membership function.
+
+Parameters
+----------
+func: dict,
+        key is the name of the function, value is the associated function.
+```
+
+The added membership function can be removed by remove_membership_func() method.
+
+```
+def remove_membership_func(self, func_name):
+
+Remove a fuzzy membershipfunction.
+
+Parameters
+----------
+func_name: str
+        name of the function to be removed.
+```
 
 </div>
 
 ## activate()
 <div align='justify'>
 
-Activate the specified membership functions based on the passed parameters.
+Activate the specified membership functions based on the passed parameters. The activation of the membership functions is achieved by applying fuzzy inference rules. Curently, the package implements two such methods: mamdaniMin(), and mamdaniProduct().
 
 ```
-activate(activation_input, mf)
+activate(mf, activation_input, fuzzy_inference="mamdaniProduct", **params)
 
 Parameters
 ----------
-activation_input : dict,
-                        Membership function to apply the implication operation, 
-                        where the key is the linguistic term and the value is the frequency of its occurrence.
-                        Example: parameters = {'H': 0.66, 'VH': 0.33}
-mf : dict,
+activation_input: dict,
+                Membership function to apply the implication operation, 
+                where the key is the linguistic term and the value is the frequency of its occurrence
+                Example: parameters = {'H': 0.66, 'VH': 0.33}
+mf: dict,
         membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
-        and the value is a 1d array with the membership values.
-        
+        and the value is a 1d array with the membership values
+
+fuzzy_inference: str,
+                        fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"
+
 Return
 ---------
 y : dict,
         activated membership functions, where the key is the linguistic term and 
         the value is a 1d array with the activated membership values. 
 ```
-To activate the membership functions, we need to pass in the activation input along with the membership function. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurrences of the terms. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
-The method returns a dictionary with the activated membership function.
+To activate the membership functions, we need to pass in the activation input along with the membership function and specify the activation rule/method. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurrences of the terms. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
+
+The mamdaniMin fuzzy inference rule is expressed as:
+
+$$ \mu_{R}(x,y)= min\lfloor\mu_{A}(x), \mu_{B}(y)\rfloor$$
+
+The method returns a dictionary with the activated membership function. This process can be visualized as follows.
 
 ```
 Example:
@@ -378,7 +424,7 @@ Output:
  'VH': array([0.  , 0.  , 0.  , ..., 0.33, 0.33, 0.33])}
 ```
 Essentially, the values in the activation input determine the point at which the membership function of each linguistic term is going to be cut. 
-You can visualize it as follows (Figure 4). 
+You can visualize it as follows (Figure 6). 
 
 ```
 fig = plt.figure(figsize= (10, 5))
@@ -399,8 +445,17 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="..\..\figures\figure_4.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 4:</em> The activated membership function.
+<img src="..\..\figures\figure_6.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 6:</em> The activated membership function.
+
+The mamdaniProduct method can be expressed as:
+
+$$ \mu_{R}(x,y)= \mu_{A}(x)\cdot \mu_{B}(y)$$
+
+In other words, the method rescales the membership functions instead of cliping them at the cut points. 
+
+<img src="..\..\figures\figure_6_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 6.1:</em> The activated membership function: mamdaniProduct.
 
 </div>
 
@@ -448,8 +503,8 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="..\..\figures\figure_5.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 5:</em> The aggregated membership function.
+<img src="..\..\figures\figure_7.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 7:</em> The aggregated membership function.
 
 </div>
 
@@ -465,6 +520,7 @@ Parameters
 ----------
 aggregated : 1d array,
                 Aggregated membership function to be defuzzified.
+
 method : str, 
             Defuzzification method, default --> 'centroid'. 
             For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
@@ -483,7 +539,7 @@ defuzz = fcm.defuzzify(aggr)
 ```
 Output:
 
-0.704
+0.72
 ```
 This can be visualized as follows (The code was taken and adjusted from  <a href="https://pythonhosted.org/scikit-fuzzy/auto_examples/plot_tipping_problem.html">scikit-fuzzy tutorial)</a>:
 
@@ -519,8 +575,8 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="..\..\figures\figure_6.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 6:</em> Derived edge weight (defuzzification).
+<img src="..\..\figures\figure_8.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 8:</em> Derived edge weight (defuzzification).
 
 </div>
 
@@ -530,7 +586,7 @@ plt.show()
 The methods described above are wrapped in gen_weights() method to allow for automatic generation of weight matrices based on qualitative inputs.
 
 ```
-gen_weights(method = 'centroid')
+gen_weights(method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params)
 
 Parameters
 ----------
@@ -560,32 +616,4 @@ C2 -0.610698  0.000000   0  0.000000
 C3  0.556908  0.000000   0  0.230423
 C4  0.000000  0.000000   0  0.000000
 ```
-
-To use visualization methods developed for this module we first need to create an instance of FcmVisualize class and instantiate it with the fcm object we created earlier.
-
-Example:
-
-```
-from fcmbci import FcmVisualize
-
-vis = FcmVisualize(fcm)
-```
-
-One can inspect the frequency of the ratings of each linguistic term for a given pair of concepts with the term_freq_hist() method.
-
-```
-vis.term_freq_hist('C1', 'C2')
-```
-<img src="..\..\figures\figure_7.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 7:</em> Expert's ratings of causal strength between C1 and C2.
-
-One can also visually inspect the deffuzification of the activated membership functions between a pair of concepts with the defuzz_view() method.
-
-```
-vis.defuzz_view('C1', 'C2')
-```
-
-<img src="..\..\figures\figure_8.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 8:</em> Deffuzification of the aggregated membership functions of concepts C1 and C2.
-
 </div>
