@@ -12,8 +12,10 @@ import json
 import collections
 import re
 from data_processor.checkers import Checker
+from data_processor.fuzzy_inference import FuzzyInference
+from data_processor.fuzzy_membership import FuzzyMembership
 
-class DataProcessor:
+class DataProcessor(FuzzyInference, FuzzyMembership):
     """
     A class of methods to derive causal weights for FCMs based on linguistic terms.
     The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
@@ -23,6 +25,10 @@ class DataProcessor:
             __flatData(self, data)
             __activationParameter(self, flat_data, conceptPair)
             __entropy(self, data)
+            add_membership_func(self, func)
+            remove_membership_func(self, func_name)
+            add_fuzzy_inference_func(self, func)
+            remove_fuzzy_inference_func(self, func_name)
             read_xlsx(self, filepath, check_consistency=False)
             read_json(self, filepath, check_consistency=False)
             automf(self)
@@ -51,8 +57,13 @@ class DataProcessor:
                             check the consistency of raitings across the experts.
                             default --> False
         """
+        FuzzyInference.__init__(self)
+        FuzzyMembership.__init__(self)
+        
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
-        self.universe = np.arange(-1, 1.05, 0.05) # changed from 0.001 to .05 based on Gib.
+        self.universe = np.arange(-1, 1.05, 0.05)
+        # add a zero to the center of the universe of discourse to make it even (necessary for symetric dist of membership functions.)
+        self.universe = np.insert(self.universe, len(self.universe[ : int(len(self.universe)/2)]), 0)
         self.__noCausality = no_causality.lower()
 
         if data != None:
@@ -311,50 +322,34 @@ class DataProcessor:
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
 
-    def automf(self):
+    def automf(self, membership_function = 'trimf', **params):
         
         """ 
-        Automatically generate triangular membership functions based on the passed linguistic terms (in the init).
-        This function was taken and modified from scikit-fuzzy.
+        Automatically generate membership functions based on the passed linguistic terms (in the init).
+        This functions were taken and modified from scikit-fuzzy.
         
+        Parameters
+        ----------
+        membership_function: str,
+                                fuzzy membership function. --> "trimf" 
+
         Return
         ---------
         y: dict,
             Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
         """
-        
-        number = len(self.linguistic_terms)
-        limits = [self.universe.min(), self.universe.max()]
-        universe_range = (limits[1] - limits[0])/2
-        widths = [universe_range / (((number/2) - 1) / 2.)] * int(number)
-        
-        
-        # Create the centers of the mfs for each side of the x axis and then merge them together.
-        centers_pos = np.linspace(0.001, 1, number//2).round(2)
-        centers_neg = np.linspace(-1, -0.001, number//2).round(2)
-        centers = list(centers_neg)+list(centers_pos)
-        
-        abcs = [[c - w / 2, c, c + w / 2] for c, w in zip(centers, widths)]
-        
-        abcs[number//2] = [0.001, 0.001, centers_pos[1]] # + Very low 
-        abcs[((number//2) -1)] = [centers_neg[-2], -0.001, -0.001] # - Very Low
-        
-        terms = dict()
+        np.set_printoptions(suppress=True) # not necessary (easier for debug.)
 
-        # add a narrow interval for no causality (based on Giab).
-        self.linguistic_terms.insert(len(self.linguistic_terms)//2, self.__noCausality)
-        abcs.insert(len(abcs)//2, np.array([-0.01, 0, 0.01])) 
+        mf = self.membership_func[membership_function]
 
-        # Repopulate
-        for term, abc in zip(self.linguistic_terms, abcs):
-            terms[term] = skfuzzy.trimf(self.universe, abc)
+        terms = mf(universe = self.universe, linguistic_terms=self.linguistic_terms, noCausality=self.__noCausality)
         
         return terms
         
-    def activate(self, activation_input, mf):
+    def activate(self, mf, activation_input, fuzzy_inference="mamdaniProduct", **params):
         
         """ 
-        Activate the specified membership function based on the passed parameters.
+        Activate the specified membership function based on the passed parameters (Mamdani).
         
         Parameters
         ----------
@@ -366,18 +361,23 @@ class DataProcessor:
             membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
             and the value is a 1d array with the membership values
         
+        fuzzy_inference: str,
+                            fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"
+        
         Return
         ---------
         y: dict,
             activated membership functions, where the key is the linguistic term and 
             the value is a 1d array with the activated membership values. 
         """
-        activation_input = {k.lower(): v for k, v in activation_input.items()} # Make lower case.
 
+        infer = self.fuzzy_inference_funcs[fuzzy_inference]
+
+        activation_input = {k.lower(): v for k, v in activation_input.items()} # Make lower case.
         activated = {}
+          
         for i in activation_input.keys():
-            activated[i] = np.fmin(activation_input[i], mf[i])
-        
+            activated[i] = infer(mf_x=mf[i], weight=activation_input[i], **params)
         return activated
     
     def aggregate(self, activated):
@@ -415,7 +415,7 @@ class DataProcessor:
         method: str, 
                     Defuzzification method, default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
-        
+
         Return
         ---------
         y : int,
@@ -426,7 +426,7 @@ class DataProcessor:
         
         return defuzzified_value           
         
-    def gen_weights(self, method = 'centroid'): 
+    def gen_weights(self, method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params): 
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
@@ -435,8 +435,11 @@ class DataProcessor:
         method: str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
-                    
-        """        
+        
+        fuzzy_inference: str,
+                            fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"                    
+        """
+
         # A dict to store the aggregated results for the visualization purposes. 
         self.aggregated = {}
         flat_data = self.__flatData(self.data)
@@ -446,11 +449,11 @@ class DataProcessor:
         weight_matrix = pd.DataFrame(columns=cols, index=cols)
         
         # Create the membership functions for the linguistic terms.
-        self.terms_mf = self.automf()
+        self.terms_mf = self.automf(membership_function=membership_function, **params)
         
         for concepts in set(flat_data.index):
             activation_parameter = self.__activationParameter(flat_data, concepts)
-            activated = self.activate(activation_parameter, self.terms_mf)
+            activated = self.activate(mf=self.terms_mf, activation_input=activation_parameter, fuzzy_inference=fuzzy_inference, **params)
             if not all(x==0 for x in activation_parameter.values()):
                 aggr = self.aggregate(activated)
                 self.aggregated[f'{concepts}'] = aggr
