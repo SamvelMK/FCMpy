@@ -36,7 +36,7 @@ lt = ['-VH', '-H', '-M', '-L','-VL', 'VL', 'L', 'M', 'H', 'VH']
 fcm = DataProcessor(linguistic_terms=lt)
 ```
 Note that the class is automatically instantiated with a universe of discourse with a range of [-1, 1].
-One should also specify the column name (in the data) that expresses no causality between the concept pair. The default argument is set to be 'No-Causality'. However, one cance change this by modifying the default argument:
+One should also specify the column name (in the data) that expresses no causality between the concept pair. The default argument is set to be 'No-Causality'. However, one can change this by modifying the default argument:
 
 ```
 from fcmbci import DataProcessor
@@ -203,7 +203,7 @@ and a file called inconsistentRatings_{current_date}.xlsx will be created (Figur
 ## read_json()
 <div align='justify'>
 
-In certain cases one might have to read the data from json files. The read_json method takes two arguments: <em> filepath </em>, <em> check_consistency </em>.
+In certain cases one might have to read data from a json file. The read_json method takes two arguments: <em> filepath </em>, <em> check_consistency </em>.
 
 
 ````
@@ -229,6 +229,39 @@ The json file should have the following general structure:
  ]
 }
 ```
+
+</div>
+
+## read_csv()
+
+<div align='justify'>
+
+In certain cases, one might have to read data from a CSV file. The read_csv method takes three arguments: <em> filepath </em>, <em> sepConcept </em> and <em> csv_sep </em>.
+
+```
+read_csv(filePath, sepConcept, csv_sep=',')
+ 
+Read data from a csv file.
+
+Parameters
+----------
+filepath : str, path object or file-like object
+
+sepConcept: str
+                the separation symbol (e.g., '->') that separates the antecedent from the concequent in the column heads of a csv file
+
+csv_sep: str,
+                separator of the csv file (read more in pandas.read_csv)
+```
+
+The csv file should have the following general structure:
+
+<img src="..\..\figures\figure_3_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<em>Figure 4:</em> Sample data structure.
+
+Each <em>column</em> represents a pair of connected concepts. The column heads should follow the following format: antecedent sepConcept concequent (polarity) (e.g., 'C1 -> C2 (+)').
+If the pattern is not detected the method will throw an error.
+Each <em>row</em> in the file represents the inputs of an expert. Each cell of the file represents a linguistic term expressing causality between the respective concepts.
 
 </div>
 
