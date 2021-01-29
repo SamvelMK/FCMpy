@@ -286,7 +286,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(self.data)
 
-    def read_csv(self, filePath, sepConcept, csv_sep=',', check_consistency=False):
+    def read_csv(self, filePath, sepConcept, csv_sep=','):
         """ 
         Read data from a csv file.
 
@@ -297,18 +297,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         sepConcept: str
                     the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
         
-        linguistic_terms: list
-                            list of linguistic terms
-        
-        noCausality: str,
-                        the term used to express noCausality
-        
         csv_sep: str,
                     separator of the csv file (read more in pandas.read_csv)
 
-        check_consistency: Bool
-                            check the consistency of raitings across the experts.
-                            default --> False
         """
         data = pd.read_csv(filePath, sep=csv_sep)
         dataOd = collections.OrderedDict()
@@ -319,6 +310,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             dataOd[f'Expert{i}'] = expertData
         
         self.data = dataOd
+        self.entropy = self.__entropy(self.data)
+
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
 
