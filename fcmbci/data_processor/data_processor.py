@@ -46,6 +46,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         Parameters
         ----------
         linguistic_terms: list
+                            List of linguistic terms used to express causality between concepts.
                             Note that the number of linguistic terms should be even. A narrow interval around 0 (for no causality option) is added automatically.
         no_causality: str
                         name of the column that expresses no causality
@@ -57,6 +58,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                             check the consistency of raitings across the experts.
                             default --> False
         """
+
         FuzzyInference.__init__(self)
         FuzzyMembership.__init__(self)
         
@@ -78,6 +80,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             self.data = pd.DataFrame()
 
     def __flatData(self, data):
+
         """
         Create a flat data from an ordered dictionary.
 
@@ -91,6 +94,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         y: pandas.DataFrame
             data with all the expert inputs in one dataframe.
         """
+
         # Create a flat data with all of the experts' inputs.
         flat_data = pd.concat([data[i] for i in data], sort = False)
         flat_data.columns = [i.lower() for i in flat_data.columns]
@@ -100,6 +104,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         return flat_data
 
     def __concept_parser(self, string, sepConcept):
+
         """
         Parse the csv file column names. Extract the antecedent, concequent pairs and the polarity of the causal relationship.
 
@@ -117,6 +122,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             keys --> antecedent, concequent, polarity
 
         """
+
         dt = {}
         pattern = f'[a-zA-Z]+.[a-zA-Z]+.{sepConcept}.+.(\(\+\)|\(\-\))'
         patterMatch = bool(re.search(pattern, string))
@@ -131,6 +137,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             raise ValueError('The $antecedent$ $->$ $concequent (sign)$ format is not detected! Check the data format!') 
 
     def __extractExpertData(self, data, sepConcept, linguistic_terms, noCausality):
+
         """
         Convert csv data fromat to a dataframe with columns representing the linguistic terms (see more in the doc.).
 
@@ -170,6 +177,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         return pd.DataFrame(dict_data)
 
     def __activationParameter(self, flat_data, conceptPair):
+
         """
         Create an activation parameter based on the expert inputs.
 
@@ -192,6 +200,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         return activation_parameter
 
     def __entropy(self, data):
+
         """
         Calculate the entropy of the expert raitings.
 
@@ -245,6 +254,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                             check the consistency of raitings across the experts.
                             default --> False
         """
+
         column_names = [i.lower() for i in self.linguistic_terms]
         data = pd.read_excel(filepath, sheet_name=None)
 
@@ -258,6 +268,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         self.entropy = self.__entropy(self.data)           
 
     def read_json(self, filepath, check_consistency=False):
+
         """ 
         Read data from a json file.
 
@@ -269,6 +280,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                             check the consistency of raitings across the experts.
                             default --> False
         """
+
         column_names = [i.lower() for i in self.linguistic_terms]
         f = open(filepath) 
         data = json.load(f)
@@ -287,6 +299,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         self.entropy = self.__entropy(self.data)
 
     def read_csv(self, filePath, sepConcept, csv_sep=','):
+
         """ 
         Read data from a csv file.
 
@@ -301,6 +314,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                     separator of the csv file (read more in pandas.read_csv)
 
         """
+
         data = pd.read_csv(filePath, sep=csv_sep)
         dataOd = collections.OrderedDict()
         for i in range(len(data)):
@@ -325,12 +339,13 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         ----------
         membership_function: str,
                                 fuzzy membership function. --> "trimf" 
-
+        
         Return
         ---------
         y: dict,
             Generated membership functions. The keys are the linguistic terms and the values are 1d arrays. 
         """
+
         np.set_printoptions(suppress=True) # not necessary (easier for debug.)
 
         mf = self.membership_func[membership_function]
@@ -419,7 +434,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         
         return defuzzified_value           
         
-    def gen_weights(self, method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params): 
+    def gen_weights(self, method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params):
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
@@ -429,8 +444,13 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
         
+        membership_function: str,
+                                fuzzy membership function. --> 'trimf'
+
         fuzzy_inference: str,
-                            fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"                    
+                            fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"
+
+        params: other parameters for the functions                    
         """
 
         # A dict to store the aggregated results for the visualization purposes. 
