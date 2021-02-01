@@ -3,7 +3,11 @@
 ## Constructing a Fuzzy Cognitive Map (Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020)
 
 <div align='justify'>
+<em>Note: To properly view the math formulas in this .md file please add the "MathJax Plugin for Github" chrome extension. See more in: https://dev.to/aaroncql/display-latex-math-in-github-markdown-previews-2988</em>.
+</div>
+<br>
 
+<div align='justify'>
 Once the structure of the FCM is available, we proceed with the second model-building step in which we need to identify the value of each edge. This is often done by providing a questionnaire to participants (Gray, Hilsberg, McFall, & Arlinghaus, 2015; Firmansyah, Supangkat, Arman, & Giabbanelli, 2019; Giabbanelli & Crutzen, 2014; Giabbanelli, Torsney-Weir, & Mago, 2012), who occasionally consist of (or are supplemented by) researchers leading the study (Mago, et al., 2013; Papada, Katsoulakos, Doulos, Kaliampakos, & Damigos, 2019). 
 Then, a common practice consists of counting the fraction of respondents for each membership function (e.g. 3 out of 6 participants say “low”), clipping the function accordingly (i.e. truncate the triangle “low” after 3/6 of its height), and combining the functions and finding their center. We now detail this process on the example illustrated in Figure 1. <br>
 <br>
