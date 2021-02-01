@@ -28,7 +28,7 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 <div align='justify'>
 
-To create an instance of the DataProcessor class you can either pass the data (collections.OrderedDict where the key is the expert ID and the values are panda's dataframes) to the constructor or create an instance with no data and then read the data by using one of the methods of this class (i.e., [read_xlsx](#read_xlsx) or [read_json](#read_json)).
+To create an instance of the DataProcessor class you can either pass the data (collections.OrderedDict where the key is the expert ID and the values are panda's dataframes) to the constructor or create an instance with no data and then read the data by using one of the methods of this class (e.g., [read_xlsx](#read_xlsx), [read_json](#read_json)).
 
 To instantiate the FcmDataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. 
 
@@ -50,9 +50,9 @@ lt = ['-VH', '-H', '-M', '-L','-VL', 'VL', 'L', 'M', 'H', 'VH']
 fcm = DataProcessor(linguistic_terms=lt, no_causality='No-Causality')
 ```
 
-When supplying the data one can also specify whether there is a need to check for the consistency in the data. The <em>consistency_check</em> argument checks the consistency of the raitings (mainly the valence of the raitings (positive or negative)) of each pari of concepts across all the experts. If inconsistencies are identified then an inconsistencies_current_date.xlsx file is generated. In this file one can find the pair of concepts that were rated inconsistently across the experts.
+When supplying the data one can also specify whether there is a need to check for the consistency in the data. The <em>consistency_check</em> argument checks the consistency of the ratings (mainly the valence of the ratings (positive or negative)) of each pair of concepts across all the experts. If inconsistencies are identified then an inconsistencies_current_date.xlsx file is generated. In this file one can find the pair of concepts that were rated inconsistently across the experts.
 
-When data is supplied to the constructor, the algorithm atomatically calculates the entropy of the expert raitings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
+When data is supplied to the constructor, the algorithm automatically calculates the entropy of the expert ratings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
 
 $$
 R=-\sum_{i=1}^{n}p_ilog_2(p_i)
@@ -191,7 +191,7 @@ OrderedDict([('Expert_1',    From  To  -VL  -L  -M  -H  -VH  NA   VL   L   M    
 ```
 The read_xlsx() method stores the data in an ordered dictionary where the <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda's dataframes of the expert inputs.
 
-If the <em>check_consistency</em> is set to <em>True</em> then the method will check for inconsistencies in the expert raitings. More specifically, the method will identify the concepts for which the sign of the causal relationships was indicated inconsistently across the experts. If such inconsistencies are identified, a notification will appear in the console:
+If the <em>check_consistency</em> is set to <em>True</em> then the method will check for inconsistencies in the expert ratings. More specifically, the method will identify the concepts for which the sign of the causal relationships was indicated inconsistently across the experts. If such inconsistencies are identified, a notification will appear in the console:
 ```
 [('C1', 'C2')] pairs of concepts were raited inconsistently across the experts. For more information check the inconsistentRatings_XX_X_XXXX.xlsx
 ```
@@ -233,7 +233,7 @@ The json file should have the following general structure:
 ```
 The read_json() method stores the data in an ordered dictionary where the <em>keys</em> are the expert ids (i.e., the names of the excel sheets) and the <em>values</em> are panda's dataframes of the expert inputs.
 
-If the <em>check_consistency</em> is set to <em>True</em> then the method will check for inconsistencies in the expert raitings. More specifically, the method will identify the concepts for which the sign of the causal relationships was indicated inconsistently across the experts. If such inconsistencies are identified, a notification will appear in the console:
+If the <em>check_consistency</em> is set to <em>True</em> then the method will check for inconsistencies in the expert ratings. More specifically, the method will identify the concepts for which the sign of the causal relationships was indicated inconsistently across the experts. If such inconsistencies are identified, a notification will appear in the console:
 </div>
 
 ## read_csv()
@@ -252,7 +252,7 @@ Parameters
 filepath : str, path object or file-like object
 
 sepConcept: str
-                the separation symbol (e.g., '->') that separates the antecedent from the concequent in the column heads of a csv file
+                the separation symbol (e.g., '->') that separates the antecedent from the consequent in the column heads of a csv file
 
 csv_sep: str,
                 separator of the csv file (read more in pandas.read_csv)
@@ -263,7 +263,7 @@ The csv file should have the following general structure:
 <img src="..\..\figures\figure_4.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 4:</em> Sample data structure (CSV).
 
-Each <em>column</em> represents a pair of connected concepts. The column heads should follow the following format: antecedent sepConcept concequent (polarity) (e.g., 'C1 -> C2 (+)').
+Each <em>column</em> represents a pair of connected concepts. The column heads should follow the following format: antecedent sepConcept consequent (polarity) (e.g., 'C1 -> C2 (+)').
 If the pattern is not detected the method will throw an error.
 Each <em>row</em> in the file represents the inputs of an expert. Each cell of the file represents a linguistic term expressing causality between the respective concepts.
 
@@ -304,7 +304,7 @@ from fcmbci import DataProcessor
 
 lt = ['-VH', '-H', '-M', '-L','-VL', 'VL','L', 'M', 'H', 'VH']
 
-fcm = DataProcessor(linguistic_terms=lt)
+fcm = DataProcessor(linguistic_terms=lt, no_causality='no causality')
 
 mf = fcm.automf()
 ```
@@ -312,16 +312,17 @@ mf = fcm.automf()
 ```
 Output:
 
-{'-VH': array([1.   , 0.996, 0.992, ..., 0.   , 0.   , 0.   ]),
- '-H': array([0.001, 0.005, 0.009, ..., 0.   , 0.   , 0.   ]),
- '-M': array([0., 0., 0., ..., 0., 0., 0.]),
- '-L': array([0., 0., 0., ..., 0., 0., 0.]),
- '-VL': array([0., 0., 0., ..., 0., 0., 0.]),
- 'VL': array([0., 0., 0., ..., 0., 0., 0.]),
- 'L': array([0., 0., 0., ..., 0., 0., 0.]),
- 'M': array([0., 0., 0., ..., 0., 0., 0.]),
- 'H': array([0.   , 0.   , 0.   , ..., 0.009, 0.005, 0.001]),
- 'VH': array([0.   , 0.   , 0.   , ..., 0.992, 0.996, 1.   ])}
+{'-VH': array([1., 0.8, 0.6, 0.4, 0.2, ..., 0., 0., 0., 0.]),
+ '-H': array([0., 0.2, 0.4, 0.6, ..., 0., 0., 0., 0. ]),
+ '-M': array([0., 0., 0., 0., ..., 0., 0., 0., 0. ]),
+ '-L': array([0., 0., 0., 0., ..., 0., 0., 0., 0.]),
+ '-VL': array([0., 0., 0., 0., ..., 0., 0., 0., 0.]),
+ 'no causality': array([0., 0., 0., 0., ..., 0., 0., 0., 0.]),
+ 'VL': array([0., 0., 0., 0., ..., 0., 0., 0., 0.]),
+ 'L': array([0., 0., 0., 0., ..., 0., 0., 0., 0.]),
+ 'M': array([0., 0., 0., 0., ..., 0., 0., 0., 0.]),
+ 'H': array([0., 0., 0., 0., ..., 0.6, 0.4, 0.2, 0.]),
+ 'VH': array([0., 0., 0., 0., ..., 0.4, 0.6, 0.8, 1.])}
 ```
 
 You can visualize this as follows:
@@ -381,7 +382,7 @@ func_name: str
 ## activate()
 <div align='justify'>
 
-Activate the specified membership functions based on the passed parameters. The activation of the membership functions is achieved by applying fuzzy inference rules. Curently, the package implements two such methods: mamdaniMin(), and mamdaniProduct().
+Activate the specified membership functions based on the passed parameters. The activation of the membership functions is achieved by applying fuzzy inference rules. Currently, the package implements two such methods: mamdaniMin(), and mamdaniProduct().
 
 ```
 activate(mf, activation_input, fuzzy_inference="mamdaniProduct", **params)
@@ -459,7 +460,7 @@ $$
 \mu_{R}(x,y)= \mu_{A}(x)\cdot \mu_{B}(y)
 $$ 
 
-In other words, the method rescales the membership functions instead of cliping them at the cut points. 
+In other words, the method rescales the membership functions instead of clipping them at the cut points. 
 
 <br>
 <img src="..\..\figures\figure_6_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>

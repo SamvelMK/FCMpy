@@ -308,7 +308,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         filepath : str, path object or file-like object
 
         sepConcept: str
-                    the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
+                    the separation symbol (e.g., '->') that separates the antecedent from the consequent in the columns of a csv file
         
         csv_sep: str,
                     separator of the csv file (read more in pandas.read_csv)
