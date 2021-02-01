@@ -50,11 +50,12 @@ When supplying the data one can also specify whether there is a need to check fo
 
 When data is supplied to the constructor, the algorithm atomatically calculates the entropy of the expert raitings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
 
+<div align="center"><img style="background: white;" src="https://render.githubusercontent.com/render/math?math="></div>
+
 <div class=container, align=center>
 
-<!-- $$ R=-\sum_{i=1}^np_ilog_2(p_i) $$ --> 
+<!-- $$ R=-\sum_{i=1}^np_ilog_2(p_i) $$  -->
 
-<div align="center"><img style="background: white;" src="https://render.githubusercontent.com/render/math?math="></div>
 
 </div>
 
