@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from datetime import date 
 from tqdm import tqdm
-
+import collections
 class Checker:
     """
     The class includes function input checks.
@@ -14,6 +14,8 @@ class Checker:
     Methods:
             consistency_check(data, column_names)
             column_check(data)
+            check_lt(linguistic_terms)
+            check_data(data, linguistic_terms)
             input_check(initial_state, weights)
     """
     @staticmethod
@@ -70,7 +72,59 @@ class Checker:
         for expert in data.keys():
             if ('from' not in [x.lower() for x in data[expert].columns]) | ('to' not in [x.lower() for x in data[expert].columns]):
                 raise ValueError('Columns From --> To were not found. Check the data!')
-    
+
+    @staticmethod
+    def check_lt(linguistic_terms):
+        """
+        Check the input of the linguistic terms against the following criteria:
+            R1: should be even
+            R2: should be in a list format
+            R3: each item in a list should be a string
+            R4: should be no douplicates
+
+        Parameters
+        ----------
+        linguistic_terms: list
+        """
+
+        # R1: should be even
+        if len(linguistic_terms) % 2 != 0:
+            raise ValueError("You passed an odd number of linguistic terms. There should be even number of linguistic terms!")
+        # R2: should be in a list format
+        elif type(linguistic_terms) != type(list()):
+            raise ValueError('The linguistic terms shoud be in a list format.')
+        # R3: each item in a list should be a string     
+        elif sum([type(i) != type(str()) for i in linguistic_terms]):
+            raise ValueError("The linguistic terms should be strings")
+        # R4: should be no douplicates 
+        elif len(set(linguistic_terms)) != len(linguistic_terms):
+            raise ValueError('There are douplicate linguistic terms.')
+
+    @staticmethod
+    def check_data(data, linguistic_terms):
+        """
+        Check the input data against the following criteria:
+            R1: data shoud be an collections.OrderedDict
+            R2: data.values shoud be a pandas.DataFrame
+            R3: data.values.columns shoud include all the linguistic terms.
+        
+        Parameters
+        ----------
+        data: collections.OrderedDict
+
+        linguistic_terms: list
+        """
+
+        # R1: data shoud be an collections.OrderedDict
+        if type(data) != type(collections.OrderedDict()):
+            raise ValueError('The data should be an ordered dictionary.')
+        # R2: data.values shoud be a pandas.DataFrame
+        elif sum([type(data[i]) != type(pd.DataFrame()) for i in data]) > 0:
+            raise ValueError('The values in the ordered dict should be in a pandas.DataFrame format.')
+        # R3: data.values.columns shoud include all the linguistic terms.
+        elif sum([term not in data[i].columns for term in linguistic_terms for i in data]) > 0:
+            raise ValueError('The columns of the dataframe should include all the linguistic terms.')
+
     @staticmethod
     def input_check(initial_state, weights):
         """

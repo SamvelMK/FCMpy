@@ -62,6 +62,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         FuzzyInference.__init__(self)
         FuzzyMembership.__init__(self)
         
+        # check the validty of the inputs:
+        Checker.check_lt(linguistic_terms=linguistic_terms)
+
         self.linguistic_terms = [i.lower() for i in linguistic_terms]
         self.universe = np.arange(-1, 1.05, 0.05)
         # add a zero to the center of the universe of discourse to make it even (necessary for symetric dist of membership functions.)
@@ -69,7 +72,10 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         self.__noCausality = no_causality.lower()
 
         if data != None:
+            # check the validity of the input data
             Checker.columns_check(data=data) # check if the from ---> to columns exist.
+            Checker.check_data(data=data, linguistic_terms=self.linguistic_terms)
+
             if check_consistency:
                 Checker.consistency_check(data=data, column_names = self.linguistic_terms) # check the consistency of the data.
                 self.data = data
@@ -77,6 +83,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                 # calculate the entropy of the expert raitings.
                 self.entropy = self.__entropy(self.data)
         else:
+            
             self.data = pd.DataFrame()
 
     def __flatData(self, data):
@@ -263,9 +270,12 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         if check_consistency:
             Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
         self.data = collections.OrderedDict(data)
-        
+
+        # check the validity of the output data
+        Checker.check_data(data=self.data, linguistic_terms=self.linguistic_terms)
+
         # calculate the entropy of the expert raitings.
-        self.entropy = self.__entropy(self.data)           
+        self.entropy = self.__entropy(data=self.data)           
 
     def read_json(self, filepath, check_consistency=False):
 
@@ -294,9 +304,11 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         if check_consistency:
             Checker.consistency_check(data=od, column_names=column_names)
         self.data = od
-        
+        # check the validity of the output data
+        Checker.check_data(data=self.data, linguistic_terms=self.linguistic_terms)
+
         # calculate the entropy of the expert raitings.
-        self.entropy = self.__entropy(self.data)
+        self.entropy = self.__entropy(data=self.data)
 
     def read_csv(self, filePath, sepConcept, csv_sep=','):
 
@@ -324,6 +336,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             dataOd[f'Expert{i}'] = expertData
         
         self.data = dataOd
+        # check the validity of the output data
+        Checker.check_data(data=self.data, linguistic_terms=self.linguistic_terms)
 
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(data=self.data)
