@@ -60,12 +60,9 @@ $$ -->
 
 <div align="center"><img style="background: white;" src="..\..\svg\kmrIv8GImD.svg"></div> 
 
-<div align="center"><img style="background: white;" src="https://render.githubusercontent.com/render/math?math=R%3D-%5Csum_%7Bi%3D1%7D%5E%7Bn%7Dp_ilog_2(p_i)%0D"></div> 
-
-
 </div>
 
-Where $p_i$ is the proportion of the answers (per linguistic term) about the causal relationship R (i.e., $C_{ij}$)
+Where $p_i$ is the proportion of the answers (per linguistic term) about the causal relationship R (i.e., <!-- $C_{ij}$ --> <img style="transform: translateY(0.1em); background: white;" src="..\..\svg\TiH9XWOqt2.svg">)
 
 The entropy of the concepts can be inspected as follows:
 
@@ -416,7 +413,9 @@ To activate the membership functions, we need to pass in the activation input al
 
 The mamdaniMin fuzzy inference rule is expressed as:
 
-$$ \mu_{R}(x,y)= min\lfloor\mu_{A}(x), \mu_{B}(y)\rfloor$$
+$$\mu_{R}(x,y)= min\lfloor\mu_{A}(x), \mu_{B}(y)\rfloor$$
+
+<img src="https://latex.codecogs.com/gif.latex?\mu_{R}(x,y)=&space;min\lfloor\mu_{A}(x),&space;\mu_{B}(y)\rfloor" title="\mu_{R}(x,y)= min\lfloor\mu_{A}(x), \mu_{B}(y)\rfloor" />
 
 The method returns a dictionary with the activated membership function. This process can be visualized as follows.
 
