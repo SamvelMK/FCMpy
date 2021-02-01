@@ -50,14 +50,11 @@ When supplying the data one can also specify whether there is a need to check fo
 
 When data is supplied to the constructor, the algorithm atomatically calculates the entropy of the expert raitings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
 
-<!-- $$
+$$
 R=-\sum_{i=1}^{n}p_ilog_2(p_i)
-$$ --> 
+$$ 
 
-<div align="center"><img src="..\..\svg\kmrIv8GImD.svg"></div> 
-<br>
-
-Where $p_i$ is the proportion of the answers (per linguistic term) about the causal relationship R (i.e., <!-- $C_{ij}$ --> <img style="transform: translateY(0.1em);" src="..\..\svg\TiH9XWOqt2.svg">)
+Where $p_i$ is the proportion of the answers (per linguistic term) about the causal relationship R (i.e., $C_{ij}$)
 
 The entropy of the concepts can be inspected as follows:
 
@@ -412,9 +409,6 @@ $$
 \mu_{R}(x,y)= min \left \lfloor \mu_{A}(x), \mu_{B}(y) \right \rfloor
 $$ 
 
-<div align="center"><img src="..\..\svg\OKR1hluNRx.svg"></div>
-<br>
-
 The method returns a dictionary with the activated membership function. This process can be visualized as follows.
 
 ```
@@ -456,12 +450,10 @@ plt.show()
 
 The mamdaniProduct method can be expressed as:
 
-<!-- $$
+$$
 \mu_{R}(x,y)= \mu_{A}(x)\cdot \mu_{B}(y)
-$$ --> 
+$$ 
 
-<div align="center"><img src="..\..\svg\vdDgynhIZc.svg"></div>
-<br>
 In other words, the method rescales the membership functions instead of cliping them at the cut points. 
 
 <img src="..\..\figures\figure_6_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
