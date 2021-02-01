@@ -345,10 +345,10 @@ axes.get_yaxis().tick_left()
 plt.tight_layout()
 plt.show()
 ```
-
+<br>
 <img src="..\..\figures\figure_5.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 5:</em> Automatically generated triangular membership functions.
-
+<em>Figure 5:</em> Automatically generated triangular membership functions. <br>
+<br>
 New membership functions can also be added to the constructor by add_membership_func() method.
 
 ```
@@ -448,9 +448,10 @@ axes.set_ylim([0,1])
 plt.tight_layout()
 plt.show()
 ```
-
+<br>
 <img src="..\..\figures\figure_6.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 6:</em> The activated membership function.
+<em>Figure 6:</em> The activated membership function.<br>
+<br>
 
 The mamdaniProduct method can be expressed as:
 
@@ -460,9 +461,10 @@ $$
 
 In other words, the method rescales the membership functions instead of cliping them at the cut points. 
 
+<br>
 <img src="..\..\figures\figure_6_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 6.1:</em> The activated membership function: mamdaniProduct.
-
+<em>Figure 6.1:</em> The activated membership function: mamdaniProduct.<br>
+<br>
 </div>
 
 ## aggregate()
@@ -508,10 +510,10 @@ plt.ylim(0,1)
 plt.tight_layout()
 plt.show()
 ```
-
+<br>
 <img src="..\..\figures\figure_7.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 7:</em> The aggregated membership function.
-
+<em>Figure 7:</em> The aggregated membership function.<br>
+<br>
 </div>
 
 ## defuzzify()
@@ -580,10 +582,10 @@ axes.get_yaxis().tick_left()
 plt.tight_layout()
 plt.show()
 ```
-
+<br>
 <img src="..\..\figures\figure_8.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
-<em>Figure 8:</em> Derived edge weight (defuzzification).
-
+<em>Figure 8:</em> Derived edge weight (defuzzification).<br>
+<br>
 </div>
 
 ## gen_weights()
