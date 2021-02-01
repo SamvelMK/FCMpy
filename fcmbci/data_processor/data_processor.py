@@ -31,11 +31,11 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             remove_fuzzy_inference_func(self, func_name)
             read_xlsx(self, filepath, check_consistency=False)
             read_json(self, filepath, check_consistency=False)
-            automf(self)
-            activate(self, activation_input, mf)
+            automf(self, membership_function = 'trimf', **params)
+            activate(self, mf, activation_input, fuzzy_inference="mamdaniProduct", **params)
             aggregate(self, activated)
             defuzzify(self, aggregated, method = 'centroid')
-            gen_weights(self, method = 'centroid')
+            gen_weights(self,  method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params)
     """
     
     def __init__(self, linguistic_terms, no_causality='No-Causality', data = None, check_consistency=False):
@@ -87,7 +87,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         Parameters
         ----------
         data: dict,
-                keys ---> expertId, values ---> pandasDf
+                keys ---> expertId, values ---> pandas.DataFrame
         
         Return
         ---------
@@ -103,7 +103,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
         return flat_data
 
-    def __concept_parser(self, string, sepConcept):
+    def __conceptParser(self, string, sepConcept):
 
         """
         Parse the csv file column names. Extract the antecedent, concequent pairs and the polarity of the causal relationship.
@@ -136,7 +136,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         else:
             raise ValueError('The $antecedent$ $->$ $concequent (sign)$ format is not detected! Check the data format!') 
 
-    def __extractExpertData(self, data, sepConcept, linguistic_terms, noCausality):
+    def __extractExpertData(self, data, sepConcept, linguistic_terms, no_causality):
 
         """
         Convert csv data fromat to a dataframe with columns representing the linguistic terms (see more in the doc.).
@@ -149,8 +149,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         linguistic_terms: list
                             list of linguistic terms
         
-        noCausality: str,
-                        the term used to express noCausality
+        no_causality: str,
+                        the term used to express no causality
 
         Return
         ---------
@@ -160,13 +160,13 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         dict_data = []
         for i in data.keys():
             _ = {i: 0 for i in linguistic_terms}
-            concepts = self.__concept_parser(i, sepConcept=sepConcept)
+            concepts = self.__conceptParser(string=i, sepConcept=sepConcept)
             _['From'] = concepts['antecedent']
             _['To'] = concepts['concequent']
 
             if data[i].lower() in self.linguistic_terms:
                 # no causality cases
-                if data[i].lower() == noCausality:
+                if data[i].lower() == no_causality:
                     _[data[i].lower()] = 1
                 else:        
                     if concepts['polarity'] == '+':
@@ -202,7 +202,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
     def __entropy(self, data):
 
         """
-        Calculate the entropy of the expert raitings.
+        Calculate the entropy of the expert ratings.
 
         Parameters
         ----------
@@ -212,13 +212,13 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         Return
         ---------
         y: pandas.DataFrame,
-            entropy of the concept pairs in expert raitings.
+            entropy of the concept pairs in expert ratings.
         """
 
-        flat_data = self.__flatData(data)
+        flat_data = self.__flatData(data=data)
         prop = {}
         for concepts in set(flat_data.index):
-            activation_parameter = self.__activationParameter(flat_data, concepts) 
+            activation_parameter = self.__activationParameter(flat_data=flat_data, conceptPair=concepts) 
             prop[concepts] = activation_parameter
 
         entropy_concept = {}
@@ -320,13 +320,13 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         for i in range(len(data)):
             _ = data.iloc[i].to_dict()
 
-            expertData = self.__extractExpertData(data=_, sepConcept=sepConcept, linguistic_terms=self.linguistic_terms, noCausality=self.__noCausality)
+            expertData = self.__extractExpertData(data=_, sepConcept=sepConcept, linguistic_terms=self.linguistic_terms, no_causality=self.__noCausality)
             dataOd[f'Expert{i}'] = expertData
         
         self.data = dataOd
 
         # calculate the entropy of the expert raitings.
-        self.entropy = self.__entropy(self.data)
+        self.entropy = self.__entropy(data=self.data)
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
 
@@ -351,7 +351,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
         mf = self.membership_func[membership_function]
 
-        terms = mf(universe = self.universe, linguistic_terms=self.linguistic_terms, noCausality=self.__noCausality)
+        terms = mf(universe=self.universe, linguistic_terms=self.linguistic_terms, noCausality=self.__noCausality, **params)
         
         return terms
         
@@ -362,14 +362,15 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         
         Parameters
         ----------
+        mf: dict,
+            membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
+            and the value is a 1d array with the membership values
+
         activation_input: dict,
                             Membership function to apply the implication operation, 
                             where the key is the linguistic term and the value is the frequency of its occurrence
                             Example: parameters = {'H': 0.66, 'VH': 0.33}
-        mf: dict,
-            membership functions upon which the implication operator is applied. The key in the dict is the linguistic term, 
-            and the value is a 1d array with the membership values
-        
+
         fuzzy_inference: str,
                             fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"
         
@@ -441,6 +442,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
         (i.e., where the causal relationships are expressed in linguistic terms).
 
+        Parameters
+        ----------
         method: str,
                     Defuzzification method;  default --> 'centroid'. 
                     For other defuzzification methods check scikit-fuzzy library (e.g., bisector, mom, sig)
@@ -466,11 +469,11 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         self.terms_mf = self.automf(membership_function=membership_function, **params)
         
         for concepts in set(flat_data.index):
-            activation_parameter = self.__activationParameter(flat_data, concepts)
+            activation_parameter = self.__activationParameter(flat_data=flat_data, conceptPair=concepts)
             activated = self.activate(mf=self.terms_mf, activation_input=activation_parameter, fuzzy_inference=fuzzy_inference, **params)
             if not all(x==0 for x in activation_parameter.values()):
-                aggr = self.aggregate(activated)
+                aggr = self.aggregate(activated=activated)
                 self.aggregated[f'{concepts}'] = aggr
-                value = self.defuzzify(aggr, method)
+                value = self.defuzzify(aggregated=aggr, method=method)
                 weight_matrix.loc[concepts] = value
         self.causal_weights = weight_matrix.fillna(0)
