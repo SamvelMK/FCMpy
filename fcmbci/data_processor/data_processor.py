@@ -324,8 +324,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             dataOd[f'Expert{i}'] = expertData
         
         self.data = dataOd
-        self.entropy = self.__entropy(self.data)
 
+        # calculate the entropy of the expert raitings.
+        self.entropy = self.__entropy(self.data)
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
 
