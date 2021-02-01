@@ -57,7 +57,7 @@ When data is supplied to the constructor, the algorithm atomatically calculates 
 \R=-\sum_{i=1}^{n}p_ilog_2(p_i)
 $$ --> 
 
-<div align="center"><img style="background: white;" src="https://render.githubusercontent.com/render/math?math=%5CR%3D-%5Csum_%7Bi%3D1%7D%5E%7Bn%7Dp_ilog_2(p_i)%0D"></div> 
+<div align="center"><img style="background: white;" src="..\..\svg\PpsPcu7WVZ.svg"></div> 
 
 </div>
 
