@@ -408,9 +408,9 @@ To activate the membership functions, we need to pass in the activation input al
 
 The mamdaniMin fuzzy inference rule is expressed as:
 
-<!-- $$
+$$
 \mu_{R}(x,y)= min \left \lfloor \mu_{A}(x), \mu_{B}(y) \right \rfloor
-$$ --> 
+$$ 
 
 <div align="center"><img src="..\..\svg\OKR1hluNRx.svg"></div>
 <br>
