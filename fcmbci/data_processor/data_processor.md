@@ -346,7 +346,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-<img src="..\..\figures\figure_5.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<img src="..\..\figures\figure_5.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 5:</em> Automatically generated triangular membership functions.
 
 New membership functions can also be added to the constructor by add_membership_func() method.
