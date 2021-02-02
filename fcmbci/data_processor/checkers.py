@@ -1,5 +1,5 @@
 ###########################################################################
-##              Class of methods to check the imput data                 ##
+##              Class of methods to check the input data                 ##
 ###########################################################################
 
 import numpy as np
@@ -7,7 +7,9 @@ import pandas as pd
 from datetime import date 
 from tqdm import tqdm
 import collections
+
 class Checker:
+
     """
     The class includes function input checks.
 
@@ -18,20 +20,22 @@ class Checker:
             check_data(data, linguistic_terms)
             input_check(initial_state, weights)
     """
+
     @staticmethod
     def consistency_check(data, column_names):
+
         """
         Extract inconsistent ratings for the given linguistic terms in the supplied data.
+        The method writes out an excel file with the inconsistencies and raises a ValueError if inconsistencies were identified.
         
         Parameters
         ----------
         data : OrderedDict,
+
         column_names: list
                         the column names (linguistic terms) of the pandas df in the ordered dictionary
-        Return
-        ----------
-        Writes out an excel file with the inconsistencies and raises a ValueError if inconsistencies were identified.
         """
+
         current_date=date.today()
 
         flat_data = pd.concat([data[i] for i in data], sort = False)
@@ -62,6 +66,7 @@ class Checker:
 
     @staticmethod
     def columns_check(data):
+
         """
         Checks whether the dataframe includes From ---> To column. It raises an error, if the columns are not found. 
         
@@ -69,12 +74,14 @@ class Checker:
         ----------
         data : OrderedDict
         """
+
         for expert in data.keys():
             if ('from' not in [x.lower() for x in data[expert].columns]) | ('to' not in [x.lower() for x in data[expert].columns]):
                 raise ValueError('Columns From --> To were not found. Check the data!')
 
     @staticmethod
     def check_lt(linguistic_terms):
+
         """
         Check the input of the linguistic terms against the following criteria:
             R1: should be even
@@ -102,6 +109,7 @@ class Checker:
 
     @staticmethod
     def check_data(data, linguistic_terms):
+
         """
         Check the input data against the following criteria:
             R1: data shoud be an collections.OrderedDict
@@ -122,11 +130,12 @@ class Checker:
         elif sum([type(data[i]) != type(pd.DataFrame()) for i in data]) > 0:
             raise ValueError('The values in the ordered dict should be in a pandas.DataFrame format.')
         # R3: data.values.columns shoud include all the linguistic terms.
-        elif sum([term not in data[i].columns for term in linguistic_terms for i in data]) > 0:
+        elif sum([term not in [i.lower() for i in data[i].columns] for term in linguistic_terms for i in data]) > 0:
             raise ValueError('The columns of the dataframe should include all the linguistic terms.')
 
     @staticmethod
     def input_check(initial_state, weights):
+
         """
         Check the inputs for simulations.
         
@@ -134,9 +143,11 @@ class Checker:
         ----------
         initial_state: str
                 name of the intervention
+
         weights: numpy.ndarray or panda.DataFrame
                         causal weights between concepts
         """
+
         if len(initial_state) != weights.shape[0]:
             raise ValueError('The length of the initial_state.values() must == the length of the weights')
 
