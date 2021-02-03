@@ -131,7 +131,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         """
 
         dt = {}
-        pattern = f'[a-zA-Z]+.[a-zA-Z]+.{sepConcept}.+.(\(\+\)|\(\-\))'
+        pattern = f'[a-zA-Z]+.+->.+.(\(\+\)|\(\-\))'
         patterMatch = bool(re.search(pattern, string))
         
         if patterMatch:
@@ -298,7 +298,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         d = {}
         for i in data.keys():
             d[i] = data[i]
-        od = collections.OrderedDict([(i, pd.DataFrame(d[i])) for i in d])
+        od = collections.OrderedDict([(i, pd.DataFrame(d[i]).replace(r'^\s*$', np.nan, regex=True)) for i in d])
         # check the data
         Checker.columns_check(data=od)
         if check_consistency:
@@ -331,7 +331,6 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         dataOd = collections.OrderedDict()
         for i in range(len(data)):
             _ = data.iloc[i].to_dict()
-
             expertData = self.__extractExpertData(data=_, sepConcept=sepConcept, linguistic_terms=self.linguistic_terms, no_causality=self.__noCausality)
             dataOd[f'Expert{i}'] = expertData
         
