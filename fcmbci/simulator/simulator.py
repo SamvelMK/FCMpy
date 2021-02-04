@@ -10,6 +10,10 @@ class Simulator(Inference):
     Methods:
             __init__(self)
             simulate(self, initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params)
+            add_inference_methods(self, func)
+            remove_inference_methods(self, func_name)
+            add_transfer_func(self, func)
+            remove_transfer_func(self, func_name)
     """
 
     def __init__(self):
@@ -24,16 +28,22 @@ class Simulator(Inference):
         initial_state: dict
                         initial state vector of the concepts
                         keys ---> concepts, values ---> initial state of the associated concept
+
         weight_mat: numpy.ndarray
                         N*N weight matrix of the FCM.
+
         transfer: str
                     transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+
         inference: str
                     inference method --> "kosko", "mKosko", "rescaled"
+
         thresh: float
                     threshold for the error
+
         iterations: int
                         number of iterations
+                        
         params: additional parameters for the methods
 
         Return
