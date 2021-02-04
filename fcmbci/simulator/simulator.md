@@ -191,7 +191,7 @@ The values converged in the 7 state (e <= 0.001)
 ```
 
 <br>
-<img src="..\..\figures\Sim_figure_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<img src="..\..\figures\Sim_figure_1.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 1:</em> The results of the FCM simulation. <br>
 <br>
 
