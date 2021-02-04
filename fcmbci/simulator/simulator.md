@@ -92,7 +92,9 @@ $$ f(x)=\frac{1}{1+e^{-\lambda x}}, x\in\mathbb{R}; [0,1] $$
 
 <div class=container, align=center>
 
-$$ f(x)=tanh(x)=\frac{sinh(x)}{cosh(x)}=\frac{e^{2x}-1}{e^{2x}+1}, x\in\mathbb{R}; [-1,1]$$
+$$
+f(x)=tanh(x)=\frac{sinh(x)}{cosh(x)}=\frac{e^{2x}-1}{e^{2x}+1}, x\in\mathbb{R}; [-1,1]
+$$
 
 </div>
 
@@ -100,7 +102,9 @@ $$ f(x)=tanh(x)=\frac{sinh(x)}{cosh(x)}=\frac{e^{2x}-1}{e^{2x}+1}, x\in\mathbb{R
 
 <div class=container, align=center>
 
-$$ f(x)=\begin{Bmatrix}  1, & x > 0\\   0, & x\leq 0 \end{Bmatrix} $$
+$$
+f(x)=\begin{Bmatrix}  1, & x > 0\\   0, & x\leq 0 \end{Bmatrix}
+$$
 
 </div>
 
@@ -108,7 +112,9 @@ $$ f(x)=\begin{Bmatrix}  1, & x > 0\\   0, & x\leq 0 \end{Bmatrix} $$
 
 <div class=container, align=center>
 
-$$ f(x)=\begin{Bmatrix} 1, & x > 0 \\  0, & x= 0\\  -1, & x < 0 \end{Bmatrix} $$
+$$
+f(x)=\begin{Bmatrix} 1, & x > 0 \\  0, & x= 0\\  -1, & x < 0 \end{Bmatrix}
+$$
 
 </div>
 
@@ -122,14 +128,18 @@ The simulation is run until either of the two conditions are met: 1) output (A) 
 Fixed point <a href="https://dl.acm.org/doi/abs/10.1016/j.ins.2008.05.015">(Tsadiras 2008)</a>:
 <div class=container, align=center>
 
-$$ \exists t_{\alpha} \in \lbrace 1,2, ..., (T-1)\rbrace : A^{(t+1)}=A^{(t)}, \forall t \geq t_{\alpha}$$
+$$
+\exists t_{\alpha} \in \lbrace 1,2, ..., (T-1)\rbrace : A^{(t+1)}=A^{(t)}, \forall t \geq t_{\alpha}
+$$
 
 </div>
 
 Limit Cycle <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC55187/">(Wang et al. 1990)</a>:
 <div class=container, align=center>
 
-$$ \exists t_{\alpha}, P \in \lbrace 1,2, ..., (T-1)\rbrace : A^{(t+P)}=A^{(t)}, \forall t \geq t_{\alpha}$$
+$$
+\exists t_{\alpha}, P \in \lbrace 1,2, ..., (T-1)\rbrace : A^{(t+P)}=A^{(t)}, \forall t \geq t_{\alpha}
+$$
 
 </div>
 
