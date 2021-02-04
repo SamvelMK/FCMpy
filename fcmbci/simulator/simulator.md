@@ -52,21 +52,27 @@ In each iteration, the concept values of the defined FCM are updated according t
 Kosko (Stach et al., 2010):
 <div class=container, align=center>
 
-$$ {d}_i^{s+1}=f(\sum_{j=1}^n \mathbf{d}_j^s * \mathbf{C}_{ji}) $$
+$$ 
+{d}_i^{s+1}=f(\sum_{j=1}^n {d}_j^s * {C}_{ji}) 
+$$
 
 </div>
 
 Modified Kosko (Papageorgiou, 2011):
 <div class=container, align=center>
 
-$$ \mathbf{d}_i^{s+1}= f(\mathbf{d}_i+\sum_{j=1}^n \mathbf{d}_j^s * \mathbf{C}_{ji}) $$
+$$
+d_{i}^{s+1}= f(d_{i}+\sum_{j=1}^n d_j^s * C_{ji})
+$$
 
 </div>
 
 Rescaled (Papageorgiou, 2011):
 <div class=container, align=center>
 
-$$ \mathbf{d}_i^{s+1} = f((2\mathbf{d}_i -1)  +\sum_{j=1}^n (2\mathbf{d}_j^s -1) * \mathbf{C}_{ji}) $$
+$$
+d_{i}^{s+1} = f((2d_{i} -1)  +\sum_{j=1}^n (2d_{j}^s -1) * C_{ji}) 
+$$
 
 </div>
 
