@@ -53,7 +53,7 @@ Kosko (Stach et al., 2010):
 <div class=container, align=center>
 
 $$ 
-{d}_i^{s+1}=f(\sum_{j=1}^n {d}_j^s * {C}_{ji}) 
+d_{i}^{s+1}=f(\sum_{j=1}^n {d}_j^s * {C}_{ji}) 
 $$
 
 </div>
