@@ -4,6 +4,7 @@ from simulator.inference import Inference
 import warnings
 
 class Simulator(Inference):
+
     """
     The class includes methods for runing sumulations on top of a defined FCM.
 
@@ -18,8 +19,33 @@ class Simulator(Inference):
 
     def __init__(self):
         super().__init__()
+    
+    def __getStableConcepts(self, weight_mat):
+
+        """
+        Extract the positions of the stable concepts (concepts with in-degree == 0).
+
+        Parameters
+        ----------
+        weight_mat: numpy.ndarray
+                        N*N weight matrix of the FCM.
+        
+        Return
+        ----------
+        y: numpy.ndarray
+                the positions of the stable concepts (concepts with in-degree == 0)
+
+        """
+
+        stables = []
+        for i in range(len(weight_mat)):
+            if np.all(weight_mat[i] == 0):
+                stables.append(i)
+
+        return stables
 
     def simulate(self, initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params):
+        
         """
         Runs simulations over the passed FCM.
         
@@ -54,7 +80,11 @@ class Simulator(Inference):
         
         results = pd.DataFrame(initial_state, index=[0])
         state_vector = np.array(list(initial_state.values()))
-        
+
+        # get the stable concept values
+        stableConceptPos = self.__getStableConcepts(weight_mat=weight_mat)
+        satble_values = state_vector[stableConceptPos]
+
         __infer = self.inference_methods[inference]
         __transfer = self.transfer_funcs[transfer]
         
@@ -67,9 +97,12 @@ class Simulator(Inference):
                 
                 state_vector = __transfer(x=__infer(initial_state=state_vector, weight_mat=weight_mat, **params), **params)
                 
+                # Reset the stable values
+                state_vector[stableConceptPos] = satble_values
+
                 # Append the results
                 results.loc[len(results)] = state_vector
-                
+
                 # update the step_count
                 step_count +=1
                 
