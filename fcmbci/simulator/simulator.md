@@ -1,4 +1,4 @@
-# Methods for simulating FCM's (Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020).
+# Methods for simulating FCM's <a href="https://www.sciencedirect.com/science/article/pii/S2666521220300089?via%3Dihub">(Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020) </a>.
 <div align = justify>
 When creating an FCM, the emphasis is on fuzzy logic as shown in the <a href="\fcmbci\data_processor\data_processor.md">data_processor</a> module. However, when using an FCM, the emphasis shifts to mathematics that are similar to neural networks. Indeed, an FCM can also be seen as a “recurrent artificial neural network that creates models as collections of concepts/neurons and the various causal relations that exist between them” (Tsadiras, 2008). Inferring how a determinant quantitatively impacts another is thus analogous to computing how the firing of a neuron propagates throughout a network (Dickerson & Kosko, 1994). Consequently, the equation governing the update of an FCM is often known as ‘activation function’, using the same vocabulary as in neural networks.
 
@@ -49,7 +49,7 @@ simulate(initial_state, weight_mat, transfer, inference, thresh=0.001, iteration
 In each iteration, the concept values of the defined FCM are updated according to the defined inference method (i.e., activation function). In the current version, the module implements the following three types of inference methods:
 </div>
 
-Kosko (Stach et al., 2010):
+Kosko <a href="https://link.springer.com/chapter/10.1007/978-3-642-03220-2_2">(Stach et al., 2010)</a>:
 <div class=container, align=center>
 
 $$ 
@@ -58,7 +58,7 @@ $$
 
 </div>
 
-Modified Kosko (Papageorgiou, 2011):
+Modified Kosko <a href="https://www.sciencedirect.com/science/article/abs/pii/S1568494609002646">(Papageorgiou, 2011)</a>:
 <div class=container, align=center>
 
 $$
@@ -67,7 +67,7 @@ $$
 
 </div>
 
-Rescaled (Papageorgiou, 2011):
+Rescaled <a href="https://www.sciencedirect.com/science/article/abs/pii/S1568494609002646">(Papageorgiou, 2011)</a>:
 <div class=container, align=center>
 
 $$
@@ -143,7 +143,7 @@ $$
 
 </div>
 
-Example:
+Example (replicated the example presented in the fcm inference package in R by Dikopoulou & Papageorgiou):
 
 Let's first create a connection matrix for a sample FCM with eight concepts and define the initial state vector for these concepts.
 
