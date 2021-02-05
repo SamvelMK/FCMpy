@@ -16,6 +16,7 @@ from data_processor.fuzzy_inference import FuzzyInference
 from data_processor.fuzzy_membership import FuzzyMembership
 
 class DataProcessor(FuzzyInference, FuzzyMembership):
+    
     """
     A class of methods to derive causal weights for FCMs based on linguistic terms.
     The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].

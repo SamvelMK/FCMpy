@@ -1,6 +1,6 @@
 # Methods for deriving FCM edge weights from qualitative inputs.
 
-## Constructing a Fuzzy Cognitive Map (Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020)
+## Constructing a Fuzzy Cognitive Map <a href="https://www.sciencedirect.com/science/article/pii/S2666521220300089?via%3Dihub">(Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020) </a>
 
 <div align='justify'>
 <em>Note: To properly view the math formulas in this .md file please add the "MathJax Plugin for Github" chrome extension. See more in: https://dev.to/aaroncql/display-latex-math-in-github-markdown-previews-2988</em>.
