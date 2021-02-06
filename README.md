@@ -34,6 +34,12 @@ python setup.py sdist bdist_wheel
 pip install e . # to install it in the current dir.
 ```
 
+You can run the unittest for the package as follows:
+
+```
+python -m unittest discover unittests
+```
+
 ## Examples
 
 
