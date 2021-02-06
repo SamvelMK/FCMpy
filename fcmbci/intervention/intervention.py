@@ -6,6 +6,7 @@ import warnings
 from data_processor.checkers import Checker
 
 class Intervention(Simulator):
+
     """
     The class includes methods for testing interventiosn (what-if scenarios) on top of a defined FCM structure.
 
@@ -13,9 +14,11 @@ class Intervention(Simulator):
             __init__(self, initial_state, weights, transfer, inference, thresh, iterations, **params)
             add_intervention(self, name, weights, effectiveness)
             remove_intervention(self, name)
-            test_interventions(self, name, iterations = None)
+            test_intervention(self, name, iterations = None)
     """
+
     def __init__(self, initial_state, weights, transfer, inference, thresh, iterations, **params):
+
         """
         Test interventions (simulate what-if scenarios) on top of a defined FCM structure.
 
@@ -57,6 +60,7 @@ class Intervention(Simulator):
         self.initial_equilibrium = self.test_results['baseline'].iloc[-1]
 
     def add_intervention(self, name, weights, effectiveness):
+
         """
         Add an intervention node with the associated causal weights to the FCM.
 
@@ -101,6 +105,7 @@ class Intervention(Simulator):
         self.interventions[name] = intervention    
     
     def remove_intervention(self, name):
+
         """
         Remove intervention.
 
@@ -112,7 +117,8 @@ class Intervention(Simulator):
 
         del self.interventions[name]
 
-    def test_interventions(self, name, iterations = None):
+    def test_intervention(self, name, iterations = None):
+        
         """
         Test an intervention case.
 
