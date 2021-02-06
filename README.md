@@ -31,7 +31,7 @@ Alternatively, you can install from source or develop this package, you can fork
 ```
 python -m pip install --user --upgrade setuptools wheel
 python setup.py sdist bdist_wheel
-pip install e . # to install it in the current dir.
+pip install e . 
 ```
 
 You can run the unittest for the package as follows:
