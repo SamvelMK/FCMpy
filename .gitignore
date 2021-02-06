@@ -13,3 +13,4 @@ dist
 *.ipynb_checkpoints*
 test.py
 .vscode
+*.ipynb
