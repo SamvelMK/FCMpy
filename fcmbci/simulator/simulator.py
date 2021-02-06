@@ -82,9 +82,8 @@ class Simulator(Inference):
         state_vector = np.array(list(initial_state.values()))
 
         # get the stable concept values
-        stableConceptPos = self.__getStableConcepts(weight_mat=weight_mat)
+        stableConceptPos = self.__getStableConcepts(weight_mat=weight_mat.T)
         satble_values = state_vector[stableConceptPos]
-
         __infer = self.inference_methods[inference]
         __transfer = self.transfer_funcs[transfer]
         
