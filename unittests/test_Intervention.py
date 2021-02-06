@@ -30,13 +30,32 @@ class TestFcmSimulator(unittest.TestCase):
                                         thresh=0.001, iterations=100, l=1)
 
     def test_addIntervention(self):
-        pass
+        # Check if the interventions were properly added to the constructor.
+        self.inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
+        self.inter.add_intervention('intervention_2', weights={'C1':-.5}, effectiveness=1)
+        self.inter.add_intervention('intervention_3', weights={'C1':-1}, effectiveness=1)
+
+        intervations = ['intervention_1', 'intervention_2', 'intervention_3']
+        nInter = len(set(intervations) ^ set(self.inter.interventions.keys()))
+        self.assertEqual(nInter, 0, msg="The interventions were not added properly to the constructor!")
 
     def test_removeIntervention(self):
-        pass
+        # Check if the interventions were properly added to the constructor.
+        self.inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
+        self.inter.add_intervention('intervention_2', weights={'C1':-.5}, effectiveness=1)
+        self.inter.add_intervention('intervention_3', weights={'C1':-1}, effectiveness=1)
+
+        self.inter.remove_intervention('intervention_1')
+        intervations = ['intervention_2', 'intervention_3']
+        nInter = len(set(intervations) ^ set(self.inter.interventions.keys()))
+        self.assertEqual(nInter, 0, msg="The intervention was not removed from the constructor!")
 
     def test_testIntervention(self):
-        pass
+        # Check if the itest_intervention runs properly.
+        # Check if the stable concept (intervetion in this case) is indeed stable.
+        self.inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
+        self.inter.test_intervention('intervention_1')
+        self.assertEqual(len(set(self.inter.test_results['intervention_1']['intervention'])), 1)
 
 if __name__ == '__main__':
     unittest.main()
