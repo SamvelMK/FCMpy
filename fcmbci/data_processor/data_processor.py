@@ -14,6 +14,8 @@ import re
 from data_processor.checkers import Checker
 from data_processor.fuzzy_inference import FuzzyInference
 from data_processor.fuzzy_membership import FuzzyMembership
+from data_processor.input_validator import type_check
+from typing import Union
 
 class DataProcessor(FuzzyInference, FuzzyMembership):
     
@@ -38,8 +40,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             defuzzify(self, aggregated, method = 'centroid')
             gen_weights(self,  method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params)
     """
-    
-    def __init__(self, linguistic_terms, no_causality='No-Causality', data = None, check_consistency=False):
+
+    @type_check
+    def __init__(self, linguistic_terms: list, no_causality: str='No-Causality', data = None, check_consistency:bool=False):
         
         """
         The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
@@ -79,15 +82,16 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
             if check_consistency:
                 Checker.consistency_check(data=data, column_names = self.linguistic_terms) # check the consistency of the data.
-                self.data = data
-                
-                # calculate the entropy of the expert raitings.
-                self.entropy = self.__entropy(self.data)
-        else:
-            
+
+            self.data = data
+    
+            # calculate the entropy of the expert raitings.
+            self.entropy = self.__entropy(self.data)
+        else: 
             self.data = pd.DataFrame()
 
-    def __flatData(self, data):
+    @type_check
+    def __flatData(self, data: dict) -> pd.DataFrame:
 
         """
         Create a flat data from an ordered dictionary.
@@ -111,7 +115,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
         return flat_data
 
-    def __conceptParser(self, string, sepConcept):
+    @type_check
+    def __conceptParser(self, string: str, sepConcept: str) -> dict:
 
         """
         Parse the csv file column names. Extract the antecedent, concequent pairs and the polarity of the causal relationship.
@@ -143,8 +148,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             return dt
         else:
             raise ValueError('The $antecedent$ $->$ $concequent (sign)$ format is not detected! Check the data format!') 
-
-    def __extractExpertData(self, data, sepConcept, linguistic_terms, no_causality):
+    
+    @type_check
+    def __extractExpertData(self, data, sepConcept: str, linguistic_terms: list, no_causality: str) -> pd.DataFrame:
 
         """
         Convert csv data fromat to a dataframe with columns representing the linguistic terms (see more in the doc.).
@@ -164,7 +170,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         ---------
         y: pandas.DataFrame
         """
-
+        
         dict_data = []
         for i in data.keys():
             _ = {i: 0 for i in linguistic_terms}
@@ -184,7 +190,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                 dict_data.append(_)
         return pd.DataFrame(dict_data)
 
-    def __activationParameter(self, flat_data, conceptPair):
+    @type_check
+    def __activationParameter(self, flat_data: pd.DataFrame, conceptPair: tuple) -> dict:
 
         """
         Create an activation parameter based on the expert inputs.
@@ -207,7 +214,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         activation_parameter = (flat_data.loc[conceptPair].sum()/len(self.data)).to_dict()
         return activation_parameter
 
-    def __entropy(self, data):
+    @type_check
+    def __entropy(self, data: collections.OrderedDict) -> pd.DataFrame:
 
         """
         Calculate the entropy of the expert ratings.
@@ -246,9 +254,10 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
         return entropy_concept
 
-    #### Read data            
-
-    def read_xlsx(self, filepath, check_consistency=False):
+    #### Read data
+                
+    @type_check
+    def read_xlsx(self, filepath, check_consistency: bool=False):
         
         """ 
         Read data from an excel spreadsheet.
@@ -278,7 +287,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(data=self.data)           
 
-    def read_json(self, filepath, check_consistency=False):
+    @type_check
+    def read_json(self, filepath, check_consistency: bool=False):
 
         """ 
         Read data from a json file.
@@ -311,7 +321,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(data=self.data)
 
-    def read_csv(self, filePath, sepConcept, csv_sep=','):
+    @type_check
+    def read_csv(self, filePath, sepConcept: str, csv_sep: str=','):
 
         """ 
         Read data from a csv file.
@@ -344,7 +355,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
     #### Obtain (numerical) causal weights based on expert (linguistic) inputs.
 
-    def automf(self, membership_function = 'trimf', **params):
+    @type_check
+    def automf(self, membership_function: str = 'trimf', **params) -> dict:
         
         """ 
         Automatically generate membership functions based on the passed linguistic terms (in the init).
@@ -364,12 +376,12 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         np.set_printoptions(suppress=True) # not necessary (easier for debug.)
 
         mf = self.membership_func[membership_function]
-
         terms = mf(universe=self.universe, linguistic_terms=self.linguistic_terms, noCausality=self.__noCausality, **params)
         
         return terms
-        
-    def activate(self, mf, activation_input, fuzzy_inference="mamdaniProduct", **params):
+
+    @type_check    
+    def activate(self, mf: dict, activation_input: dict, fuzzy_inference: str="mamdaniProduct", **params) -> dict:
         
         """ 
         Activate the specified membership function based on the passed parameters (Mamdani).
@@ -404,7 +416,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             activated[i] = infer(mf_x=mf[i], weight=activation_input[i], **params)
         return activated
     
-    def aggregate(self, activated):
+    @type_check
+    def aggregate(self, activated: dict) -> np.ndarray:
         
         """ 
         Aggregate the activated membership function using fmax operator. 
@@ -425,7 +438,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         
         return aggregated
     
-    def defuzzify(self, aggregated, method = 'centroid'):
+    @type_check
+    def defuzzify(self, aggregated: np.ndarray, method: str = 'centroid') -> int:
         
         """ 
         Difuzzify the aggregated membership functions using centroid defuzzification method as a default.
@@ -449,8 +463,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         defuzzified_value = fuzz.defuzz(self.universe, aggregated, method)
         
         return defuzzified_value           
-        
-    def gen_weights(self, method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params):
+
+    @type_check    
+    def gen_weights(self, method: str = 'centroid', membership_function: str ='trimf', fuzzy_inference: str ="mamdaniProduct", **params):
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 

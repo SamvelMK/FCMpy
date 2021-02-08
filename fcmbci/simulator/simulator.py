@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from simulator.inference import Inference
 import warnings
+from data_processor.input_validator import type_check
 
 class Simulator(Inference):
 
@@ -20,7 +21,8 @@ class Simulator(Inference):
     def __init__(self):
         super().__init__()
     
-    def __getStableConcepts(self, weight_mat):
+    @type_check
+    def __getStableConcepts(self, weight_mat: np.ndarray) -> np.ndarray:
 
         """
         Extract the positions of the stable concepts (concepts with in-degree == 0).
@@ -43,8 +45,9 @@ class Simulator(Inference):
                 stables.append(i)
 
         return stables
-
-    def simulate(self, initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params):
+    
+    @type_check
+    def simulate(self, initial_state: dict, weight_mat: np.ndarray, transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **params) -> pd.DataFrame:
         
         """
         Runs simulations over the passed FCM.

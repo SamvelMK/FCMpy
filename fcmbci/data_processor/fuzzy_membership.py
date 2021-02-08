@@ -1,5 +1,6 @@
 import numpy as np
 import skfuzzy
+from data_processor.input_validator import type_check
 
 class FuzzyMembership:
 
@@ -17,7 +18,8 @@ class FuzzyMembership:
         self.membership_func = {'trimf' : self.__trimf}
 
     @staticmethod
-    def __trimf(universe, linguistic_terms, noCausality):
+    @type_check
+    def __trimf(universe: np.ndarray, linguistic_terms: list, noCausality: str) -> dict:
         
         """
         Generate triangular membership functions.
@@ -74,7 +76,8 @@ class FuzzyMembership:
 
         return terms
     
-    def add_membership_func(self, func):
+    @type_check
+    def add_membership_func(self, func: dict):
         
         """
         Add a fuzzy membership function.
@@ -87,7 +90,9 @@ class FuzzyMembership:
 
         self.membership_func.update(func)
     
-    def remove_membership_func(self, func_name):
+    @type_check
+    def remove_membership_func(self, func_name: str):
+        
         """
         Remove a fuzzy membershipfunction.
 
@@ -96,6 +101,7 @@ class FuzzyMembership:
         func_name: str
                     name of the function to be removed.
         """
+
         if 'FuzzyMembership.__' not in str(self.membership_func[func_name]):
             del self.membership_func[func_name]
         else:

@@ -1,4 +1,5 @@
 import numpy as np
+from data_processor.input_validator import type_check
 
 class FuzzyInference:
 
@@ -17,7 +18,8 @@ class FuzzyInference:
         self.fuzzy_inference_funcs = {"mamdaniMin" : self.__mamdaniMin, "mamdaniProduct" : self.__mamdaniProduct}
 
     @staticmethod
-    def __mamdaniMin(mf_x, weight):
+    @type_check
+    def __mamdaniMin(mf_x: np.ndarray, weight: float) -> np.ndarray:
         """
         Mamdani min inference method.
 
@@ -38,7 +40,8 @@ class FuzzyInference:
         return np.fmin(weight, mf_x)
 
     @staticmethod
-    def __mamdaniProduct(mf_x, weight):
+    @type_check
+    def __mamdaniProduct(mf_x: np.ndarray, weight: float) -> np.ndarray:
         """
         mf_x: numpy.ndarray.
                 membership function of a linguistic term (x)
@@ -54,7 +57,8 @@ class FuzzyInference:
 
         return  np.dot(mf_x, weight)
     
-    def add_fuzzy_inference_func(self, func):
+    @type_check
+    def add_fuzzy_inference_func(self, func: dict):
     
         """
         Add a fuzzy inference function.
@@ -67,7 +71,8 @@ class FuzzyInference:
 
         self.fuzzy_inference_funcs.update(func)
     
-    def remove_fuzzy_inference_func(self, func_name):
+    @type_check
+    def remove_fuzzy_inference_func(self, func_name: str):
         """
         Remove a fuzzy inference function.
 
