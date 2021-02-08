@@ -14,7 +14,7 @@ Currently, the FcmBci package implements the testing of intervention cases by ad
 
 <div align='justify'>
 
-To instantiate the Intervention class we need to pass on the initial state vector of the FCM concepts (<em>initial_state</em>), the connection matrix (<em>weights</em>) and specify the transfer function (<em>transfer</em>), the inference (<em>inference</em>) method, the error threshold (<em>thresh</em>) and the number of iterations for the simulation to run (<em>iterations</em>). One can also pass additional parameters that are required for the functions involved in the computations (e.g., l in the sigmoing function). 
+To instantiate the Intervention class we need to pass on the initial state vector of the FCM concepts (<em>initial_state</em>), the connection matrix (<em>weights</em>) and specify the transfer function (<em>transfer</em>), the inference (<em>inference</em>) method, the error threshold (<em>thresh</em>) and the number of iterations for the simulation to run (<em>iterations</em>). One can also pass additional parameters that are required for the functions involved in the computations (e.g., l (lambda) in the sigmoid function). 
 
 ```
 Intervention(initial_state, weights, transfer, inference, thresh, iterations, **params)
@@ -68,7 +68,7 @@ Output:
 The values converged in the 7 state (e <= 0.001)
 ```
 
-One can inspect the basline vector in the test_results field as follows:
+One can inspect the baseline vector in the test_results field as follows:
 
 ```
 inter.test_results['baseline']
@@ -128,7 +128,7 @@ add_intervention(name, weights, effectiveness):
                     the degree to which the intervention was delivered (should be between [-1, 1])
 ```
 
-Let's consider three such hypothetical intervention we wish to test in our FCM. The first intervention targets concepts (nodes) C1 and C2. It negatively impacts concept C1 (-.3) while positively impacting the concept C2 (.5). We consider a case where the intervention has maximum effectiveness (1). The other two interventions follow the same logic but impact other nodes (see below). 
+Let's consider three such hypothetical interventions we wish to test in our FCM. The first intervention targets concepts (nodes) C1 and C2. It negatively impacts concept C1 (-.3) while positively impacting the concept C2 (.5). We consider a case where the intervention has maximum effectiveness (1). The other two interventions follow the same logic but impact other nodes (see below). 
 
 ```
 inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
@@ -136,7 +136,7 @@ inter.add_intervention('intervention_2', weights={'C1':-.5}, effectiveness=1)
 inter.add_intervention('intervention_3', weights={'C1':-1}, effectiveness=1)
 ```
 
-One can also remove the added interventions by using the remove_intervention method.
+One can also remove the added interventions by using the [remove_intervention](#remove_intervention) method.
 
 </div>
 
@@ -159,7 +159,7 @@ def remove_intervention(name):
 
 </div>
 
-## test_interventions()
+## test_intervention()
 
 <div align='justify'>
 
@@ -180,9 +180,9 @@ test_intervention(name, iterations = None):
 The test_intervention method requires the name of the intervention to be tested and the number of iterations it needs to run. If no argument is provided for the iterations the algorithm will use the iterations parameter specified when instantiating the Intervention class. 
 
 ```
-inter.test_interventions('intervention_1')
-inter.test_interventions('intervention_2')
-inter.test_interventions('intervention_3')
+inter.test_intervention('intervention_1')
+inter.test_intervention('intervention_2')
+inter.test_intervention('intervention_3')
 ```
 
 ```
@@ -194,7 +194,7 @@ The values converged in the 7 state (e <= 0.001)
 The values converged in the 7 state (e <= 0.001)
 ```
 
-The results of the tests can be accessed in the test_results field.
+The results of the tests can be accessed in the <em>test_results</em> field.
 
 ```
 Output:
