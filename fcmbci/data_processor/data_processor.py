@@ -51,7 +51,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         ----------
         linguistic_terms: list
                             List of linguistic terms used to express causality between concepts.
-                            Note that the number of linguistic terms should be even. A narrow interval around 0 (for no causality option) is added automatically.
+                            Note that the number of linguistic terms should be even (and in an ascending order). A narrow interval around 0 (for no causality option) is added automatically.
         no_causality: str
                         name of the column that expresses no causality
                         default ---> 'No-Causality'
@@ -240,9 +240,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         entropy_concept = {}
         for concept in prop.keys():
             p = prop[concept].values()
-            res = -sum([i*np.log2(i) for i in p if i != 0])
-            if res == 0: # to avoide -0 reports.
-                res = abs(res)
+            res = -1*sum([i*np.log2(i) for i in p if i != 0])
+            res = abs(res)
             entropy_concept[concept] = res
         
         # Prepare a formated dataframe
