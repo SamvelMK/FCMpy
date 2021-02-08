@@ -97,9 +97,6 @@ class Checker:
         # R1: should be even
         if len(linguistic_terms) % 2 != 0:
             raise ValueError("You passed an odd number of linguistic terms. There should be even number of linguistic terms!")
-        # R2: should be in a list format
-        elif type(linguistic_terms) != type(list()):
-            raise ValueError('The linguistic terms shoud be in a list format.')
         # R3: each item in a list should be a string     
         elif sum([type(i) != type(str()) for i in linguistic_terms]):
             raise ValueError("The linguistic terms should be strings")
