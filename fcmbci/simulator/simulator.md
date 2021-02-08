@@ -191,7 +191,7 @@ The values converged in the 7 state (e <= 0.001)
 ```
 
 <br>
-<img src="..\..\figures\Sim_figure_1.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<img src="..\..\figures\Sim_figure_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 1:</em> The results of the FCM simulation. <br>
 <br>
 
@@ -201,11 +201,11 @@ The values converged in the 7 state (e <= 0.001)
 
 <div align = justify>
 
-## add_inference_methods()
+## add_inference_method()
 
 <div align = justify>
 
-To add a costum inference method one could use the <em>add_inference_methods</em> method:
+To add a costom inference method one could use the <em>add_inference_method</em> method:
 
 ```
 add_inference_method(func):
@@ -217,11 +217,11 @@ add_inference_method(func):
     func: dict
             key is the name of the method, value is the associated function   
 ```
-To remove the added inference method one shall call the associated [remove_inference_methods](#remove_inference_methods) method.
+To remove the added inference method one shall call the associated [remove_inference_method](#remove_inference_method) method.
 
 </div>
 
-## remove_inference_methods()
+## remove_inference_method()
 
 ```
 remove_inference_method(func_name):
@@ -235,7 +235,7 @@ remove_inference_method(func_name):
 ```
 
 ## add_transfer_func()
-To add a costum transfer method one could use the <em>add_transfer_func</em> method:
+To add a costom transfer method one could use the <em>add_transfer_func</em> method:
 
 ```
 add_transfer_func(func):
