@@ -32,7 +32,7 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 To create an instance of the DataProcessor class you can either pass the data (collections.OrderedDict where the key is the expert ID and the values are panda's dataframes) to the constructor or create an instance with no data and then read the data by using one of the methods of this class (e.g., [read_xlsx](#read_xlsx), [read_json](#read_json)).
 
-To instantiate the FcmDataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. 
+To instantiate the FcmDataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. Note that the number of linguistic terms should be even (and in an ascending order).
 
 ```
 from fcmbci import DataProcessor
@@ -42,7 +42,7 @@ lt = ['-VH', '-H', '-M', '-L','-VL', 'VL', 'L', 'M', 'H', 'VH']
 fcm = DataProcessor(linguistic_terms=lt)
 ```
 Note that the class is automatically instantiated with a universe of discourse with a range of [-1, 1].
-One should also specify the column name (in the data) that expresses no causality between the concept pair. The default argument is set to be 'No-Causality'. However, one can change this by modifying the default argument:
+One should also specify the column name (in the data) that expresses no causality between the concept pair. The default argument is set to be 'No-Causality'. However, one can change this by modifying the default argument (i.e., setting the name (str) of the column that represents no-causality term in a given use-case):
 
 ```
 from fcmbci import DataProcessor
@@ -54,7 +54,7 @@ fcm = DataProcessor(linguistic_terms=lt, no_causality='No-Causality')
 
 When supplying the data one can also specify whether there is a need to check for the consistency in the data. The <em>consistency_check</em> argument checks the consistency of the ratings (mainly the valence of the ratings (positive or negative)) of each pair of concepts across all the experts. If inconsistencies are identified then an inconsistencies_current_date.xlsx file is generated. In this file one can find the pair of concepts that were rated inconsistently across the experts.
 
-When data is supplied to the constructor, the algorithm automatically calculates the entropy of the expert ratings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
+When data is supplied to the constructor, the algorithm automatically calculates the <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8678634">entropy<a> of the expert ratings for each pair of concepts. The entropy for each concept pair is calculated with the following formula:
 
 $$
 R=-\sum_{i=1}^{n}p_ilog_2(p_i)
@@ -410,7 +410,7 @@ y : dict,
 ```
 To activate the membership functions, we need to pass in the activation input along with the membership function and specify the activation rule/method. The activation input is a dictionary with the keys as the linguistic terms and the values as the frequency of the occurrences of the terms. As in the example presented in the background section, let's suppose that 1/6 of the experts expressed the causality between a given pair of concepts as Medium, 3/6 of the experts expressed it as High and 2/6 of the experts expressed it as VH. The respective activation input would look like this: {'M': 0.16, 'H': 0.5, 'VH': 0.33}.
 
-The mamdaniMin fuzzy inference rule is expressed as:
+The <a href="https://link.springer.com/chapter/10.1007%2F978-3-642-25859-6_4">mamdaniMin</a> fuzzy inference rule is expressed as:
 
 $$
 \mu_{R}(x,y)= min \left \lfloor \mu_{A}(x), \mu_{B}(y) \right \rfloor
@@ -456,7 +456,7 @@ plt.show()
 <em>Figure 6:</em> The activated membership function.<br>
 <br>
 
-The mamdaniProduct method can be expressed as:
+The <a href="https://link.springer.com/chapter/10.1007%2F978-3-642-25859-6_4">mamdaniProduct</a> method can be expressed as:
 
 $$
 \mu_{R}(x,y)= \mu_{A}(x)\cdot \mu_{B}(y)
