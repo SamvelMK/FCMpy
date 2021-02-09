@@ -1,8 +1,8 @@
 # Methods for simulating FCM's <a href="https://www.sciencedirect.com/science/article/pii/S2666521220300089?via%3Dihub">(Retrived from Mkhitaryan, Giabbanelli, Vries & Crutzen, 2020) </a>.
 <div align = justify>
-When creating an FCM, the emphasis is on fuzzy logic as shown in the <a href="\fcmbci\data_processor\data_processor.md">data_processor</a> module. However, when using an FCM, the emphasis shifts to mathematics that are similar to neural networks. Indeed, an FCM can also be seen as a “recurrent artificial neural network that creates models as collections of concepts/neurons and the various causal relations that exist between them” (Tsadiras, 2008). Inferring how a determinant quantitatively impacts another is thus analogous to computing how the firing of a neuron propagates throughout a network (Dickerson & Kosko, 1994). Consequently, the equation governing the update of an FCM is often known as ‘activation function’, using the same vocabulary as in neural networks.
-
-The Simulator module inherits from Transfer and Inference classes and includes methods for runing simulations on defined FCM structure. The Simulator module includes the following methods:
+When creating an FCM, the emphasis is on fuzzy logic as shown in the <a href="\fcmbci\data_processor\data_processor.md">data_processor</a> module. However, when using an FCM, the emphasis shifts to mathematics that are similar to neural networks. Indeed, an FCM can also be seen as a “recurrent artificial neural network that creates models as collections of concepts/neurons and the various causal relations that exist between them” (Tsadiras, 2008). Inferring how a determinant quantitatively impacts another is thus analogous to computing how the firing of a neuron propagates throughout a network (Dickerson & Kosko, 1994). Consequently, the equation governing the update of an FCM is often known as ‘activation function’, using the same vocabulary as in neural networks. <br>
+<br>
+The Simulator module inherits from Inference and Transfer classes (see the description of transfer and inference methods below) and includes methods for runing simulations on defined FCM structure. The Simulator module includes the following methods:
 
 - [simulate](#simulate)
 - [add_inference_methods](#add_inference_methods)
@@ -191,7 +191,7 @@ The values converged in the 7 state (e <= 0.001)
 ```
 
 <br>
-<img src="..\..\figures\Sim_figure_1.PNG" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+<img src="..\..\figures\Sim_figure_1.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
 <em>Figure 1:</em> The results of the FCM simulation. <br>
 <br>
 
