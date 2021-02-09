@@ -32,7 +32,7 @@ Given the use of fuzzy logic, the result from the process is a number in the int
 
 To create an instance of the DataProcessor class you can either pass the data (collections.OrderedDict where the key is the expert ID and the values are panda's dataframes) to the constructor or create an instance with no data and then read the data by using one of the methods of this class (e.g., [read_xlsx](#read_xlsx), [read_json](#read_json)).
 
-To instantiate the FcmDataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. Note that the number of linguistic terms should be even (and in an ascending order).
+To instantiate the DataProcessor class one needs to pass a list of linguistic terms that need to be converted to numerical weights. Note that the number of linguistic terms should be even (and in an ascending order).
 
 ```
 from fcmbci import DataProcessor
@@ -416,7 +416,7 @@ $$
 \mu_{R}(x,y)= min \left \lfloor \mu_{A}(x), \mu_{B}(y) \right \rfloor
 $$ 
 
-The method returns a dictionary with the activated membership function. This process can be visualized as follows.
+The method returns a dictionary with the activated membership function.
 
 ```
 Example:
