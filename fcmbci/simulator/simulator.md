@@ -11,10 +11,10 @@ The Simulator module inherits from Inference and Transfer classes (see the descr
 - [remove_transfer_func](#remove_transfer_func)
 
 ## simulate()
-The simulate method allows one to run simulations over the defined FCM structure. The method requires the initial state vector <em>(initial_state)</em> , the connection matrix <em>(weight_mat)</em>, the prefered transfer and inference methods <em>(transfer, inference)</em>. The optional parameters include the the threshold for the error <em>(thresh)</em>, and the number of iterations for the simulation <em>(iterations)</em>.
+The simulate method allows one to run simulations over the defined FCM structure. The method requires the initial state vector <em>(initial_state)</em> , the connection matrix <em>(weight_matrix)</em>, the prefered transfer and inference methods <em>(transfer, inference)</em>. The optional parameters include the the threshold for the error <em>(thresh)</em>, and the number of iterations for the simulation <em>(iterations)</em>.
 
 ```
-simulate(initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params):
+simulate(initial_state, weight_matrix, transfer, inference, thresh=0.001, iterations=50, **params):
         
         Runs simulations over the passed FCM.
         
@@ -24,7 +24,7 @@ simulate(initial_state, weight_mat, transfer, inference, thresh=0.001, iteration
                         initial state vector of the concepts
                         keys ---> concepts, values ---> initial state of the associated concept
 
-        weight_mat: numpy.ndarray
+        weight_matrix: numpy.ndarray
                         N*N weight matrix of the FCM.
 
         transfer: str
@@ -157,7 +157,7 @@ C6 = [-0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 C7 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.4, 0.9]
 C8 =[0.1, 0.0, 0.0, 0.0, 0.0, 0.1, 0.6, 0.0]
 
-weight_mat = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
+weight_matrix = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
                     columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
 
 init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
@@ -171,7 +171,7 @@ from fcmbci import Simulator
 
 sim = Simulator()
 
-res = sim.simulate(initial_state=init_state, weight_mat=weight_mat.to_numpy(), transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50)
+res = sim.simulate(initial_state=init_state, weight_matrix=weight_matrix.to_numpy(), transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50)
 print(res)
 ```
 
