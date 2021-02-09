@@ -504,4 +504,4 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                 self.aggregated[f'{concepts}'] = aggr
                 value = self.defuzzify(aggregated=aggr, method=method)
                 weight_matrix.loc[concepts] = value
-        self.causal_weights = weight_matrix.fillna(0)
+        self.weight_matrix = weight_matrix.fillna(0)

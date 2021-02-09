@@ -616,7 +616,7 @@ fcm.gen_weights()
 The weight matrix can be inspected as follows:
 
 ```
-fcm.causal_weights
+fcm.weight_matrix
 ```
 ```
 Output:
