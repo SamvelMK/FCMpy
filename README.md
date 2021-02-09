@@ -1,4 +1,5 @@
 # Fuzzy Cognitive Maps for Behavior Change Interventions and Evaluation (FcmBci).
+<div align = justify>
 
 The fcmbci is Python package for automatically generating causal weights for fuzzy cognitive maps based on qualitative inputs (by using fuzzy logic), optimizing the FCM connection matrix via Machine Learning Algorithms and testing <em>what-if</em> scenarios. The package includes the following submodules:
 
@@ -9,7 +10,7 @@ The fcmbci is Python package for automatically generating causal weights for fuz
 
 <a href="fcmbci\data_processor\data_processor.md">The DatProcessor module </a> includes methods for deriving causal weights of an FCM based on qualitative inputs from experts. <br> 
 <a href="fcmbci\simulator\simulator.md">The Simulator module </a> provides methods for runing simulations on top of a given FCM structure. <br>
-<a href="fcmbci\intervention\intervention.md"> Intervention module </a> allows testing what-if scenarios on top of the specified FCMs<br>
+<a href="fcmbci\intervention\intervention.md">The Intervention module </a> allows testing what-if scenarios on top of the specified FCMs<br>
 
 ## Installation
 Fcmbci requires python >=3.6 and depends on:
@@ -87,14 +88,15 @@ from fcmbci import Simulator
 
 sim = Simulator()
 
-res = sim.simulate(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50)
+res = sim.simulate(initial_state=init_state, weight_matrix=weight_matrix, 
+                    transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50)
 ```
 
 If one wants to test intervention scenarios (what-if scenarios) one can use the utilities provided in the <em>Intervention</em> module. To create an instance of the Intervention class, aS in the case of the simulations one needs to pass the initial state vector, connection matrix, the transfer and inference methods, the threshold for stoping the simulation and the number of iterations to run. Additionally, if one uses the sigmoid transfer function, one needs to specify the lambda <em> l </em> parameter for the sigmioid function (see more details on the methods in the <a href="fcmbci\intervention\intervention.md">documentation</a>).
 
 ```
-inter = Intervention(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', 
-               thresh=0.001, iterations=100, l=1)
+inter = Intervention(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', 
+                        inference='mKosko', thresh=0.001, iterations=100, l=1)
 ```
 
 After instantiating the Intervention class, one can add intervention cases. One can do that by using the <em>add_intervention</em> method. The method requires one to pass the name of the intervention <em>name</em>, the weights (a dictionary where the keys are the concepts the intervention impacts and the values are the associated causal impact) <em>weights</em>, and the effectiveness of the intervention <em>effectiveness</em>.
@@ -117,3 +119,5 @@ test_results['intervention_1']
 ## License
 
 Please read LICENSE.txt in this directory.
+
+</div>
