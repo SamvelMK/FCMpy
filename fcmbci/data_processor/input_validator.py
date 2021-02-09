@@ -1,6 +1,6 @@
 ### Taken and modified from Simon Pirschel at https://aboutsimon.com/blog/2018/04/04/Python3-Type-Checking-And-Data-Validation-With-Type-Hints.html
 
-from typing import get_type_hints
+from typing import get_type_hints, get_origin, get_args
 from functools import wraps
 from inspect import getfullargspec
 
@@ -15,10 +15,16 @@ def validate_input(obj, **kwargs):
         if attr_name not in kwargs.keys(): # for default arguments (self)
             continue
         else:
-            if not isinstance(kwargs[attr_name], attr_type):
-                raise TypeError(
-                    'Argument %r is not of type %s' % (attr_name, attr_type)
-                )
+            try:
+                if not isinstance(kwargs[attr_name], attr_type):
+                    raise TypeError(
+                        'Argument %r is not of type %s' % (attr_name, attr_type)
+                    )
+            except: # for Union cases.
+                if not isinstance(kwargs[attr_name], get_args(attr_type)):
+                    raise TypeError(
+                        'Argument %r is not of type %s' % (attr_name, attr_type)
+                    )
                 
 def type_check(decorator):
     @wraps(decorator)

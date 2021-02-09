@@ -42,7 +42,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
     """
 
     @type_check
-    def __init__(self, linguistic_terms: list, no_causality: str='No-Causality', data = None, check_consistency:bool=False):
+    def __init__(self, linguistic_terms: list, no_causality: str='No-Causality', data:Union[collections.OrderedDict, None] = None, check_consistency:bool=False):
         
         """
         The FcmDataProcessor object is initialized with a universe of discourse with a range [-1, 1].
