@@ -88,10 +88,10 @@ class TestDataProcessor(unittest.TestCase):
         fcm = DataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'], no_causality='NA')
         fcm.read_xlsx(filepath=os.path.abspath('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/PyFcmBci/unittests/test_cases/data_test.xlsx'), check_consistency=False)
         fcm.gen_weights()
-        weights = fcm.causal_weights
+        weight_matrix = fcm.weight_matrix
         
-        self.assertLessEqual(max(weights.max()), 1)
-        self.assertGreaterEqual(min(weights.min()), -1)    
+        self.assertLessEqual(max(weight_matrix.max()), 1)
+        self.assertGreaterEqual(min(weight_matrix.min()), -1)    
 
 if __name__ == '__main__':
     unittest.main()
