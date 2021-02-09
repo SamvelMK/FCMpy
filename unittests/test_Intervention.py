@@ -20,13 +20,13 @@ class TestFcmSimulator(unittest.TestCase):
         C7 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.4, 0.9]
         C8 =[0.1, 0.0, 0.0, 0.0, 0.0, 0.1, 0.6, 0.0]
 
-        weight_mat = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
+        weight_matrix = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
                             columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
 
         init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
                             'C6': 0, 'C7': 0, 'C8': 0}
 
-        self.inter = Intervention(initial_state=init_state, weights=weight_mat, transfer='sigmoid', inference='mKosko', 
+        self.inter = Intervention(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', 
                                         thresh=0.001, iterations=100, l=1)
 
     def test_addIntervention(self):

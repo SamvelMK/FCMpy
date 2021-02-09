@@ -14,16 +14,16 @@ Currently, the FcmBci package implements the testing of intervention cases by ad
 
 <div align='justify'>
 
-To instantiate the Intervention class we need to pass on the initial state vector of the FCM concepts (<em>initial_state</em>), the connection matrix (<em>weights</em>) and specify the transfer function (<em>transfer</em>), the inference (<em>inference</em>) method, the error threshold (<em>thresh</em>) and the number of iterations for the simulation to run (<em>iterations</em>). One can also pass additional parameters that are required for the functions involved in the computations (e.g., l (lambda) in the sigmoid function). 
+To instantiate the Intervention class we need to pass on the initial state vector of the FCM concepts (<em>initial_state</em>), the connection matrix (<em>weight_matrix</em>) and specify the transfer function (<em>transfer</em>), the inference (<em>inference</em>) method, the error threshold (<em>thresh</em>) and the number of iterations for the simulation to run (<em>iterations</em>). One can also pass additional parameters that are required for the functions involved in the computations (e.g., l (lambda) in the sigmoid function). 
 
 ```
-Intervention(initial_state, weights, transfer, inference, thresh, iterations, **params)
+Intervention(initial_state, weight_matrix, transfer, inference, thresh, iterations, **params)
 
     Parameters
     ----------
     initial_state: dict
                     keys ---> concepts, values ---> initial states of the associated concepts
-    weights: panda.DataFrame
+    weight_matrix: panda.DataFrame
                 causal weights between concepts
     transfer: str
                 transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
@@ -48,7 +48,7 @@ C6 = [-0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 C7 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.4, 0.9]
 C8 =[0.1, 0.0, 0.0, 0.0, 0.0, 0.1, 0.6, 0.0]
 
-weight_mat = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
+weight_matrix = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
                     columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
 
 init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
@@ -58,7 +58,7 @@ init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
 When we instantiate the Intervention class it automatically runs one cycle of simulation and stores the fixed point vector (if such is identified) as the baseline values for testing the intervention cases.
 
 ```
-inter = Intervention(initial_state=init_state, weights=weights, transfer='sigmoid', inference='mKosko', 
+inter = Intervention(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', 
                thresh=0.001, iterations=100, l=1)
 ```
 

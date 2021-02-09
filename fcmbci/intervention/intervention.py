@@ -11,13 +11,13 @@ class Intervention(Simulator):
     The class includes methods for testing interventiosn (what-if scenarios) on top of a defined FCM structure.
 
     Methods:
-            __init__(self, initial_state, weights, transfer, inference, thresh, iterations, **params)
+            __init__(self, initial_state, weight_matrix, transfer, inference, thresh, iterations, **params)
             add_intervention(self, name, weights, effectiveness)
             remove_intervention(self, name)
             test_intervention(self, name, iterations = None)
     """
 
-    def __init__(self, initial_state, weights, transfer, inference, thresh, iterations, **params):
+    def __init__(self, initial_state, weight_matrix, transfer, inference, thresh, iterations, **params):
 
         """
         Test interventions (simulate what-if scenarios) on top of a defined FCM structure.
@@ -26,7 +26,7 @@ class Intervention(Simulator):
         ----------
         initial_state: dict
                         keys ---> concepts, values ---> initial states of the associated concepts
-        weights: panda.DataFrame
+        weight_matrix: panda.DataFrame
                     causal weights between concepts
         transfer: str
                     transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
@@ -39,21 +39,21 @@ class Intervention(Simulator):
         params: additional parameters for the methods
         """
 
-        Checker.input_check(initial_state, weights)
+        Checker.input_check(initial_state, weight_matrix)
 
         super().__init__()
         self.interventions = {}
         self.test_results = {}
-        self.weights = weights
+        self.weight_matrix = weight_matrix
 
-        weight_mat = self.weights.to_numpy()
+        weight_matrix = self.weight_matrix.to_numpy()
         self.__transfer = transfer
         self.__inference = inference
         self.__thresh = thresh
         self.__iterations = iterations
         self.__params = params
 
-        self.test_results['baseline'] = self.simulate(initial_state = initial_state, weight_mat = weight_mat,
+        self.test_results['baseline'] = self.simulate(initial_state = initial_state, weight_matrix = weight_matrix,
                                                    transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
                                                    iterations = self.__iterations, **self.__params)
         
@@ -84,7 +84,7 @@ class Intervention(Simulator):
         intervention['efectiveness'] = effectiveness
         
         # construct a weight matrix for a given intervention
-        temp = self.weights.copy(deep=True)
+        temp = self.weight_matrix.copy(deep=True)
         temp['antecident'] = temp.columns
         temp.set_index('antecident', inplace=True)
         temp['intervention'] = 0
@@ -100,7 +100,7 @@ class Intervention(Simulator):
         temp_vector = temp_vector.append(pd.Series({'intervention': effectiveness})).to_dict()
         
         # add the causal weights for the intervention
-        intervention['weight_mat'] = temp
+        intervention['weight_matrix'] = temp
         intervention['state_vector'] = temp_vector
         self.interventions[name] = intervention    
     
@@ -135,9 +135,9 @@ class Intervention(Simulator):
         else:
             iterations = self.__iterations
 
-        weights = self.interventions[name]['weight_mat'].to_numpy()
+        weight_matrix = self.interventions[name]['weight_matrix'].to_numpy()
         state_vector = self.interventions[name]['state_vector']
         
-        self.test_results[name] = self.simulate(initial_state=state_vector, weight_mat=weights, transfer=self.__transfer, 
+        self.test_results[name] = self.simulate(initial_state=state_vector, weight_matrix=weight_matrix, transfer=self.__transfer, 
                                                                 inference=self.__inference, thresh=self.__thresh, 
                                                                 iterations=iterations, **self.__params)
