@@ -2,8 +2,7 @@
 ##       Required Packages         ##
 #####################################
 
-pandas>=0.25.1
-numpy>=1.16.5
+pandas>=1.0.3
+numpy>=numpy==1.18.2
 scikit-fuzzy>=0.4.2
-networkx>=1.9.0
-matplotlib>=3.1.1
+tqdm>=4.50.2
