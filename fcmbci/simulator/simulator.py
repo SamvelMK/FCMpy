@@ -82,7 +82,7 @@ class Simulator(Inference):
                 results of the simulation.
         """
         
-        Checker.check_matrix(weight_matrix)
+        Checker.check_matrix(matrix = weight_matrix)
 
         results = pd.DataFrame(initial_state, index=[0])
         state_vector = np.array(list(initial_state.values()))
