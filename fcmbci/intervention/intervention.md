@@ -23,7 +23,7 @@ Intervention(initial_state, weight_matrix, transfer, inference, thresh, iteratio
     ----------
     initial_state: dict
                     keys ---> concepts, values ---> initial states of the associated concepts
-    weight_matrix: panda.DataFrame
+    weight_matrix: pd.DataFrame, np.ndarray
                 causal weights between concepts
     transfer: str
                 transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"

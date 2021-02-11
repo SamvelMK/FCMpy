@@ -4,6 +4,8 @@ from simulator.inference import Inference
 from simulator.simulator import Simulator
 import warnings
 from data_processor.checkers import Checker
+from data_processor.input_validator import type_check
+from typing import Union
 
 class Intervention(Simulator):
 
@@ -17,7 +19,8 @@ class Intervention(Simulator):
             test_intervention(self, name, iterations = None)
     """
 
-    def __init__(self, initial_state, weight_matrix, transfer, inference, thresh, iterations, **params):
+    @type_check
+    def __init__(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], transfer: str, inference: str, thresh: float, iterations: int, **params):
 
         """
         Test interventions (simulate what-if scenarios) on top of a defined FCM structure.
@@ -45,21 +48,21 @@ class Intervention(Simulator):
         self.interventions = {}
         self.test_results = {}
         self.weight_matrix = weight_matrix
-
-        weight_matrix = self.weight_matrix.to_numpy()
+        self.__initial_state=initial_state
         self.__transfer = transfer
         self.__inference = inference
         self.__thresh = thresh
         self.__iterations = iterations
         self.__params = params
 
-        self.test_results['baseline'] = self.simulate(initial_state = initial_state, weight_matrix = weight_matrix,
+        self.test_results['baseline'] = self.simulate(initial_state = self.__initial_state, weight_matrix = self.weight_matrix,
                                                    transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
                                                    iterations = self.__iterations, **self.__params)
         
         self.initial_equilibrium = self.test_results['baseline'].iloc[-1]
 
-    def add_intervention(self, name, weights, effectiveness):
+    @type_check
+    def add_intervention(self, name: str, weights: dict, effectiveness: Union[int, float]):
 
         """
         Add an intervention node with the associated causal weights to the FCM.
@@ -83,8 +86,12 @@ class Intervention(Simulator):
         intervention = {}
         intervention['efectiveness'] = effectiveness
         
+
         # construct a weight matrix for a given intervention
-        temp = self.weight_matrix.copy(deep=True)
+        if type(self.weight_matrix) == np.ndarray:
+            temp = pd.DataFrame(self.weight_matrix, columns=self.__initial_state)
+        else:
+            temp = self.weight_matrix.copy(deep=True)
         temp['antecident'] = temp.columns
         temp.set_index('antecident', inplace=True)
         temp['intervention'] = 0
@@ -104,7 +111,8 @@ class Intervention(Simulator):
         intervention['state_vector'] = temp_vector
         self.interventions[name] = intervention    
     
-    def remove_intervention(self, name):
+    @type_check
+    def remove_intervention(self, name: str):
 
         """
         Remove intervention.
@@ -117,7 +125,7 @@ class Intervention(Simulator):
 
         del self.interventions[name]
 
-    def test_intervention(self, name, iterations = None):
+    def test_intervention(self, name: str, iterations: int = None):
         
         """
         Test an intervention case.
@@ -135,7 +143,7 @@ class Intervention(Simulator):
         else:
             iterations = self.__iterations
 
-        weight_matrix = self.interventions[name]['weight_matrix'].to_numpy()
+        weight_matrix = self.interventions[name]['weight_matrix']
         state_vector = self.interventions[name]['state_vector']
         
         self.test_results[name] = self.simulate(initial_state=state_vector, weight_matrix=weight_matrix, transfer=self.__transfer, 
