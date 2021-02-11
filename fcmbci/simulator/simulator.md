@@ -24,7 +24,7 @@ simulate(initial_state, weight_matrix, transfer, inference, thresh=0.001, iterat
                         initial state vector of the concepts
                         keys ---> concepts, values ---> initial state of the associated concept
 
-        weight_matrix: numpy.ndarray
+        weight_matrix: pd.DataFrame, np.ndarray
                         N*N weight matrix of the FCM.
 
         transfer: str
