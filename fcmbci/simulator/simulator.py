@@ -3,6 +3,7 @@ import numpy as np
 from simulator.inference import Inference
 import warnings
 from data_processor.input_validator import type_check
+from data_processor.checkers import Checker
 
 class Simulator(Inference):
 
@@ -81,6 +82,8 @@ class Simulator(Inference):
                 results of the simulation.
         """
         
+        Checker.check_matrix(weight_matrix)
+
         results = pd.DataFrame(initial_state, index=[0])
         state_vector = np.array(list(initial_state.values()))
 
