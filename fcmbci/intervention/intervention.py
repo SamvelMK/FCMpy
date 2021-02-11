@@ -39,7 +39,7 @@ class Intervention(Simulator):
         params: additional parameters for the methods
         """
 
-        Checker.input_check(initial_state, weight_matrix)
+        Checker.input_check(initial_state=initial_state, weight_matrix= weight_matrix)
 
         super().__init__()
         self.interventions = {}
