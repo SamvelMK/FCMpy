@@ -22,7 +22,7 @@ class TestSimulator(unittest.TestCase):
         df = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
                             columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
         self.weight_matrix = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8], 
-                        columns=['C1','C2','C3','C4','C5','C6','C7','C8']).to_numpy()
+                        columns=['C1','C2','C3','C4','C5','C6','C7','C8'])
 
         self.init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
                         'C6': 0, 'C7': 0, 'C8': 0}
@@ -48,7 +48,7 @@ class TestSimulator(unittest.TestCase):
         self.assertEqual([round(i, 4) for i in eql_r], [round(i, 4) for i in equilibrium_r])
 
     def test_stableConcepts(self):
-        self.weight_matrix[:, 0] = self.weight_matrix[:, 0]*0
+        self.weight_matrix['C1'] = 0
         res_k = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='kosko', thresh=0.001, iterations=50, l=1)
         self.assertEqual(len(set(res_k['C1'])), 1)
 
