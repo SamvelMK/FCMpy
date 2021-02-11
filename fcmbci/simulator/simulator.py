@@ -4,6 +4,7 @@ from simulator.inference import Inference
 import warnings
 from data_processor.input_validator import type_check
 from data_processor.checkers import Checker
+from typing import Union
 
 class Simulator(Inference):
 
@@ -48,7 +49,7 @@ class Simulator(Inference):
         return stables
     
     @type_check
-    def simulate(self, initial_state: dict, weight_matrix: np.ndarray, transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **params) -> pd.DataFrame:
+    def simulate(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **params) -> pd.DataFrame:
         
         """
         Runs simulations over the passed FCM.
@@ -59,7 +60,7 @@ class Simulator(Inference):
                         initial state vector of the concepts
                         keys ---> concepts, values ---> initial state of the associated concept
 
-        weight_matrix: numpy.ndarray
+        weight_matrix: pd.DataFrame, np.ndarray
                         N*N weight matrix of the FCM.
 
         transfer: str
@@ -81,6 +82,11 @@ class Simulator(Inference):
         y: pandas.DataFrame
                 results of the simulation.
         """
+
+        if type(weight_matrix) != np.ndarray:
+            # Align the initial_vector order for correct computations (vec . mat)
+            initial_state = {k : initial_state[k] for k in weight_matrix.columns}
+            weight_matrix=weight_matrix.to_numpy()
         
         Checker.check_matrix(matrix = weight_matrix)
 
@@ -95,7 +101,6 @@ class Simulator(Inference):
         
         step_count = 0
         residual = thresh
-        
         
         while step_count <= iterations:
             if (residual >= thresh):
