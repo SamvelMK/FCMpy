@@ -8,6 +8,7 @@ from datetime import date
 from tqdm import tqdm
 import collections
 from data_processor.input_validator import type_check
+from typing import Union
 
 class Checker:
 
@@ -132,7 +133,7 @@ class Checker:
 
     @staticmethod
     @type_check
-    def input_check(initial_state: dict, weight_matrix: pd.DataFrame):
+    def input_check(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray]):
 
         """
         Check the inputs for simulations.
@@ -142,18 +143,23 @@ class Checker:
         initial_state: str
                 name of the intervention
 
-        weights: pd.DataFrame
-                    causal weights between concepts
+        weight_matrix: pd.DataFrame, np.ndarray
+                        causal weights between concepts
         """
-
+        
         if len(initial_state) != weight_matrix.shape[0]:
             raise ValueError('The length of the initial_state.values() must == the length of the weights')
-
-        elif (min(initial_state.values()) < -1) | (max(initial_state.values()) > 1):
-            raise ValueError('The values in the initial_state vector are out of the input domain (-1, 1)')
         
-        elif (weight_matrix.values.min() < -1) | (weight_matrix.values.max() > 1):
-            raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
+        if  type(weight_matrix) != np.ndarray:
+    
+            if (min(initial_state.values()) < -1) | (max(initial_state.values()) > 1):
+                raise ValueError('The values in the initial_state vector are out of the input domain (-1, 1)')
+            
+            elif (weight_matrix.values.min() < -1) | (weight_matrix.values.max() > 1):
+                raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
+        else:
+            if (weight_matrix.min() < -1) | (weight_matrix.max() > 1):
+                raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
 
     @staticmethod
     @type_check
