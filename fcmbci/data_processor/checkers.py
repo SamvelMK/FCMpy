@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import date 
 from tqdm import tqdm
 import collections
+from data_processor.input_validator import type_check
 
 class Checker:
 
@@ -19,10 +20,12 @@ class Checker:
             check_lt(linguistic_terms)
             check_data(data, linguistic_terms)
             input_check(initial_state, weights)
+            check_matrix(matrix: np.ndarray)
     """
 
     @staticmethod
-    def consistency_check(data, column_names):
+    @type_check
+    def consistency_check(data: dict, column_names: list):
 
         """
         Extract inconsistent ratings for the given linguistic terms in the supplied data.
@@ -30,12 +33,11 @@ class Checker:
         
         Parameters
         ----------
-        data : OrderedDict,
+        data : dict,
 
         column_names: list
                         the column names (linguistic terms) of the pandas df in the ordered dictionary
         """
-
         current_date=date.today()
 
         flat_data = pd.concat([data[i] for i in data], sort = False)
@@ -65,22 +67,23 @@ class Checker:
             print(f'{list(res.index)} pairs of concepts were raited inconsistently across the experts. For more information check the inconsistentRatings_{current_date.day}_{current_date.month}_{current_date.year}.xlsx')
 
     @staticmethod
-    def columns_check(data):
+    @type_check
+    def columns_check(data: dict):
 
         """
         Checks whether the dataframe includes From ---> To column. It raises an error, if the columns are not found. 
         
         Parameters
         ----------
-        data : OrderedDict
+        data : dict
         """
-
         for expert in data.keys():
             if ('from' not in [x.lower() for x in data[expert].columns]) | ('to' not in [x.lower() for x in data[expert].columns]):
                 raise ValueError('Columns From --> To were not found. Check the data!')
 
     @staticmethod
-    def check_lt(linguistic_terms):
+    @type_check
+    def check_lt(linguistic_terms: list):
 
         """
         Check the input of the linguistic terms against the following criteria:
@@ -105,12 +108,12 @@ class Checker:
             raise ValueError('There are douplicate linguistic terms.')
 
     @staticmethod
-    def check_data(data, linguistic_terms):
+    @type_check
+    def check_data(data: collections.OrderedDict, linguistic_terms: list):
 
         """
         Check the input data against the following criteria:
-            R1: data shoud be an collections.OrderedDict
-            R2: data.values shoud be a pandas.DataFrame
+            R1: data.values shoud be a pandas.DataFrame
             R3: data.values.columns shoud include all the linguistic terms.
         
         Parameters
@@ -120,18 +123,16 @@ class Checker:
         linguistic_terms: list
         """
 
-        # R1: data shoud be an collections.OrderedDict
-        if type(data) != type(collections.OrderedDict()):
-            raise ValueError('The data should be an ordered dictionary.')
-        # R2: data.values shoud be a pandas.DataFrame
-        elif sum([type(data[i]) != type(pd.DataFrame()) for i in data]) > 0:
+        # R1: data.values shoud be a pandas.DataFrame
+        if sum([type(data[i]) != type(pd.DataFrame()) for i in data]) > 0:
             raise ValueError('The values in the ordered dict should be in a pandas.DataFrame format.')
         # R3: data.values.columns shoud include all the linguistic terms.
         elif sum([term not in [i.lower() for i in data[i].columns] for term in linguistic_terms for i in data]) > 0:
             raise ValueError('The columns of the dataframe should include all the linguistic terms.')
 
     @staticmethod
-    def input_check(initial_state, weights):
+    @type_check
+    def input_check(initial_state: dict, weight_matrix: pd.DataFrame):
 
         """
         Check the inputs for simulations.
@@ -141,20 +142,21 @@ class Checker:
         initial_state: str
                 name of the intervention
 
-        weights: numpy.ndarray or panda.DataFrame
-                        causal weights between concepts
+        weights: pd.DataFrame
+                    causal weights between concepts
         """
 
-        if len(initial_state) != weights.shape[0]:
+        if len(initial_state) != weight_matrix.shape[0]:
             raise ValueError('The length of the initial_state.values() must == the length of the weights')
 
         elif (min(initial_state.values()) < -1) | (max(initial_state.values()) > 1):
             raise ValueError('The values in the initial_state vector are out of the input domain (-1, 1)')
         
-        elif (weights.values.min() < -1) | (weights.values.max() > 1):
+        elif (weight_matrix.values.min() < -1) | (weight_matrix.values.max() > 1):
             raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
 
     @staticmethod
+    @type_check
     def check_matrix(matrix: np.ndarray):
         """
         Check if a matrix is symetric.
