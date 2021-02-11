@@ -13,7 +13,7 @@ The fcmbci is Python package for automatically generating causal weights for fuz
 <a href="fcmbci\intervention\intervention.md"> The Intervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
 
 ## Installation
-Fcmbci requires python >=3.6 and depends on:
+Fcmbci requires python >=3.8.1 and depends on:
 
 * pandas>=1.0.3
 * numpy>=numpy==1.18.2
