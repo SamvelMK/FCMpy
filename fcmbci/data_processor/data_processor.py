@@ -256,7 +256,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
     #### Read data
                 
     @type_check
-    def read_xlsx(self, filepath, check_consistency: bool=False):
+    def read_xlsx(self, filepath, check_consistency: bool=False, engine: str="openpyxl"):
         
         """ 
         Read data from an excel spreadsheet.
@@ -269,10 +269,14 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         check_consistency: Bool
                             check the consistency of raitings across the experts.
                             default --> False
+        
+        engine: str,
+                the engine for excel reader (read more in pd.read_excel)
+                default --> "openpyxl"
         """
 
         column_names = [i.lower() for i in self.linguistic_terms]
-        data = pd.read_excel(filepath, sheet_name=None)
+        data = pd.read_excel(filepath, sheet_name=None,  engine=engine)
 
         # check the data
         Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
@@ -488,9 +492,9 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         # A dict to store the aggregated results for the visualization purposes. 
         self.aggregated = {}
         flat_data = self.__flatData(self.data)
-        
+
         # weight matrix for the final results.
-        cols = set([i[0] for i in set(flat_data.index)])
+        cols = set(list(sum(set([i for i in flat_data.index]), ()))) # to create a symetric matrix/df
         weight_matrix = pd.DataFrame(columns=cols, index=cols)
         
         # Create the membership functions for the linguistic terms.
