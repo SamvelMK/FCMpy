@@ -153,3 +153,16 @@ class Checker:
         
         elif (weights.values.min() < -1) | (weights.values.max() > 1):
             raise ValueError('The values in the weight_df are out of the input domain (-1, 1)')
+
+    @staticmethod
+    def check_matrix(matrix: np.ndarray):
+        """
+        Check if a matrix is symetric.
+
+        Parameters
+        ----------
+        matrix: np.ndarray
+        """
+
+        if matrix.shape[0] != matrix.shape[0]:
+            raise ValueError('The matrix should be symetric!')
