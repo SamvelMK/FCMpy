@@ -29,16 +29,22 @@ class Intervention(Simulator):
         ----------
         initial_state: dict
                         keys ---> concepts, values ---> initial states of the associated concepts
+
         weight_matrix: panda.DataFrame
                     causal weights between concepts
+
         transfer: str
                     transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+
         inference: str
                     inference method --> "kosko", "mKosko", "rescaled"
+
         thresh: float
                     threshold for the error
+
         iterations: int
                         number of iterations
+
         params: additional parameters for the methods
         """
 
@@ -71,8 +77,10 @@ class Intervention(Simulator):
         ----------
         name: str
                 name of the intervention
+
         weights: dict
                     keys ---> concepts the intervention impacts, value: the associated causal weight
+
         effectiveness: float
                         the degree to which the intervention was delivered (should be between [-1, 1])
         """
@@ -134,6 +142,7 @@ class Intervention(Simulator):
         ----------
         name: str
                 name of the intervention
+                
         iterations: number of iterations for the FCM simulation
                         default ---> the iterations specified in the init.
         """
