@@ -87,7 +87,9 @@ class Simulator(Inference):
             # Align the initial_vector order for correct computations (vec . mat)
             initial_state = {k : initial_state[k] for k in weight_matrix.columns}
             weight_matrix=weight_matrix.to_numpy()
-        
+        else:
+            warnings.warn("When passing an initial state with a weight matrix type numpy.ndarray make sure that the order of the keys in the dictionary with the initial states matches the order of the column of the numpy.ndarray!")
+
         Checker.check_matrix(matrix = weight_matrix)
 
         results = pd.DataFrame(initial_state, index=[0])
