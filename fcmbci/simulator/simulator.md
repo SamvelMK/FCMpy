@@ -11,7 +11,7 @@ The Simulator module inherits from Inference and Transfer classes (see the descr
 - [remove_transfer_func](#remove_transfer_func)
 
 ## simulate()
-The simulate method allows one to run simulations over the defined FCM structure. The method requires the initial state vector <em>(initial_state)</em> , the connection matrix <em>(weight_matrix)</em>, the prefered transfer and inference methods <em>(transfer, inference)</em>. The optional parameters include the the threshold for the error <em>(thresh)</em>, and the number of iterations for the simulation <em>(iterations)</em>.
+The simulate method allows one to run simulations over the defined FCM structure. The method requires the initial state vector <em>(initial_state)</em> , the connection matrix <em>(weight_matrix)</em>, the prefered transfer and inference methods <em>(transfer, inference)</em>. The optional parameters include the the threshold for the error <em>(thresh)</em>, and the number of iterations for the simulation <em>(iterations)</em>. The <a href="https://www.springer.com/gp/book/9783642397387">threshoold</a> will depend on the specific domain of application (in most cases it is 0.001).
 
 ```
 simulate(initial_state, weight_matrix, transfer, inference, thresh=0.001, iterations=50, **params):
