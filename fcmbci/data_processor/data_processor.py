@@ -150,13 +150,15 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             raise ValueError('The $antecedent$ $->$ $concequent (sign)$ format is not detected! Check the data format!') 
     
     @type_check
-    def __extractExpertData(self, data, sepConcept: str, linguistic_terms: list, no_causality: str) -> pd.DataFrame:
+    def __extractExpertData(self, data: dict, sepConcept: str, linguistic_terms: list, no_causality: str) -> pd.DataFrame:
 
         """
         Convert csv data fromat to a dataframe with columns representing the linguistic terms (see more in the doc.).
 
         Parameters
-        ----------        
+        ----------
+        data: dict,
+                
         sepConcept: str
                     the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
         
@@ -252,7 +254,13 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         entropy_concept = entropy_concept.sort_index(level=[0,1])
 
         return entropy_concept
-
+    
+    @type_check
+    def __skipCol(self, data: Union[dict, collections.OrderedDict]) -> Union[dict, collections.OrderedDict]:
+        skip = [i.lower() for i in self.linguistic_terms] + ['from', 'to'] 
+        data = dict([(key, data[key].loc[:, data[key].columns.str.lower().isin(skip)]) for key in data])
+        return data
+    
     #### Read data
                 
     @type_check
@@ -278,14 +286,17 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         column_names = [i.lower() for i in self.linguistic_terms]
         data = pd.read_excel(filepath, sheet_name=None,  engine=engine)
 
+        # Check if all the linguistic terms are in the columns.
+        Checker.check_data(data = data, linguistic_terms=self.linguistic_terms)
+
+        # drop the skip column from the data that are not in the linguistic terms.
+        data = self.__skipCol(data=data)
+
         # check the data
         Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
         if check_consistency:
             Checker.consistency_check(data=data, column_names = column_names) # Checks whether the sign of the raitings across the experts are consistent.
         self.data = collections.OrderedDict(data)
-
-        # check the validity of the output data
-        Checker.check_data(data=self.data, linguistic_terms=self.linguistic_terms)
 
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(data=self.data)           
@@ -313,13 +324,18 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         for i in data.keys():
             d[i] = data[i]
         od = collections.OrderedDict([(i, pd.DataFrame(d[i]).replace(r'^\s*$', np.nan, regex=True)) for i in d])
+        
+        # Check if all the linguistic terms are in the columns.
+        Checker.check_data(data = od, linguistic_terms=self.linguistic_terms)
+
+        # drop the skip column from the data that are not in the linguistic terms.
+        od = collections.OrderedDict(self.__skipCol(data=od))
+
         # check the data
         Checker.columns_check(data=od)
         if check_consistency:
             Checker.consistency_check(data=od, column_names=column_names)
         self.data = od
-        # check the validity of the output data
-        Checker.check_data(data=self.data, linguistic_terms=self.linguistic_terms)
 
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(data=self.data)
@@ -350,8 +366,6 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             dataOd[f'Expert{i}'] = expertData
         
         self.data = dataOd
-        # check the validity of the output data
-        Checker.check_data(data=self.data, linguistic_terms=self.linguistic_terms)
 
         # calculate the entropy of the expert raitings.
         self.entropy = self.__entropy(data=self.data)
