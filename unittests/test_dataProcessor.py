@@ -29,8 +29,18 @@ class TestDataProcessor(unittest.TestCase):
          self.assertIsInstance(self.fcm.data, collections.OrderedDict)
          self.assertEqual(len(self.fcm.data), self.nExpert)
 
+    def test_readExcelUnsure(self):
+        self.fcm.read_xlsx(filepath=os.path.abspath('unittests/test_cases/data_test_unsure.xlsx'), check_consistency=False)
+        self.assertIsInstance(self.fcm.data, collections.OrderedDict)
+        self.assertEqual(len(self.fcm.data), self.nExpert)
+
     def test_readJson(self):
         self.fcm.read_json(filepath=os.path.abspath('unittests/test_cases/data_test.json'), check_consistency=False)
+        self.assertIsInstance(self.fcm.data, collections.OrderedDict)
+        self.assertEqual(len(self.fcm.data), 2)
+
+    def test_readJsonUnsure(self):
+        self.fcm.read_json(filepath=os.path.abspath('unittests/test_cases/data_test_unsure.json'), check_consistency=False)
         self.assertIsInstance(self.fcm.data, collections.OrderedDict)
         self.assertEqual(len(self.fcm.data), 2)
 
