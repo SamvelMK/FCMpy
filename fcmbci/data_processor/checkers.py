@@ -26,7 +26,7 @@ class Checker:
 
     @staticmethod
     @type_check
-    def consistency_check(data: dict, column_names: list):
+    def consistency_check(data: Union[dict, collections.OrderedDict], column_names: list):
 
         """
         Extract inconsistent ratings for the given linguistic terms in the supplied data.
@@ -34,7 +34,7 @@ class Checker:
         
         Parameters
         ----------
-        data : dict,
+        data : dict, collections.OrderedDict,
 
         column_names: list
                         the column names (linguistic terms) of the pandas df in the ordered dictionary
@@ -110,26 +110,21 @@ class Checker:
 
     @staticmethod
     @type_check
-    def check_data(data: collections.OrderedDict, linguistic_terms: list):
+    def check_data(data: Union[dict, collections.OrderedDict], linguistic_terms: list):
 
         """
-        Check the input data against the following criteria:
-            R1: data.values shoud be a pandas.DataFrame
-            R3: data.values.columns shoud include all the linguistic terms.
+        Check if data.values.columns includes all the linguistic terms.
         
         Parameters
         ----------
-        data: collections.OrderedDict
+        data: dict, collections.OrderedDict
 
         linguistic_terms: list
         """
 
-        # R1: data.values shoud be a pandas.DataFrame
-        if sum([type(data[i]) != type(pd.DataFrame()) for i in data]) > 0:
-            raise ValueError('The values in the ordered dict should be in a pandas.DataFrame format.')
-        # R3: data.values.columns shoud include all the linguistic terms.
-        elif sum([term not in [i.lower() for i in data[i].columns] for term in linguistic_terms for i in data]) > 0:
-            raise ValueError('The columns of the dataframe should include all the linguistic terms.')
+        not_in = [i for i in linguistic_terms for y in data if i not in data[y].keys().str.lower()]
+        if not_in:
+            raise ValueError(f'the following linguistic terms are not in the data {set(not_in)}')
 
     @staticmethod
     @type_check
