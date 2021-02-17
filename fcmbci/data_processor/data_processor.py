@@ -172,24 +172,25 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         ---------
         y: pandas.DataFrame
         """
-        
+
+        # Columns of the dfs (add the no causality term)
+        col = linguistic_terms + [self.__noCausality]
         dict_data = []
         for i in data.keys():
-            _ = {i: 0 for i in linguistic_terms}
+            _ = {i: 0 for i in col}
             concepts = self.__conceptParser(string=i, sepConcept=sepConcept)
             _['From'] = concepts['antecedent']
             _['To'] = concepts['concequent']
-
-            if data[i].lower() in self.linguistic_terms:
-                # no causality cases
-                if data[i].lower() == no_causality:
+            
+            # no causality cases
+            if data[i].lower() == no_causality:
+                _[data[i].lower()] = 1
+            else:        
+                if concepts['polarity'] == '+':
                     _[data[i].lower()] = 1
-                else:        
-                    if concepts['polarity'] == '+':
-                        _[data[i].lower()] = 1
-                    else:
-                        _[str('-'+data[i].lower())] = 1
-                dict_data.append(_)
+                else:
+                    _[str('-'+data[i].lower())] = 1
+            dict_data.append(_)
         return pd.DataFrame(dict_data)
 
     @type_check
@@ -211,7 +212,8 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         y: dict,
             keys ---> linguistic terms, values ---> proportion of expert raitings.
         """
-        
+        keep = self.linguistic_terms+[self.__noCausality]
+        flat_data = flat_data[keep]
         activation_parameter = {}
         activation_parameter = (flat_data.loc[conceptPair].sum()/len(self.data)).to_dict()
         return activation_parameter
@@ -254,13 +256,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         entropy_concept = entropy_concept.sort_index(level=[0,1])
 
         return entropy_concept
-    
-    @type_check
-    def __skipCol(self, data: Union[dict, collections.OrderedDict]) -> Union[dict, collections.OrderedDict]:
-        skip = [i.lower() for i in self.linguistic_terms] + ['from', 'to'] 
-        data = dict([(key, data[key].loc[:, data[key].columns.str.lower().isin(skip)]) for key in data])
-        return data
-    
+
     #### Read data
                 
     @type_check
@@ -288,9 +284,6 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
 
         # Check if all the linguistic terms are in the columns.
         Checker.check_data(data = data, linguistic_terms=self.linguistic_terms)
-
-        # drop the skip column from the data that are not in the linguistic terms.
-        data = self.__skipCol(data=data)
 
         # check the data
         Checker.columns_check(data=data) # check if From ---> To columns exist: raise error if otherwise.
@@ -327,9 +320,6 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         
         # Check if all the linguistic terms are in the columns.
         Checker.check_data(data = od, linguistic_terms=self.linguistic_terms)
-
-        # drop the skip column from the data that are not in the linguistic terms.
-        od = collections.OrderedDict(self.__skipCol(data=od))
 
         # check the data
         Checker.columns_check(data=od)
@@ -430,7 +420,10 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         activated = {}
           
         for i in activation_input.keys():
-            activated[i] = infer(mf_x=mf[i], weight=activation_input[i], **params)
+            if i in self.linguistic_terms:
+                activated[i] = infer(mf_x=mf[i], weight=activation_input[i], **params)
+            else:
+                print(f'Skipping {i}')
         return activated
     
     @type_check
