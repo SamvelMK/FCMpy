@@ -15,7 +15,7 @@ import warnings
 class TestDataProcessor(unittest.TestCase):
 
     def setUp(self):
-        self.fcm = DataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'])
+        self.fcm = DataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'], no_causality='na')
         self.nExpert = 6
         self.activation_param = {'M': 0.16, 'H': 0.5, 'VH': 0.33}
         
@@ -40,6 +40,7 @@ class TestDataProcessor(unittest.TestCase):
         self.assertEqual(len(self.fcm.data), 2)
 
     def test_readJsonUnsure(self):
+        self.fcm = DataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'], no_causality='na')
         self.fcm.read_json(filepath=os.path.abspath('unittests/test_cases/data_test_unsure.json'), check_consistency=False)
         self.assertIsInstance(self.fcm.data, collections.OrderedDict)
         self.assertEqual(len(self.fcm.data), 2)
