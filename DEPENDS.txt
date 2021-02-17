@@ -6,3 +6,4 @@ pandas>=1.0.3
 numpy>=numpy==1.18.2
 scikit-fuzzy>=0.4.2
 tqdm>=4.50.2
+openpyxl
