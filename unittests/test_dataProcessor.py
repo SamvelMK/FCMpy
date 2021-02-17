@@ -47,7 +47,7 @@ class TestDataProcessor(unittest.TestCase):
 
     def test_readCsv(self):
         fcm = DataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'], no_causality='no causality')
-        fcm.read_csv('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/PyFcmBci/unittests/test_cases/data_test.csv', sepConcept='->', csv_sep=';')
+        fcm.read_csv(os.path.abspath('unittests/test_cases/data_test.csv'), sepConcept='->', csv_sep=';')
         self.assertIsInstance(fcm.data, collections.OrderedDict)
         self.assertEqual(len(fcm.data), self.nExpert)
 
@@ -97,7 +97,7 @@ class TestDataProcessor(unittest.TestCase):
     
     def test_gen_weights(self):
         fcm = DataProcessor(linguistic_terms=['-VH', '-H', '-M', '-L', '-VL', 'VL','L', 'M', 'H', 'VH'], no_causality='NA')
-        fcm.read_xlsx(filepath=os.path.abspath('C:/PhD/FCM_Projects/FCM_Python/FCM_BCI/PyFcmBci/unittests/test_cases/data_test.xlsx'), check_consistency=False)
+        fcm.read_xlsx(filepath=os.path.abspath('unittests/test_cases/data_test.xlsx'), check_consistency=False)
         fcm.gen_weights()
         weight_matrix = fcm.weight_matrix
         
