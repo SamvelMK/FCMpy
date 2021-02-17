@@ -19,6 +19,7 @@ Fcmbci requires python >=3.8.1 and depends on:
 * numpy>=numpy==1.18.2
 * scikit-fuzzy>=0.4.2
 * tqdm>=4.50.2
+* openpyxl
 
 and will soon be available on PyPi! The lastest version can be installed by:
 

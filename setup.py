@@ -15,7 +15,7 @@ with open('DEPENDS.txt') as fid:
 setuptools.setup(
     name="fcmbci",
     version="0.0.1",
-    author="Samvel Mkhitaryan",
+    author="Samvel Mkhitaryan, Philippe J. Giabbanelli, Maciej Wozniak, Nanne K. de Vries, Rik Crutzen",
     author_email="mkhitarian.samvel@gmail.com",
     description="Fuzzy Cognitive Maps for Behavior Change Interventions and Evaluation",
     long_description=readme(),
