@@ -32,7 +32,7 @@ Alternatively, you can install from source or develop this package, you can fork
 ```
 python -m pip install --user --upgrade setuptools wheel
 python setup.py sdist bdist_wheel
-pip install e . 
+python -m pip install install e . 
 ```
 
 You can run the unittest for the package as follows:
@@ -82,7 +82,7 @@ The connection matrix can be accessed/inspected as follows:
 fcm.weight_matrix
 ```
 
-Once we constructed the weight matrix we can use the <em>Simulate</em> module to run simulations on top of the defined FCM structure. After creating an instance of the Simulation class one can use the <em>simulate</em> method to run the FCM simulations. The sumulate method requires one to pass the initial state vector (<em>initial_state</em>), connection matrix (<em>weight_matrix</em>), the transfer (<em>transfer</em>) and inference methods (<em>inference</em>), the threshold (<em>thresh</em>) for stoping the simulation and the number of iterations to run (<em>iterations</em> ) (see more details on the methods in the <a href="fcmbci\simulator\simulator.md">documentation</a>).
+Once we constructed the weight matrix we can use the <em>Simulate</em> module to run simulations on top of the defined FCM structure. After creating an instance of the Simulation class one can use the <em>simulate</em> method to run the FCM simulations. The sumulate method requires one to pass the initial state vector (<em>initial_state</em>), connection matrix (<em>weight_matrix</em>), the transfer (<em>transfer</em>) method and the lambda parameter for the sigmoidal functions (<em>l</em>), the inference method (<em>inference</em>), the threshold (<em>thresh</em>) for stoping the simulation and the number of iterations to run (<em>iterations</em> ) (see more details on the methods in the <a href="fcmbci\simulator\simulator.md">documentation</a>).
 
 ```
 from fcmbci import Simulator
@@ -90,7 +90,7 @@ from fcmbci import Simulator
 sim = Simulator()
 
 res = sim.simulate(initial_state=init_state, weight_matrix=weight_matrix, 
-                    transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50)
+                    transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1)
 ```
 
 If one wants to test intervention scenarios (what-if scenarios) one can use the utilities provided in the <em>Intervention</em> module. To create an instance of the Intervention class, as in the case of the simulations one needs to pass the initial state vector, connection matrix, the transfer and inference methods, the threshold for stoping the simulation and the number of iterations to run. Additionally, if one uses the sigmoid transfer function, one needs to specify the <em>l</em> (i.e., lambda) parameter for the sigmioid function (see more details on the methods in the <a href="fcmbci\intervention\intervention.md">documentation</a>).
