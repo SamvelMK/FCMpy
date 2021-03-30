@@ -500,10 +500,16 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         self.aggregated = {}
         flat_data = self.__flatData(self.data)
 
-        # weight matrix for the final results.
-        cols = set(list(sum(set([i for i in flat_data.index]), ()))) # to create a symetric matrix/df
-        weight_matrix = pd.DataFrame(columns=cols, index=cols)
-        
+        # Check if the matrix should be symetric
+        if set(flat_data.index.get_level_values('from')) == set(flat_data.index.get_level_values('to')):
+            # weight matrix for the final results.
+            cols = set(list(sum(set([i for i in flat_data.index]), ()))) # to create a symetric matrix/df
+            weight_matrix = pd.DataFrame(columns=cols, index=cols)
+        else:
+            cols = set(flat_data.index.get_level_values('to'))
+            index = set(flat_data.index.get_level_values('from'))
+            weight_matrix = pd.DataFrame(columns=cols, index=index)
+
         # Create the membership functions for the linguistic terms.
         self.terms_mf = self.automf(membership_function=membership_function, **params)
         
@@ -515,4 +521,4 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                 self.aggregated[f'{concepts}'] = aggr
                 value = self.defuzzify(aggregated=aggr, method=method)
                 weight_matrix.loc[concepts] = value
-        self.weight_matrix = weight_matrix.fillna(0)
+        self.weight_matrix = weight_matrix.fillna(0)            
