@@ -8,20 +8,20 @@ class FuzzyInference:
 
     Methods:
             __init__(self)
-            __mamdaniMin(mf_x, weight, **params)
-            __mamdaniProduct(mf_x, weight, **params)
+            __min(mf_x, weight, **params)
+            __product(mf_x, weight, **params)
             add_fuzzy_inference_func(self, func)
             remove_fuzzy_inference_func(self, func_name)
     """
 
     def __init__(self):
-        self.fuzzy_inference_funcs = {"mamdaniMin" : self.__mamdaniMin, "mamdaniProduct" : self.__mamdaniProduct}
+        self.fuzzy_inference_funcs = {"min" : self.__min, "product" : self.__product}
 
     @staticmethod
     @type_check
-    def __mamdaniMin(mf_x: np.ndarray, weight: float) -> np.ndarray:
+    def __min(mf_x: np.ndarray, weight: float) -> np.ndarray:
         """
-        Mamdani min inference method.
+        Mamdani min fuzzy implication method.
 
         Parameters
         ----------
@@ -41,8 +41,10 @@ class FuzzyInference:
 
     @staticmethod
     @type_check
-    def __mamdaniProduct(mf_x: np.ndarray, weight: float) -> np.ndarray:
+    def __product(mf_x: np.ndarray, weight: float) -> np.ndarray:
         """
+        Product fuzzy implication method
+
         mf_x: numpy.ndarray.
                 membership function of a linguistic term (x)
 

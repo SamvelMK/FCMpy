@@ -35,10 +35,10 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
             read_xlsx(self, filepath, check_consistency=False)
             read_json(self, filepath, check_consistency=False)
             automf(self, membership_function = 'trimf', **params)
-            activate(self, mf, activation_input, fuzzy_inference="mamdaniProduct", **params)
+            activate(self, mf, activation_input, fuzzy_inference="product", **params)
             aggregate(self, activated)
             defuzzify(self, aggregated, method = 'centroid')
-            gen_weights(self,  method = 'centroid', membership_function='trimf', fuzzy_inference="mamdaniProduct", **params)
+            gen_weights(self,  method = 'centroid', membership_function='trimf', fuzzy_inference="product", **params)
     """
 
     @type_check
@@ -388,10 +388,10 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         return terms
 
     @type_check    
-    def activate(self, mf: dict, activation_input: dict, fuzzy_inference: str="mamdaniProduct", **params) -> dict:
+    def activate(self, mf: dict, activation_input: dict, fuzzy_inference: str="product", **params) -> dict:
         
         """ 
-        Activate the specified membership function based on the passed parameters (Mamdani).
+        Activate the specified membership function based on the passed parameters (product implication rule).
         
         Parameters
         ----------
@@ -405,7 +405,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                             Example: parameters = {'H': 0.66, 'VH': 0.33}
 
         fuzzy_inference: str,
-                            fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"
+                            fuzzy inference method. --> "min", "product"
         
         Return
         ---------
@@ -475,7 +475,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
         return defuzzified_value           
 
     @type_check    
-    def gen_weights(self, method: str = 'centroid', membership_function: str ='trimf', fuzzy_inference: str ="mamdaniProduct", **params):
+    def gen_weights(self, method: str = 'centroid', membership_function: str ='trimf', fuzzy_inference: str ="product", **params):
         
         """ 
         Apply fuzzy logic to obtain edge weights of an FCM with qualitative inputs 
@@ -491,7 +491,7 @@ class DataProcessor(FuzzyInference, FuzzyMembership):
                                 fuzzy membership function. --> 'trimf'
 
         fuzzy_inference: str,
-                            fuzzy inference method. --> "mamdaniMin", "mamdaniProduct"
+                            fuzzy inference method. --> "min", "product"
 
         params: other parameters for the functions                    
         """
