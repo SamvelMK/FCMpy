@@ -4,7 +4,7 @@ sys.path.insert(0, myPath + '/../')
 
 import numpy as np
 from expert_fcm.input_validator import type_check
-from abc import ABC, abstractclassmethod  
+from abc import ABC, abstractmethod  
 
 class Aggregate(ABC):
 
@@ -12,7 +12,7 @@ class Aggregate(ABC):
     Fuzzy aggregation rule.
     """
 
-    @abstractclassmethod
+    @abstractmethod
     def aggregate():
         raise NotImplementedError('aggregate method is not defined.')
 
