@@ -13,7 +13,7 @@ with open('DEPENDS.txt') as fid:
         INSTALL_REQUIRES.append(line.strip())
 
 setuptools.setup(
-    name="fcmbci",
+    name="fcmpy",
     version="0.0.1",
     author="Samvel Mkhitaryan, Philippe J. Giabbanelli, Maciej Wozniak, Nanne K. de Vries, Rik Crutzen",
     author_email="mkhitarian.samvel@gmail.com",
