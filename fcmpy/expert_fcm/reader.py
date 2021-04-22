@@ -21,7 +21,7 @@ class ReadData(ABC):
     
     @abstractmethod
     def read():
-        raise NotImplementedError('read method is not defined')
+        raise NotImplementedError('read method is not defined!')
 
 class CSV(ReadData):
     
