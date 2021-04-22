@@ -96,7 +96,7 @@ class CSV(ReadData):
             conceptsParsed = self.__conceptParser(string=i, sepConcept=sepConcept)
             _['From'] = conceptsParsed['antecedent']
             _['To'] = conceptsParsed['concequent']
-            
+            print(_)
             # no causality cases
             if data[i].lower() in ltValence:
                 if conceptsParsed['polarity'] == '+':
@@ -140,12 +140,12 @@ class CSV(ReadData):
         linguisticTerms = [i.lower() for i in list(linguisticTerms.keys())] # Create a list
 
         try:
-            sepConcept = kwargs['args']['sep_concept']
+            sepConcept = kwargs['params']['sep_concept']
         except:
             sepConcept = '->'
         
         try:
-            csvSep = kwargs['args']['csv_sep']
+            csvSep = kwargs['params']['csv_sep']
         except:
             csvSep = ','
 
