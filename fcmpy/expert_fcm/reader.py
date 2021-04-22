@@ -87,7 +87,7 @@ class CSV(ReadData):
         y: pandas.DataFrame
         """
 
-        ltValence = [i.lower().strip('+-') for i in linguisticTerms if i.startswith(('-', '+'), 0, 1)] # get the terms that has valence
+        ltValence = [i.lower().strip('+-') for i in linguisticTerms if i.startswith(('-', '+'), 0, 1)] # get the terms that have valence
 
         # Columns of the dfs (add the no causality term)
         dict_data = []
@@ -96,7 +96,7 @@ class CSV(ReadData):
             conceptsParsed = self.__conceptParser(string=i, sepConcept=sepConcept)
             _['From'] = conceptsParsed['antecedent']
             _['To'] = conceptsParsed['concequent']
-            print(_)
+
             # no causality cases
             if data[i].lower() in ltValence:
                 if conceptsParsed['polarity'] == '+':
