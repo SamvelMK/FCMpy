@@ -3,7 +3,6 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
 from fcmpy.expert_fcm.input_validator import type_check
-from fcmpy.expert_fcm.checkers import LtCheck
 from fcmpy.expert_fcm.methodsStore import EntropyStore
 from fcmpy.expert_fcm.methodsStore import ReaderStore
 from fcmpy.expert_fcm.methodsStore import MembershipStore
