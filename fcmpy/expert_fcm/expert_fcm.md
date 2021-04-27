@@ -48,7 +48,7 @@ array([-1.  , -0.95, -0.9 , -0.85, -0.8 , -0.75, -0.7 , -0.65, -0.6 ,
         0.8 ,  0.85,  0.9 ,  0.95,  1.  ])
 ```
 
-Now that we have defined the UD, we can sepcify the linguistic terms that should be mapped to it. To do that, we need to decide on which geometric shape would best represent the linguistic terms. In many applications, a triangular membership function is used. The triangular membership function requires one to specify the lower and the upper bounds of the triangle (i.e., where the meaning of the given linguistic term is represented the least) and the center of the triangle (i.e., where the meaning of the given linguistic term is fully expressed).
+Now that we have defined the UD, we can sepcify the linguistic terms that should be mapped to it. To do that, we need to decide on a geometric shape that would best represent the linguistic terms. In many applications, a triangular membership function is used. The triangular membership function requires one to specify the lower and the upper bounds of the triangle (i.e., where the meaning of the given linguistic term is represented the least) and the center of the triangle (i.e., where the meaning of the given linguistic term is fully expressed).
 
 We will use the <em>ExpertFcm.linguistic_terms()</em> setter to set the linguistic terms and the associated parameters for the triangular membership function.
 
@@ -119,9 +119,49 @@ plt.show()
 
 In addition to the triangular membership functions, the ExpertFcm.automf() also implements gaussian membership functions ('gaussmf') and trapezoidal membership functions ('trapmf') (based on sci-kit fuzzy module in python).
 
+```python
+
+# Gaussian/ [mean, sigma]
+fcm.linguistic_terms = {
+                        '-VH': [-1, 0.1],
+                        '-H': [-0.75, 0.1],
+                        '-M': [-0.5, 0.1], 
+                        '-L': [-0.25, 0.1],
+                        '-VL': [0, 0.1],
+                        'NA': [0, 0.001],
+                        '+VL': [0, 0.1],
+                        '+L': [0.25, 0.1],
+                        '+M': [0.5, 0.1],
+                        '+H': [0.75, 0.1],
+                        '+VH': [1, 0.1]
+                        }
+
+mfs = fcm.automf(method='gaussmf')       
+```
+
+```python
+
+fig = plt.figure(figsize= (10, 5))
+axes = plt.axes()
+
+for i in mfs:
+    axes.plot(fcm.universe, mfs[i], linewidth=0.4, label=str(i))
+    axes.fill_between(fcm.universe, mfs[i], alpha=0.5)
+
+axes.legend(bbox_to_anchor=(0.95, 0.6))
+
+axes.spines['top'].set_visible(False)
+axes.spines['right'].set_visible(False)
+axes.get_xaxis().tick_bottom()
+axes.get_yaxis().tick_left()
+plt.tight_layout()
+plt.show()
+```
+
+
 <b>Step 2: Fuzzy Implications</b>
 
-To determin the level of activation of the linguistic terms for a given pari of concepts one must first identify the level of endorcment of the given terms by the participants. This is done by calculating the proportion of the answers to each linguistic term for a given antecedent-consequen. Consider, a case where 50% of the participants (e.g., domain experts) raited the causal impact of an antecedent on the concequent as Positive High, 33% raited it as Very High and the 16% raited it as Positive Medium. Subsequently, a fuzzy implication rule is used to "activate" the corresponding membership functions. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. 
+To determine the level of activation of the linguistic terms for a given pair of concepts one must first identify the level of endorsement of the given terms by the participants. This is done by calculating the proportion of the answers to each linguistic term for a given antecedent-consequen. Consider, a case where 50% of the participants (e.g., domain experts) rated the causal impact of an antecedent on the concequent as Positive High, 33% rated it as Positive Very High and the 16% rated it as Positive Medium. Subsequently, a fuzzy implication rule is used to "activate" the corresponding membership functions. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. 
 
 The <a href="https://link.springer.com/chapter/10.1007%2F978-3-642-25859-6_4">Mamdani minimum</a> fuzzy implication rule is expressed as:
 
