@@ -1,30 +1,34 @@
 import pandas as pd
 import numpy as np
-from simulator.inference import Inference
+from fcmpy.simulator.methodStore import InferenceStore, TransferStore
 import warnings
-from data_processor.input_validator import type_check
-from data_processor.checkers import Checker
+from fcmpy.expert_fcm.input_validator import type_check
 from typing import Union
+from abc import ABC, abstractmethod
 
-class Simulator(Inference):
+class Simulator(ABC):
+
+    """
+    Class of methods for simulating FCMs.
+    """
+
+    @abstractmethod
+    def simulate():
+        raise NotImplementedError('Simulate method is not defined!')
+
+class FcmSimulator(Simulator):
 
     """
     The class includes methods for runing sumulations on top of a defined FCM.
 
     Methods:
-            __init__(self)
-            simulate(self, initial_state, weight_mat, transfer, inference, thresh=0.001, iterations=50, **params)
-            add_inference_methods(self, func)
-            remove_inference_methods(self, func_name)
-            add_transfer_func(self, func)
-            remove_transfer_func(self, func_name)
+        simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
+                        transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **params)
     """
-
-    def __init__(self):
-        super().__init__()
     
+    @staticmethod
     @type_check
-    def __getStableConcepts(self, weight_matrix: np.ndarray) -> np.ndarray:
+    def __getStableConcepts(weight_matrix: np.ndarray) -> np.ndarray:
 
         """
         Extract the positions of the stable concepts (concepts with in-degree == 0).
@@ -48,8 +52,10 @@ class Simulator(Inference):
 
         return stables
     
+    @staticmethod
     @type_check
-    def simulate(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **params) -> pd.DataFrame:
+    def simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
+                        transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **kwargs) -> pd.DataFrame:
         
         """
         Runs simulations over the passed FCM.
@@ -90,24 +96,25 @@ class Simulator(Inference):
         else:
             warnings.warn("When passing an initial state with a weight matrix type numpy.ndarray make sure that the order of the keys in the dictionary with the initial states matches the order of the column of the numpy.ndarray!")
 
-        Checker.check_matrix(matrix = weight_matrix)
-
+        # create the empty dataframe for the results
         results = pd.DataFrame(initial_state, index=[0])
         state_vector = np.array(list(initial_state.values()))
 
         # get the stable concept values
-        stableConceptPos = self.__getStableConcepts(weight_matrix=weight_matrix.T)
+        stableConceptPos = FcmSimulator.__getStableConcepts(weight_matrix=weight_matrix.T)
         satble_values = state_vector[stableConceptPos]
-        __infer = self.inference_methods[inference]
-        __transfer = self.transfer_funcs[transfer]
-        
+
         step_count = 0
         residual = thresh
+        
+        transfer = TransferStore.get(transfer)()
+        inference = InferenceStore.get(inference)()
         
         while step_count <= iterations:
             if (residual >= thresh):
                 
-                state_vector = __transfer(x=__infer(initial_state=state_vector, weight_matrix=weight_matrix, **params), **params)
+                infered = inference.infer(initial_state=state_vector, weight_matrix=weight_matrix, params=kwargs)
+                state_vector = transfer.transfer(x=infered, params=kwargs)
                 
                 # Reset the stable values
                 state_vector[stableConceptPos] = satble_values
