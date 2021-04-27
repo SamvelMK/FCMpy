@@ -3,12 +3,7 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
 from fcmpy.expert_fcm.input_validator import type_check
-from fcmpy.expert_fcm.methodsStore import EntropyStore
-from fcmpy.expert_fcm.methodsStore import ReaderStore
-from fcmpy.expert_fcm.methodsStore import MembershipStore
-from fcmpy.expert_fcm.methodsStore import ImplicationStore
-from fcmpy.expert_fcm.methodsStore import AggregationStore
-from fcmpy.expert_fcm.methodsStore import DefuzzStore
+from fcmpy.expert_fcm.methodsStore import EntropyStore, ReaderStore, MembershipStore, ImplicationStore, AggregationStore, DefuzzStore
 from fcmpy.expert_fcm.transform import Transform
 
 from abc import ABC, abstractmethod
@@ -166,7 +161,7 @@ class ExpertFcm(FcmConstructor):
             raise ValueError('Linguistic terms are not defined!')
 
         fileType = file_path.split('.')[-1]
-        reader = ReaderStore.getReader(fileType)()
+        reader = ReaderStore.get(fileType)()
         data = reader.read(filePath=file_path, linguisticTerms = self.linguistic_terms, params = kwargs)
         return data
 
@@ -191,7 +186,7 @@ class ExpertFcm(FcmConstructor):
             entropy of the concept pairs in expert ratings
         """
 
-        entropy = EntropyStore.getEnrtopy(method)()
+        entropy = EntropyStore.get(method)()
         return entropy.calculateEntropy(data=data, params=kwargs)
     
     @type_check
@@ -220,7 +215,7 @@ class ExpertFcm(FcmConstructor):
         elif self.universe is None:
             raise ValueError('Universe of discourse is not defined!')
         
-        membership = MembershipStore.getMembership(method)()
+        membership = MembershipStore.get(method)()
 
         return membership.membershipFunction(linguistic_terms=self.linguistic_terms, universe=self.universe, params = kwargs)
     
@@ -251,7 +246,7 @@ class ExpertFcm(FcmConstructor):
             the "activated" membership function
         """
 
-        implication = ImplicationStore.getImplication(method)()
+        implication = ImplicationStore.get(method)()
         return implication.implication(mf_x = membership_function, weight = weight, params = kwargs)
 
     @type_check
@@ -279,7 +274,7 @@ class ExpertFcm(FcmConstructor):
             an aggregated membership function
         """
 
-        aggr = AggregationStore.getAggregation(method)()
+        aggr = AggregationStore.get(method)()
         aggregated = aggr.aggregate(x=x, y=y, params = kwargs)
         return aggregated
 
@@ -312,7 +307,7 @@ class ExpertFcm(FcmConstructor):
             defuzzified value
         """
 
-        defuzz = DefuzzStore.getDefuzz(method)()
+        defuzz = DefuzzStore.get(method)()
         defuzz_value = defuzz.defuzz(x=x, mfx=mfx, method=method, params=kwargs)
         return defuzz_value
 
