@@ -4,7 +4,7 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
 import unittest
-from fcmbci.simulator.simulator import Simulator
+from fcmpy.simulator.simulator import FcmSimulator
 import pandas as pd 
 
 class TestSimulator(unittest.TestCase):
@@ -26,8 +26,8 @@ class TestSimulator(unittest.TestCase):
 
         self.init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
                         'C6': 0, 'C7': 0, 'C8': 0}
-        self.sim = Simulator()
-
+        self.sim = FcmSimulator()
+        
     def test_simulation(self):
         res_k = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='kosko', thresh=0.001, iterations=50, l=1)
         res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1)

@@ -4,7 +4,8 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
 import unittest
-from fcmbci.intervention.intervention import Intervention
+from fcmpy.simulator.simulator import FcmSimulator
+from fcmpy.intervention.intervention import FcmIntervention
 import pandas as pd 
 
 class TestFcmSimulator(unittest.TestCase):
@@ -25,9 +26,10 @@ class TestFcmSimulator(unittest.TestCase):
 
         init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
                             'C6': 0, 'C7': 0, 'C8': 0}
-
-        self.inter = Intervention(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', 
-                                        thresh=0.001, iterations=100, l=1)
+        
+        self.inter = FcmIntervention(FcmSimulator)
+        self.inter.initialize(initial_state=init_state, weight_matrix=weight_matrix, transfer='tanh', inference='mKosko', 
+                                        thresh=0.001, iterations=100)
 
     def test_addIntervention(self):
         # Check if the interventions were properly added to the constructor.
