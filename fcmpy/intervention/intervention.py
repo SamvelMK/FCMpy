@@ -49,9 +49,22 @@ class FcmIntervention(Intervention):
         simulator: Simulator
         """
 
-        self.simulator = simulator()
-        self.interventions = {}
-        self.test_results = {}
+        self.__simulator = simulator()
+        self.__interventions = {}
+        self.__test_results = {}
+        self.__initial_equilibrium = None
+
+    @property
+    def test_results(self):
+        return self.__test_results
+    
+    @property
+    def interventions(self):
+        return self.__interventions
+    
+    @property
+    def initial_equilibrium(self):
+        return self.__initial_equilibrium
     
     @type_check
     def initialize(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
@@ -84,7 +97,7 @@ class FcmIntervention(Intervention):
         **params: additional parameters
         """
 
-        self.weight_matrix = weight_matrix
+        self.__weight_matrix = weight_matrix
         self.__initial_state=initial_state
         self.__transfer = transfer
         self.__inference = inference
@@ -92,14 +105,14 @@ class FcmIntervention(Intervention):
         self.__iterations = iterations
         self.__l = l
         
-        self.test_results['baseline'] = self.simulator.simulate(initial_state = self.__initial_state, weight_matrix = self.weight_matrix,
+        self.__test_results['baseline'] = self.__simulator.simulate(initial_state = self.__initial_state, weight_matrix = self.__weight_matrix,
                                                                 transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
                                                                 iterations = self.__iterations, l=self.__l)
         
-        self.initial_equilibrium = self.test_results['baseline'].iloc[-1]
+        self.__initial_equilibrium = self.test_results['baseline'].iloc[-1]
 
     @type_check
-    def add_intervention(self, name: str, weights: dict, effectiveness: Union[int, float]):
+    def add_intervention(self, name: str, impact: dict, effectiveness: Union[int, float]):
 
         """
         Add an intervention node with the associated causal weights to the FCM.
@@ -109,7 +122,7 @@ class FcmIntervention(Intervention):
         name: str
                 name of the intervention
 
-        weights: dict
+        impact: dict
                     keys ---> concepts the intervention impacts, value: the associated causal weight
 
         effectiveness: float
@@ -117,7 +130,7 @@ class FcmIntervention(Intervention):
         """
 
         # Check whether the passed intervention inputs are in the functions' domain.
-        if (min(list(weights.values())) < -1) or (max(list(weights.values())) > 1):
+        if (min(list(impact.values())) < -1) or (max(list(impact.values())) > 1):
             raise ValueError('the values in the causal weights are out of the domain [-1,1].')
         elif (effectiveness < 0) or (effectiveness > 1):
             raise ValueError('the values in the intervention effectiveness are out of the domain [0,1].')
@@ -125,12 +138,11 @@ class FcmIntervention(Intervention):
         intervention = {}
         intervention['efectiveness'] = effectiveness
         
-
         # construct a weight matrix for a given intervention
-        if type(self.weight_matrix) == np.ndarray:
-            temp = pd.DataFrame(self.weight_matrix, columns=self.__initial_state)
+        if type(self.__weight_matrix) == np.ndarray:
+            temp = pd.DataFrame(self.__weight_matrix, columns=self.__initial_state)
         else:
-            temp = self.weight_matrix.copy(deep=True)
+            temp = self.__weight_matrix.copy(deep=True)
 
         temp['antecident'] = temp.columns
         temp.set_index('antecident', inplace=True)
@@ -139,17 +151,17 @@ class FcmIntervention(Intervention):
         temp.rename(index = {temp.index[-1] : 'intervention'}, inplace = True)
         
         # add the intervention impact
-        for key in weights.keys():
-            temp.loc['intervention', key] = weights[key]
+        for key in impact.keys():
+            temp.loc['intervention', key] = impact[key]
             
         # construct the new state vector for a given intervention (baseline + intervention effectiveness)
-        temp_vector = self.initial_equilibrium.copy(deep=True)
+        temp_vector = self.__initial_equilibrium.copy(deep=True)
         temp_vector = temp_vector.append(pd.Series({'intervention': effectiveness})).to_dict()
         
         # add the causal weights for the intervention
         intervention['weight_matrix'] = temp
         intervention['state_vector'] = temp_vector
-        self.interventions[name] = intervention    
+        self.__interventions[name] = intervention    
     
     @type_check
     def remove_intervention(self, name: str):
@@ -185,9 +197,9 @@ class FcmIntervention(Intervention):
         else:
             iterations = self.__iterations
 
-        weight_matrix = self.interventions[name]['weight_matrix']
-        state_vector = self.interventions[name]['state_vector']
+        weight_matrix = self.__interventions[name]['weight_matrix']
+        state_vector = self.__interventions[name]['state_vector']
         
-        self.test_results[name] = self.simulator.simulate(initial_state=state_vector, weight_matrix=weight_matrix, transfer=self.__transfer, 
+        self.__test_results[name] = self.__simulator.simulate(initial_state=state_vector, weight_matrix=weight_matrix, transfer=self.__transfer, 
                                                                 inference=self.__inference, thresh=self.__thresh, 
                                                                 iterations=iterations, l = self.__l)
