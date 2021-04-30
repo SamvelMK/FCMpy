@@ -33,9 +33,9 @@ class TestFcmSimulator(unittest.TestCase):
 
     def test_addIntervention(self):
         # Check if the interventions were properly added to the constructor.
-        self.inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
-        self.inter.add_intervention('intervention_2', weights={'C1':-.5}, effectiveness=1)
-        self.inter.add_intervention('intervention_3', weights={'C1':-1}, effectiveness=1)
+        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
+        self.inter.add_intervention('intervention_2', impact={'C1':-.5}, effectiveness=1)
+        self.inter.add_intervention('intervention_3', impact={'C1':-1}, effectiveness=1)
 
         intervations = ['intervention_1', 'intervention_2', 'intervention_3']
         nInter = len(set(intervations) ^ set(self.inter.interventions.keys()))
@@ -43,9 +43,9 @@ class TestFcmSimulator(unittest.TestCase):
 
     def test_removeIntervention(self):
         # Check if the interventions were properly added to the constructor.
-        self.inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
-        self.inter.add_intervention('intervention_2', weights={'C1':-.5}, effectiveness=1)
-        self.inter.add_intervention('intervention_3', weights={'C1':-1}, effectiveness=1)
+        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
+        self.inter.add_intervention('intervention_2', impact={'C1':-.5}, effectiveness=1)
+        self.inter.add_intervention('intervention_3', impact={'C1':-1}, effectiveness=1)
 
         self.inter.remove_intervention('intervention_1')
         intervations = ['intervention_2', 'intervention_3']
@@ -55,7 +55,7 @@ class TestFcmSimulator(unittest.TestCase):
     def test_testIntervention(self):
         # Check if the itest_intervention runs properly.
         # Check if the stable concept (intervetion in this case) is indeed stable.
-        self.inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
+        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
         self.inter.test_intervention('intervention_1')
         self.assertEqual(len(set(self.inter.test_results['intervention_1']['intervention'])), 1)
 
