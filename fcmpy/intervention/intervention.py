@@ -52,7 +52,8 @@ class FcmIntervention(Intervention):
         self.__simulator = simulator()
         self.__interventions = {}
         self.__test_results = {}
-        self.__initial_equilibrium = None
+        self.__equilibriums = {}
+        self.__comparison_table = None
 
     @property
     def test_results(self):
@@ -63,9 +64,18 @@ class FcmIntervention(Intervention):
         return self.__interventions
     
     @property
-    def initial_equilibrium(self):
-        return self.__initial_equilibrium
+    def equilibriums(self):
+        return pd.DataFrame(self.__equilibriums)
     
+    @property
+    def comparison_table(self):
+        diff = {}
+        df = pd.DataFrame(self.__equilibriums)
+        for i in df.columns:
+            diff[i] = ((df[i] - df.iloc[:, 0])/df.iloc[:, 0])*100
+        self.__comparison_table = pd.DataFrame(diff)
+        return self.__comparison_table
+
     @type_check
     def initialize(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
                             transfer: str, inference: str, thresh: float, iterations: int, l=None, **params):
@@ -109,7 +119,7 @@ class FcmIntervention(Intervention):
                                                                 transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
                                                                 iterations = self.__iterations, l=self.__l)
         
-        self.__initial_equilibrium = self.test_results['baseline'].iloc[-1]
+        self.__equilibriums['baseline'] = self.test_results['baseline'].iloc[-1]
 
     @type_check
     def add_intervention(self, name: str, impact: dict, effectiveness: Union[int, float]):
@@ -155,7 +165,7 @@ class FcmIntervention(Intervention):
             temp.loc['intervention', key] = impact[key]
             
         # construct the new state vector for a given intervention (baseline + intervention effectiveness)
-        temp_vector = self.__initial_equilibrium.copy(deep=True)
+        temp_vector = self.__equilibriums['baseline'].copy(deep=True)
         temp_vector = temp_vector.append(pd.Series({'intervention': effectiveness})).to_dict()
         
         # add the causal weights for the intervention
@@ -203,3 +213,5 @@ class FcmIntervention(Intervention):
         self.__test_results[name] = self.__simulator.simulate(initial_state=state_vector, weight_matrix=weight_matrix, transfer=self.__transfer, 
                                                                 inference=self.__inference, thresh=self.__thresh, 
                                                                 iterations=iterations, l = self.__l)
+        
+        self.__equilibriums[name] = self.__test_results[name].iloc[-1][:-1]
