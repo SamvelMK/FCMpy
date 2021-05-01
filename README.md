@@ -96,6 +96,8 @@ axes.get_yaxis().tick_left()
 plt.tight_layout()
 ```
 
+![png](/figures/mfs.png)
+
 <b>Step 2: Build FCMs based on qualitative input data using Fuzzy Logic</b>
 
 
@@ -217,7 +219,7 @@ init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
 
 * Simulate
 
-Here we run a simulation on top of the defined FCM structure using the sigmoid transfer function and the modified kosko's inference method. The simulation will run $50$ iterations and will stop if the absoulte difference between the concept values between the simulation steps is $\leqslant 0.001$. The steepness parameter for the sigmoid function is set to $1$. 
+Here we run a simulation on top of the defined FCM structure using the sigmoid transfer function and the modified kosko's inference method. The simulation will run $50$ iterations and will stop if the absoulte difference between the concept values between the simulation steps is $\leq 0.001$. The steepness parameter for the sigmoid function is set to $1$. 
 
 ```Python
 res_mK = sim.simulate(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1)
@@ -250,6 +252,10 @@ plt.xlabel('Simulation Steps')
 plt.ylabel('Initial States')
 plt.show()
 ```
+
+![png](/figures/simulations.png)
+
+<em>Figure 1:</em> The results of the FCM simulation. <br>
 
 ### Test Interventions on top of the defined FCMs
 

@@ -183,8 +183,8 @@ The values converged in the 7 state (e <= 0.001)
 6  0.725885  0.790706  0.769451  0.812473  0.819294  0.839901  0.909940  0.955774
 ```
 
-<br>
-<img src="..\..\figures\simulations.png" alt="figure not found" style="float: center; margin-right: 10px;" /><br>
+![png](/figures/simulations.png)
+
 <em>Figure 1:</em> The results of the FCM simulation. <br>
 <br>
 
