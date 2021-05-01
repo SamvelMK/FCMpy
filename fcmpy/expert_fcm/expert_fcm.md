@@ -5,7 +5,7 @@
 <div align='justify'>
 The construction of the FCMs based on qualitative input data is a four step process. In the first step, one must define the fuzzy membership functions associated with the linguistic terms used to express causal relationships between the antecedent and consequent concepts in a given system. Fuzzy membership functions map the given linguistic terms to numerical values in a defined interval (a.k.a., the universe of discourse). In the second step, based on the frequency of the used linguistic terms, for a given pair of antecedent-consequent concepts one applies a fuzzy implication rule to "activate" the associated membership function. In the third step, one must aggregate all of the "activated" membership functions. Lastly, one applies a defuzzification method to derive a numerical value for the given antecedent-consequent pair.
 
-We first present the implementation of the methods for each of the abovementioned steps. Then we conclude with a defined <em>build()</em> method that algorithmically applies these methods to a given dataset.
+We first present the implementation of the methods for each of the above mentioned steps. Then we conclude with a defined <em>build()</em> method that algorithmically applies these methods to a given dataset.
 We will use the following general imports for the code examples:
 
 ```python
@@ -48,7 +48,7 @@ array([-1.  , -0.95, -0.9 , -0.85, -0.8 , -0.75, -0.7 , -0.65, -0.6 ,
         0.8 ,  0.85,  0.9 ,  0.95,  1.  ])
 ```
 
-Now that we have defined the UD, we can sepcify the linguistic terms that should be mapped to it. To do that, we need to decide on a geometric shape that would best represent the linguistic terms. In many applications, a triangular membership function is used. The triangular membership function requires one to specify the lower and the upper bounds of the triangle (i.e., where the meaning of the given linguistic term is represented the least) and the center of the triangle (i.e., where the meaning of the given linguistic term is fully expressed).
+Now that we have defined the UD, we can specify the linguistic terms that should be mapped to it. To do that, we need to decide on a geometric shape that would best represent the linguistic terms. In many applications, a triangular membership function is used. The triangular membership function requires one to specify the lower and the upper bounds of the triangle (i.e., where the meaning of the given linguistic term is represented the least) and the center of the triangle (i.e., where the meaning of the given linguistic term is fully expressed).
 
 We will use the <em>ExpertFcm.linguistic_terms()</em> setter to set the linguistic terms and the associated parameters for the triangular membership function.
 
@@ -161,7 +161,7 @@ plt.show()
 
 <b>Step 2: Fuzzy Implications</b>
 
-To determine the level of activation of the linguistic terms for a given pair of concepts one must first identify the level of endorsement of the given terms by the participants. This is done by calculating the proportion of the answers to each linguistic term for a given antecedent-consequen. Consider, a case where 50% of the participants (e.g., domain experts) rated the causal impact of an antecedent on the concequent as Positive High, 33% rated it as Positive Very High and the 16% rated it as Positive Medium. Subsequently, a fuzzy implication rule is used to "activate" the corresponding membership functions. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. 
+To determine the level of activation of the linguistic terms for a given pair of concepts one must first identify the level of endorsement of the given terms by the participants. This is done by calculating the proportion of the answers to each linguistic term for a given antecedent-consequent. Consider, a case where 50% of the participants (e.g., domain experts) rated the causal impact of an antecedent on the consequent as Positive High, 33% rated it as Positive Very High and the 16% rated it as Positive Medium. Subsequently, a fuzzy implication rule is used to "activate" the corresponding membership functions. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. Two such rules are often used, namely Mamdani's minimum and Larsen's product implication rule. 
 
 The <a href="https://link.springer.com/chapter/10.1007%2F978-3-642-25859-6_4">Mamdani minimum</a> fuzzy implication rule is expressed as:
 
@@ -220,7 +220,7 @@ axes.set_ylim([0,1])
 ![png](/figures/mamdani.png)
 
 
-As you can see in the figure above, the corrsponding membership functions were cut at the level of endorcement. In contrast, the Larsen's product rule rescales the corresponding membership functions based on the level of endorcement of each term. <a href="https://link.springer.com/chapter/10.1007%2F978-3-642-25859-6_4"> Larsen's</a> product rule can be expressed as:
+As you can see in the figure above, the corresponding membership functions were cut at the level of endorsement. In contrast, the Larsen's product rule rescales the corresponding membership functions based on the level of endorsement of each term. <a href="https://link.springer.com/chapter/10.1007%2F978-3-642-25859-6_4"> Larsen's</a> product rule can be expressed as:
 
 $$
 \mu_{R}(x,y)= \mu_{A}(x)\cdot \mu_{B}(y)
@@ -275,7 +275,7 @@ axes.set_ylim([0,1])
 ![png](/figures/larsen.png)
 
 
-<b>Step 3: Agggregate the Activated Membership Functions</b>
+<b>Step 3: Aggregate the Activated Membership Functions</b>
 
 Now that we have activated the respective membership functions, we need to aggregate them before we can derive the causal weights through the defuzzification process. There are several aggregation methods, namely, $f(x, y)=x + y - x \times y$, the family Einstein Sum $f(x, y) = (x + y)/(1 + x \times y)$ and the family Hamacher Sum $f(x, y) = (x + y - 2 \times x \times y)/(1 - x \times y)$. To aggregate the activated membership functions, we can use the <em>ExpertFcm.aggregate()</em> method.
 
@@ -314,7 +314,7 @@ plt.tight_layout()
 
 <b> Step 4: Defuzzification</b>
 
-Now that we have aggregated the activated membership functions we can apply one of the defuzzification methods to derive the numerical value (i.e., crisp value) for the casual impact of the given antecedent-concequent pair. Among the available defuzzification methods (e.g., bisector, mean of maximum etc.) the most commonly used method is the centroid method (a.k.a. center of gravity). The centroid method for continuous membership functions can be expressed mathematically as:
+Now that we have aggregated the activated membership functions we can apply one of the defuzzification methods to derive the numerical value (i.e., crisp value) for the casual impact of the given antecedent-consequent pair. Among the available defuzzification methods (e.g., bisector, mean of maximum etc.) the most commonly used method is the centroid method (a.k.a. center of gravity). The centroid method for continuous membership functions can be expressed mathematically as:
 
 $$
 x^{*} = \frac{\int\mu_{B}(x) \cdot xdx}{\int\mu_{B}(x)dx}
@@ -372,7 +372,7 @@ plt.tight_layout()
 
 <b>Build FCMs Based on Qualitative Datasets</b>
 
-Now that we have explored how each part of the FCM construction works, we can define the steps one would use to construct FCMs based on qualitative dataests. Data on FCMs are often collected via the means of surveys. During these surveys, the participants are asked to identify the antecedent concequent concepts involved in the system and then rait the causal relationship between these concepts. Consequently, the data includes the concept pairs and the associated linguistic raitings of the participants. Since the data may come in different file formats. The ExpertFcm class provides methods for reading data from .csv, .xlsx and .json files. The corresponding files should follow certain requirments. We will describe the requirments for each file type separately.
+Now that we have explored how each part of the FCM construction works, we can define the steps one would use to construct FCMs based on qualitative datasets. Data on FCMs are often collected via the means of surveys. During these surveys, the participants are asked to identify the antecedent consequent concepts involved in the system and then rate the causal relationship between these concepts. Consequently, the data includes the concept pairs and the associated linguistic ratings of the participants. Since the data may come in different file formats. The ExpertFcm class provides methods for reading data from .csv, .xlsx and .json files. The corresponding files should follow certain requirements. We will describe the requirements for each file type separately.
 
 <b>CSV</b>
 
@@ -388,7 +388,7 @@ Each <em>row</em> in the file represents the inputs of an expert and each cell o
 
 The .xlsx files must have the following columns:
 * From: Representing antecedents
-* To: Representing consequents
+* To: Representing consequent
 * L(n): Representing linguistic term(s) n (e.g., VL, L, M etc.).
 
 ![png](/figures/xlsx.png)
@@ -431,7 +431,7 @@ for .csv files:
 for .xlsx files:
 
         **check_consistency: Bool
-                        check the consistency of raitings across the experts
+                        check the consistency of ratings across the experts
                         default --> False
 
         **engine: str,
@@ -441,7 +441,7 @@ for .xlsx files:
 for .json files:
 
         **check_consistency: Bool
-                                check the consistency of raitings across the experts.
+                                check the consistency of ratings across the experts.
                                 default --> False
 
 Return

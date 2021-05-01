@@ -9,7 +9,7 @@ The fcmpy is Python package for automatically generating causal weights for fuzz
 * ---> (ML TBA)
 
 <a href="expert_based_fcm\expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
-<a href="simulator\simulator.md"> The FcmSimulator module </a> provides methods for runing simulations on top of a given FCM structure. <br>
+<a href="simulator\simulator.md"> The FcmSimulator module </a> provides methods for running simulations on top of a given FCM structure. <br>
 <a href="intervention\intervention.md"> The FcmIntervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
 
 ## Installation
@@ -21,7 +21,7 @@ FCMpy requires python >=3.8.1 and depends on:
 * tqdm>=4.50.2
 * openpyxl
 
-and will soon be available on PyPi! The lastest version can be installed by:
+and will soon be available on PyPi! The latest version can be installed by:
 
 ```
 pip install fcmpy
@@ -149,7 +149,7 @@ OrderedDict([('Expert0',
               3    0   0   0   0    0   0    0   0   0   0    0   C3  C4           1.0)])
 ```
 
-* Calculate the entropy of the expert raitings.
+* Calculate the entropy of the expert ratings.
 
 ```Python
 entropy = fcm.entropy(data)
@@ -168,7 +168,7 @@ C3	    C1	1.251629
 
 * Build FCM connection matrix
 
-Here we build FCM based on the qualitative input data using Larsen's implication method, family maximum aggregation method and the centropid difuzzification method.
+Here we build FCM based on the qualitative input data using Larsen's implication method, family maximum aggregation method and the centroid defuzzification method.
 
 ```Python
 weight_matrix = fcm.build(data=data, implication_method='Larsen')
@@ -219,13 +219,13 @@ init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
 
 * Simulate
 
-Here we run a simulation on top of the defined FCM structure using the sigmoid transfer function and the modified kosko's inference method. The simulation will run $50$ iterations and will stop if the absoulte difference between the concept values between the simulation steps is $\leq 0.001$. The steepness parameter for the sigmoid function is set to $1$. 
+Here we run a simulation on top of the defined FCM structure using the sigmoid transfer function and the modified Kosko's inference method. The simulation will run $50$ iterations and will stop if the absolute difference between the concept values between the simulation steps is $\leq 0.001$. The steepness parameter for the sigmoid function is set to $1$. 
 
 ```Python
 res_mK = sim.simulate(initial_state=init_state, weight_matrix=weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1)
 ```
 ```Python
-Outout[4]
+Output[4]
 
 The values converged in the 7 state (e <= 0.001)
 ```
@@ -331,7 +331,7 @@ inter.equilbriums
 ```
 
 ```Python
-Ouput[8]
+Output[8]
 
     baseline    intervention_1  intervention_2  intervention_3
 C1  0.725885        0.644651        0.715704        0.723417
@@ -351,7 +351,7 @@ inter.comparison_table
 ```
 
 ```Python
-Ouput[9]
+Output[9]
 
     baseline    intervention_1  intervention_2  intervention_3
 C1       0.0      -11.191083       -1.402511       -0.339981

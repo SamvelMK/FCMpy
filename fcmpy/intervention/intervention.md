@@ -38,7 +38,7 @@ weight_matrix = pd.DataFrame([C1,C2, C3, C4, C5, C6, C7, C8],
 init_state = {'C1': 1, 'C2': 1, 'C3': 0, 'C4': 0, 'C5': 0,
                     'C6': 0, 'C7': 0, 'C8': 0}
 ```
-Before specifying intervention cases and runing simulations for each scenario, we need to create the baseline for the comparison (i.e., run a simulation with baseline initial conditions and take the converegd state vector). To do this one needs to call <em>FcmIntervention.initialize()</em> method
+Before specifying intervention cases and running simulations for each scenario, we need to create the baseline for the comparison (i.e., run a simulation with baseline initial conditions and take the converged state vector). To do this one needs to call <em>FcmIntervention.initialize()</em> method
 
 ```Python
 inter.initialize(initial_state=init_state, weight_matrix=weight_matrix, 
@@ -86,7 +86,7 @@ The FcmIntervention class implements the following methods.
 
 <div align='justify'>
 
-To specify an inetrventioncase one need to pass a <em>label</em>, a dictionary (<em>weights</em>) where the keys represent the concepts the intervention has an impact on and the values represent the magnitude of that impact. Lastly, one must specify the effectiveness of the intervention (i.e., <em>effectiveness</em>).
+To specify an intervention case one need to pass a <em>label</em>, a dictionary (<em>weights</em>) where the keys represent the concepts the intervention has an impact on and the values represent the magnitude of that impact. Lastly, one must specify the effectiveness of the intervention (i.e., <em>effectiveness</em>).
 
 </dif>
 
