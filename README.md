@@ -8,9 +8,9 @@ The fcmpy is Python package for automatically generating causal weights for fuzz
 * Intervention
 * ---> (ML TBA)
 
-<a href="fcmpy\expert_based_fcm\expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
-<a href="fcmpy\simulator\simulator.md"> The FcmSimulator module </a> provides methods for runing simulations on top of a given FCM structure. <br>
-<a href="fcmpy\intervention\intervention.md"> The FcmIntervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
+<a href="expert_based_fcm\expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
+<a href="simulator\simulator.md"> The FcmSimulator module </a> provides methods for runing simulations on top of a given FCM structure. <br>
+<a href="intervention\intervention.md"> The FcmIntervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
 
 ## Installation
 FCMpy requires python >=3.8.1 and depends on:
@@ -104,7 +104,7 @@ plt.tight_layout()
 * Read data from a csv file.
 
 ```Python
-data = fcm.read_data(file_path= os.path.abspath('unittests/test_cases/data_test.csv'), 
+data = fcm.read_data(file_path= os.path.abspath('../unittests/test_cases/data_test.csv'), 
                       sep_concept='->', csv_sep=';')
 ```
 
