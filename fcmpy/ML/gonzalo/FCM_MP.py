@@ -98,8 +98,9 @@ class Model(object):
 def cross_val(f, folds=10, **kwargs):
     X, Y, labels = read_arff(f)
     mse = []
+    print(kwargs)
     n_outputs = kwargs["M"]  # output variables
-
+    print(type(kwargs))
     if X.min() < 0. or X.max() > 1.:
         print("Numerical values need to be normalized.")
         raise Exception
@@ -148,39 +149,42 @@ def cross_val(f, folds=10, **kwargs):
     }
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+def run(**params):
+    
+    
+#     parser = argparse.ArgumentParser()
+# #     python FCM_MP.py -i irisnorm.arff
+# #     required=True
+#     parser.add_argument("-i", "--sources", nargs='+', default=['irisnorm.arff'] , help="Dataset directory or arff files")
+#     parser.add_argument("-o", "--output", help="Output csv file", default="./output.csv")
+#     parser.add_argument("-f", "--folds", type=int, help="Number of folds in a (Stratified)K-Fold", default=10)
+#     parser.add_argument("-r", "--rule", type=int, help="Reasoning rule", choices=[0, 1, 2], default=0)
+#     parser.add_argument("-T", type=int, help="FCM Iterations", default=None)
+#     parser.add_argument("-L", type=int, help="For reasoning rule 3", default=0)
+#     parser.add_argument("-M", type=int, help="Output variables", default=1)
+#     parser.add_argument("-b1", type=float, default=1.0)
 
-    parser.add_argument("-i", "--sources", nargs='+', required=True, help="Dataset directory or arff files")
-    parser.add_argument("-o", "--output", help="Output csv file", default="./output.csv")
-    parser.add_argument("-f", "--folds", type=int, help="Number of folds in a (Stratified)K-Fold", default=10)
-    parser.add_argument("-r", "--rule", type=int, help="Reasoning rule", choices=[0, 1, 2], default=0)
-    parser.add_argument("-T", type=int, help="FCM Iterations", default=None)
-    parser.add_argument("-L", type=int, help="For reasoning rule 3", default=0)
-    parser.add_argument("-M", type=int, help="Output variables", default=1)
-    parser.add_argument("-b1", type=float, default=1.0)
+#     parser.add_argument("-p", nargs=4, type=float, help="Params for expit and logit functions",
+#                         metavar=('slope', 'h', 'q', 'v'), default=[1.0, 1.0, 1.0, 1.0])
 
-    parser.add_argument("-p", nargs=4, type=float, help="Params for expit and logit functions",
-                        metavar=('slope', 'h', 'q', 'v'), default=[1.0, 1.0, 1.0, 1.0])
+#     parser.add_argument("-v", "--verbose", action="store_true", help="Verbosity")
 
-    parser.add_argument("-v", "--verbose", action="store_true", help="Verbosity")
+#     args = parser.parse_args()
+    
+    data_sources = [f for f in params['sources'] if f.endswith('.arff')]
 
-    args = parser.parse_args()
+#     dirs = [dir for dir in args.sources if os.path.isdir(dir)]
+#     data_sources += [os.path.join(dir, f) for dir in dirs for f in os.listdir(dir) if f.endswith('.arff')]
+#     data_sources.sort()
 
-    data_sources = [f for f in args.sources if f.endswith('.arff')]
-
-    dirs = [dir for dir in args.sources if os.path.isdir(dir)]
-    data_sources += [os.path.join(dir, f) for dir in dirs for f in os.listdir(dir) if f.endswith('.arff')]
-    data_sources.sort()
-
-    with open(args.output, mode='w') as csv_file:
+    with open("./output.csv", mode='w') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         headers = None
         MSE_hist = []
         for f in data_sources:
             print("Processing {}".format(f))
             # here the model is being created and called
-            result = cross_val(f, **vars(args))
+            result = cross_val(f, **params) # result = cross_val(f, **vars(args))
             print(result)
             if headers is None:
                 headers = list(result.keys())
@@ -189,7 +193,7 @@ if __name__ == "__main__":
             MSE_hist += [result["test_error"]]
             writer.writerow([os.path.basename(f)[:-5]] + [result[k] for k in headers])
 
-            if args.verbose:
+            if params['verbose']:
                 print("MSE: %.4f" % MSE_hist[-1])
 
             csv_file.flush()
@@ -197,3 +201,7 @@ if __name__ == "__main__":
             gc.collect()
 
         print("MSE Average of the model across the %d datasets: %.4f" % (len(data_sources), np.average(MSE_hist)))
+
+if __name__ == "__main__":
+    params = {'L':0, 'M':1, 'T':None, 'b1':1.0, 'folds':10, 'output':'./output.csv', 'p':[1.0, 1.0, 1.0, 1.0], 'rule':0, 'sources':['irisnorm.arff'], 'verbose':False}
+    run(**params)

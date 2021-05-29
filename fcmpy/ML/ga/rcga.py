@@ -67,14 +67,8 @@ class rcga:
         self.generations = np.random.uniform(low=-1, high=1,
                                                 size=(self.population_size, self.nConcepts, self.nConcepts - 1))
 
-    #     def zero_diag_multip(self,a):
-    #         # in order to keep the self connections (node j to j) == 0, the easiest way is to multiply the matrix of ones with 0 diagonal, element wise with each generation
-    #         # in my opinion it should be done before the fitness function is calculated or, in case of the first generation, right after creation
-    #         singl = np.ones((self.nConcepts,self.nConcepts))
-    #         np.fill_diagonal(singl,0)
-    #         multiplier = np.ones((self.population_size,self.nConcepts,self.nConcepts))
-    #         multiplier[:] = singl
-    #         return np.multiply(a,multiplier)
+
+
     # -------------------- FITNESS OF THE GENERATION --------------------------------------
 
     def simulateFCM(self, concepts, weights, nsteps):
@@ -236,17 +230,7 @@ class rcga:
                         chosen = (index, self.generation_fitness[-2, index])
             # choosing crossovers to create new gen
             selection[j] = self.generations[chosen[0]]
-            # self matining is prohibited (according to some articles, such as Muhlenbein1993)
-            # if a pair (0,1),(2,3) and so on... is equal, we choose again
-            # if j % 2 == 1:
-            #     while (np.all(selection[j] == selection[j - 1])):
-            #         candidates = np.random.choice(list(range(self.population_size)), size=self.tournamentK)
-            #         chosen = (0, 0)  # index,fitness
-            #         for index in candidates:
-            #             if self.generation_fitness[-2, index] > chosen[1]:
-            #                 chosen = (index, self.generation_fitness[-2, index])
-            #         # choosing crossovers to create new gen
-            #         selection[j] = self.generations[chosen[0]]
+          
         self.generations = selection
 
     # -------------------- check termination --------------------------------------
@@ -270,7 +254,8 @@ class rcga:
         self.generation_fitness = np.append(self.generation_fitness, np.zeros((1, self.population_size)), axis=0)
 
         # -------------------- RUNNING THE OPTIMIZATION PROCESS  --------------------------------------
-
+ 
+    
     def run(self):
         # run the optimization process
         # if we start from 1st step, randomly initialize first generation
@@ -370,12 +355,32 @@ def simulateFCM(concepts, weights, nsteps):
         out[j] = newvalues
         concepts = newvalues
     return out
+
+def reshapeW(self,W,mode):
+    # mode "in" - reshape to n,n-1
+    # mode "out" - reshape to n,n
+
+    if mode == "in":       
+        out = np.zeros((W.shape[0],W.shape[1]-1))
+        for i in range(W.shape[0]):
+            a = W[:,i].tolist()
+            a.pop(i)
+            out[i] = a 
+        return out
+    if mode == "out":
+        out = np.zeros((W.shape[0],W.shape[1]+1))
+        for i in range(W.shape[0]):
+            a = W[i].tolist() 
+            a.insert(i,0.0)# idx, val
+            out[:,i] = a
+        return out
     
 if __name__ == "__main__":
     # test 1
     # tank case
     # A0 = np.asarray([0.4, 0.707, 0.607, 0.72, 0.3])
-    # W_init = np.asarray([[0.36, 0.45, -0.9, 0], [-0.4, 0, 0, 0.6], [-0.25, 0, 0, 0], [0, 0, 0, 0.3], [0.3, 0, 0, 0]])
+    # W_init = np.asarray([[0,-0.4,-0.25,0,0.3],[0.36,0,0,0,0],[0.45,0,0,0,0],[-0.9,0,0,0,0],[0,0.6,0,0.3,0]])
+
     # testc = 5
     # nofsteps = 2
     #
@@ -384,11 +389,17 @@ if __name__ == "__main__":
     # test 2
     nofsteps = 2
     testc =7
-    W_init = np.asarray([[0,0,0,0.3,0.2,0],[0,0,0,0,0,0],[0.2,0,0,0.15,0.25,0],
-                          [0.3,0.4,0.3,0.35,0.3,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0.45,0.35,0.3,0.4,0.25,0.2]])
-    A0 = np.asarray([0.47, 0.51, 0.13, 0, 1, 0.37, 0.1])
+    
+#     A0 = np.asarray([0.47, 0.51, 0.13, 0, 1, 0.37, 0.1])
+#     W_init1 = np.asarray([[0,0,0.20,0.3,0,0,0.45],
+#         [0,0,0,0.40,0,0,0.35],
+#         [0,0,0,0.30,0,0,0.30],
+#         [0,0,0,0,0,0,0.40],
+#         [0.30,0,0.15,0.35,0,0,0.25],
+#         [0.20,0,0.25,0.30,0,0,0.20],
+#         [0,0,0,0,0,0,0]])
 
-
+    W_init = reshapeW(W_init,'in')
 
     historicaldata = simulateFCM(A0, W_init, nofsteps)
 
