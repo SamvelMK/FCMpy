@@ -80,8 +80,9 @@ class rcga:
         # we skip the diagonal == 0
         # print(self.nConcepts)
         assert weights.shape == (self.nConcepts, self.nConcepts - 1), 'wrong encoding'
-        out = np.zeros((nsteps, concepts.shape[-1]))
-        out[0] = concepts
+        # concepts=np.reshape(concepts,(1,concepts.shape[0]))
+
+
         for j in range(1, nsteps):
             newvalues = np.zeros((concepts.shape[0]))
             for i in range(concepts.shape[0]):
@@ -90,20 +91,21 @@ class rcga:
                 newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
             # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
             # BROOOOOO
-            out[j] = newvalues
+
             concepts = newvalues
-        return out[-1]
+        return concepts
 
     def calculate_fitness(self, weights):
         # calculate fitness for each of the chromosome
         # difference
-        alpha = 1 / (self.numberofsteps - 1) * self.nConcepts  # concepts_for_testing.shape[-1]
+        alpha = 1 / ((self.numberofsteps - 1) * self.nConcepts* self.data.shape[0]) # concepts_for_testing.shape[-1]
         # we are countin L1
         # let's say we have both historical data and fcm, so we can simply simulate with new weights and calculate difference to obtain the fitness function
-
-        error = alpha * np.sum(
-            np.abs(np.subtract(self.data[-1], self.simulateFCM(self.concepts_for_testing, weights, self.numberofsteps))))
-        return 1 / (100 * error + 1)
+        error = 0
+        for row,testcase in zip(self.data,self.concepts_for_testing):
+            error += np.sum(
+                np.abs(np.subtract(row, self.simulateFCM(testcase, weights, self.numberofsteps))))
+        return 1 / (100 * alpha*error + 1)
 
     # -------------------- CROSSOVER  --------------------------------------
 
@@ -323,27 +325,14 @@ class rcga:
         # return the most fitted candidate of last generation
         return self.generations[np.where(self.generation_fitness[-1] == np.max(self.generation_fitness[-1]))]
 
-
-# TODO
-'''
-1. corret selection !!!!!!!!!!!!!!!!!
-1. Other mutation methods
-2. encode differently
-
-3. Do we allow to create all the weights or not ??
-4. Try other norm, maybe L2...? or not sadfjsaonafslnsfal'nsfna
-
-'''
-
-
 def simulateFCM(concepts, weights, nsteps):
     # we have to simulate fcm with current weights in order to calculate fitness function
     # concepts should be given as a np.array((1,nConcepts))
     # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # we skip the diagonal == 0
     # assert weights.shape == (5, 4), 'wrong encoding'
-    out = np.zeros((nsteps, concepts.shape[-1]))
-    out[0] = concepts
+    # out = np.zeros((nsteps, concepts.shape[-1]))
+    # out[0] = concepts1
     for j in range(1, nsteps):
         newvalues = np.zeros((concepts.shape[0]))
         for i in range(concepts.shape[0]):
@@ -352,11 +341,11 @@ def simulateFCM(concepts, weights, nsteps):
             newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
         # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
         # BROOOOOO
-        out[j] = newvalues
+        # out[j] = newvalues
         concepts = newvalues
-    return out
+    return concepts
 
-def reshapeW(self,W,mode):
+def reshapeW(W,mode):
     # mode "in" - reshape to n,n-1
     # mode "out" - reshape to n,n
 
@@ -378,17 +367,17 @@ def reshapeW(self,W,mode):
 if __name__ == "__main__":
     # test 1
     # tank case
-    # A0 = np.asarray([0.4, 0.707, 0.607, 0.72, 0.3])
-    # W_init = np.asarray([[0,-0.4,-0.25,0,0.3],[0.36,0,0,0,0],[0.45,0,0,0,0],[-0.9,0,0,0,0],[0,0.6,0,0.3,0]])
+    A0 = np.asarray([[0.4, 0.707, 0.607, 0.72, 0.3],[0.5, 0.66, 0.56, 0.78, 0.27],[0.6, 0.8, 0.5, 0.77, 0.34],[0.45,0.73,0.65,0.74,0.31]])
+    W_init = np.asarray([[0,-0.4,-0.25,0,0.3],[0.36,0,0,0,0],[0.45,0,0,0,0],[-0.9,0,0,0,0],[0,0.6,0,0.3,0]])
 
-    # testc = 5
+    testc = 5
     # nofsteps = 2
     #
     # historicaldata = simulateFCM(A0,W_init,nofsteps)
 
     # test 2
     nofsteps = 2
-    testc =7
+    # testc =7
     
 #     A0 = np.asarray([0.47, 0.51, 0.13, 0, 1, 0.37, 0.1])
 #     W_init1 = np.asarray([[0,0,0.20,0.3,0,0,0.45],
@@ -400,8 +389,9 @@ if __name__ == "__main__":
 #         [0,0,0,0,0,0,0]])
 
     W_init = reshapeW(W_init,'in')
-
-    historicaldata = simulateFCM(A0, W_init, nofsteps)
+    historicaldata = np.zeros((A0.shape[0],A0.shape[1]))
+    for concepts,i in zip(A0,range(A0.shape[0])):
+        historicaldata[i] = simulateFCM(concepts, W_init, nofsteps)
 
     GA = rcga(testc,A0,historicaldata=historicaldata,numberofsteps=nofsteps)
     W_final = GA.run()
