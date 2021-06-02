@@ -98,9 +98,9 @@ class Model(object):
 def cross_val(f, folds=10, **kwargs):
     X, Y, labels = read_arff(f)
     mse = []
-    print(kwargs)
+    #print(kwargs)
     n_outputs = kwargs["M"]  # output variables
-    print(type(kwargs))
+    #print(type(kwargs))
     if X.min() < 0. or X.max() > 1.:
         print("Numerical values need to be normalized.")
         raise Exception
@@ -201,7 +201,7 @@ def run(**params):
             gc.collect()
 
         print("MSE Average of the model across the %d datasets: %.4f" % (len(data_sources), np.average(MSE_hist)))
-
+    return result 
 if __name__ == "__main__":
     params = {'L':0, 'M':1, 'T':None, 'b1':1.0, 'folds':10, 'output':'./output.csv', 'p':[1.0, 1.0, 1.0, 1.0], 'rule':0, 'sources':['irisnorm.arff'], 'verbose':False}
     run(**params)
