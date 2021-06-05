@@ -97,6 +97,7 @@ class Model(object):
 
 def cross_val(f, folds=10, **kwargs):
     X, Y, labels = read_arff(f)
+    # print(Y)
     mse = []
     #print(kwargs)
     n_outputs = kwargs["M"]  # output variables
