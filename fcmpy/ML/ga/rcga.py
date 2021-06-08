@@ -6,7 +6,8 @@ import copy
 import tqdm.auto as tq
 import matplotlib.pylab as plt
 import matplotlib
-matplotlib.use("TkAgg")
+
+#matplotlib.use("TkAgg") nice feature, do NOT use in the jupyter notebook 
 
 class rcga:
     '''
