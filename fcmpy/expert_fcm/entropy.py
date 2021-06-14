@@ -1,8 +1,4 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
-import pandas as pd 
+import pandas as pd
 import numpy as np 
 from typing import Union
 from fcmpy.expert_fcm.input_validator import type_check

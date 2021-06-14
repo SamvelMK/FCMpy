@@ -1,7 +1,3 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 from fcmpy.simulator.inference import Kosko, ModifiedKosko, Rescaled
 from fcmpy.simulator.transfer import Sigmoid, Bivalent, Trivalent, HyperbolicTangent
 from fcmpy.expert_fcm.methodsStore import GetMethod

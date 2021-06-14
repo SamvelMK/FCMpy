@@ -1,9 +1,5 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import numpy as np
-from expert_fcm.input_validator import type_check
+from fcmpy.expert_fcm.input_validator import type_check
 from abc import ABC, abstractclassmethod  
 
 class FuzzyImplication:

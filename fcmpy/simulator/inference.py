@@ -1,5 +1,5 @@
 import numpy as np
-from simulator.transfer import Transfer
+from fcmpy.simulator.transfer import Transfer
 from abc import ABC, abstractmethod
 
 

@@ -1,9 +1,5 @@
 # Store all the methods here with their respective get methods.
 
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 from fcmpy.expert_fcm.reader import XLSX, CSV, JSON
 from fcmpy.expert_fcm.entropy import InformationEntropy
 from fcmpy.expert_fcm.membership import TriangularMembership, GaussianMembership, TrapezoidalMembership

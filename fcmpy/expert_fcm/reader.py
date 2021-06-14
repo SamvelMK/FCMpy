@@ -1,7 +1,3 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.expert_fcm.checkers import ConsistencyCheck, ColumnsCheck
 import pandas as pd 
