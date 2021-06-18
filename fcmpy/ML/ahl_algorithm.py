@@ -1,3 +1,11 @@
+'''
+For more information and details about the algorithm, please refer to
+
+Active Hebbian learning algorithm
+to train fuzzy cognitive maps
+E.I. Papageorgiou a,*, C.D. Stylios b,1, P.P. Groumpos a
+'''
+
 import numpy as np
 import math
 import copy

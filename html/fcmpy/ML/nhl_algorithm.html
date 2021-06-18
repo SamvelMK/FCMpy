@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>ML.nhl_algorithm API documentation</title>
-<meta name="description" content="" />
+<title>fcmpy.ML.nhl_algorithm API documentation</title>
+<meta name="description" content="For more information and details about the algorithm, please refer to
+Unsupervised learning techniques for fine-tuning fuzzy cognitive
+map causal …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,14 +21,25 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>ML.nhl_algorithm</code></h1>
+<h1 class="title">Module <code>fcmpy.ML.nhl_algorithm</code></h1>
 </header>
 <section id="section-intro">
+<p>For more information and details about the algorithm, please refer to
+Unsupervised learning techniques for fine-tuning fuzzy cognitive
+map causal links
+Elpiniki I. Papageorgioua,, Chrysostomos Styliosb, Peter P. Groumposa</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import numpy as np
+<pre><code class="python">&#39;&#39;&#39;
+For more information and details about the algorithm, please refer to
+Unsupervised learning techniques for fine-tuning fuzzy cognitive
+map causal links
+Elpiniki I. Papageorgioua,, Chrysostomos Styliosb, Peter P. Groumposa
+&#39;&#39;&#39;
+
+import numpy as np
 import math
 import copy
 
@@ -176,7 +189,7 @@ class NHL:
         elif (function == &#39;tangens&#39;) or (function == &#39;tanh&#39;) or (function == &#39;tan&#39;):
             self.A[self.steps, i] = math.tanh(A)
 
-    def update_edge(self, option=None):
+    def update_edge(self):
         &#39;&#39;&#39;
         :param i: index of the target node
         :param j: index of the source node
@@ -189,32 +202,13 @@ class NHL:
         map.update_edge(1,2,option = 2)
         &#39;&#39;&#39;
 
-        # ignoring 0 edges and i = j
-#         if (self.W[0, row,col] == 0) or (row==col):
-#             return
 
-        if (option is None) or (option == 1):
         # according to the original one should A target,source, target -&gt; col,row,col x,y,x Wyx , Wji, same, weights[y + x * A.length] == Wxy , weights[x + y * A.length] = Wyx
 #             print(self.A[-2].shape)
-            sign = np.vectorize(self.sign)  
-            self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
+#         sign = np.vectorize(self.sign)
+        self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
             
-            
-            
-            
-#             self.W[-1] = np.add(self.gamma * self.W[-2],np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n                                 *self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0]))
-#             nhl.W[-1,row,col] = nhl.gamma * nhl.W[-2,row,col] + nhl.n * nhl.A[-2,row] * (nhl.A[-2,col] - nhl.sign(nhl.W[-2,row,col]) * nhl.A[-2,row] * nhl.W[-2,row,col])
 
-        elif option == 3:
-            # Prediction of stroke probability occurrence based on fuzzy cognitive maps weight update
-            # here self.n is called alpha, not sure if its the same alpha, 0 &lt;alpha&lt;0.1
-            
-            self.W[-1] = sign(self.W[0])*(np.add(self.gamma * np.abs(self.W[-2]),np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n*self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0])))
-        
-        elif option == 4:
-             self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,col] * (self.A[-2,row] - self.sign(self.W[-2,row,col]* self.A[-2,col]))
-        elif option == 5:
-            self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,row] * (self.A[-2,row] - self.sign(self.W[-2,row,col]) * self.A[-2,col] *self.W[-2,row,col])
 
             
     def termination(self):
@@ -328,7 +322,7 @@ class NHL:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="ML.nhl_algorithm.NHL"><code class="flex name class">
+<dt id="fcmpy.ML.nhl_algorithm.NHL"><code class="flex name class">
 <span>class <span class="ident">NHL</span></span>
 <span>(</span><span>nConcept, e=None, n=None, gamma=None, h=None, lbd=None, beta=None)</span>
 </code></dt>
@@ -483,7 +477,7 @@ class NHL:
         elif (function == &#39;tangens&#39;) or (function == &#39;tanh&#39;) or (function == &#39;tan&#39;):
             self.A[self.steps, i] = math.tanh(A)
 
-    def update_edge(self, option=None):
+    def update_edge(self):
         &#39;&#39;&#39;
         :param i: index of the target node
         :param j: index of the source node
@@ -496,32 +490,13 @@ class NHL:
         map.update_edge(1,2,option = 2)
         &#39;&#39;&#39;
 
-        # ignoring 0 edges and i = j
-#         if (self.W[0, row,col] == 0) or (row==col):
-#             return
 
-        if (option is None) or (option == 1):
         # according to the original one should A target,source, target -&gt; col,row,col x,y,x Wyx , Wji, same, weights[y + x * A.length] == Wxy , weights[x + y * A.length] = Wyx
 #             print(self.A[-2].shape)
-            sign = np.vectorize(self.sign)  
-            self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
+#         sign = np.vectorize(self.sign)
+        self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
             
-            
-            
-            
-#             self.W[-1] = np.add(self.gamma * self.W[-2],np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n                                 *self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0]))
-#             nhl.W[-1,row,col] = nhl.gamma * nhl.W[-2,row,col] + nhl.n * nhl.A[-2,row] * (nhl.A[-2,col] - nhl.sign(nhl.W[-2,row,col]) * nhl.A[-2,row] * nhl.W[-2,row,col])
 
-        elif option == 3:
-            # Prediction of stroke probability occurrence based on fuzzy cognitive maps weight update
-            # here self.n is called alpha, not sure if its the same alpha, 0 &lt;alpha&lt;0.1
-            
-            self.W[-1] = sign(self.W[0])*(np.add(self.gamma * np.abs(self.W[-2]),np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n*self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0])))
-        
-        elif option == 4:
-             self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,col] * (self.A[-2,row] - self.sign(self.W[-2,row,col]* self.A[-2,col]))
-        elif option == 5:
-            self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,row] * (self.A[-2,row] - self.sign(self.W[-2,row,col]) * self.A[-2,col] *self.W[-2,row,col])
 
             
     def termination(self):
@@ -627,7 +602,7 @@ class NHL:
 </details>
 <h3>Static methods</h3>
 <dl>
-<dt id="ML.nhl_algorithm.NHL.sgn"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.sgn"><code class="name flex">
 <span>def <span class="ident">sgn</span></span>(<span>X)</span>
 </code></dt>
 <dd>
@@ -654,7 +629,7 @@ def sgn(X):
     return W</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.sign"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.sign"><code class="name flex">
 <span>def <span class="ident">sign</span></span>(<span>x)</span>
 </code></dt>
 <dd>
@@ -675,7 +650,7 @@ def sign(x):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="ML.nhl_algorithm.NHL.add_edge"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.add_edge"><code class="name flex">
 <span>def <span class="ident">add_edge</span></span>(<span>self, source, target, value, prt=False)</span>
 </code></dt>
 <dd>
@@ -732,7 +707,7 @@ map.add_edge(1,2,-.8)</p></div>
         print(self.W)</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.add_node"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.add_node"><code class="name flex">
 <span>def <span class="ident">add_node</span></span>(<span>self, node, val, doc=False, doc_values=None, prt=False)</span>
 </code></dt>
 <dd>
@@ -799,7 +774,7 @@ map.add(1,0.8,doc = [0.7,0.86])</p></div>
         print(self.A)</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.f1"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.f1"><code class="name flex">
 <span>def <span class="ident">f1</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -817,7 +792,7 @@ map.add(1,0.8,doc = [0.7,0.86])</p></div>
     return score == len(self.doc)</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.next_step"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.next_step"><code class="name flex">
 <span>def <span class="ident">next_step</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -845,7 +820,7 @@ increasing the dimension of np array for A and W</p></div>
     self.A[self.steps] = np.zeros([1, self.A.shape[1]])</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.sigmoid"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.sigmoid"><code class="name flex">
 <span>def <span class="ident">sigmoid</span></span>(<span>self, x)</span>
 </code></dt>
 <dd>
@@ -876,7 +851,7 @@ increasing the dimension of np array for A and W</p></div>
     return sigm</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.termination"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.termination"><code class="name flex">
 <span>def <span class="ident">termination</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -899,8 +874,8 @@ increasing the dimension of np array for A and W</p></div>
         return False</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.update_edge"><code class="name flex">
-<span>def <span class="ident">update_edge</span></span>(<span>self, option=None)</span>
+<dt id="fcmpy.ML.nhl_algorithm.NHL.update_edge"><code class="name flex">
+<span>def <span class="ident">update_edge</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>:param i: index of the target node
@@ -915,7 +890,7 @@ map.update_edge(1,2,option = 2)</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">    def update_edge(self, option=None):
+<pre><code class="python">    def update_edge(self):
         &#39;&#39;&#39;
         :param i: index of the target node
         :param j: index of the source node
@@ -928,35 +903,14 @@ map.update_edge(1,2,option = 2)</p></div>
         map.update_edge(1,2,option = 2)
         &#39;&#39;&#39;
 
-        # ignoring 0 edges and i = j
-#         if (self.W[0, row,col] == 0) or (row==col):
-#             return
 
-        if (option is None) or (option == 1):
         # according to the original one should A target,source, target -&gt; col,row,col x,y,x Wyx , Wji, same, weights[y + x * A.length] == Wxy , weights[x + y * A.length] = Wyx
 #             print(self.A[-2].shape)
-            sign = np.vectorize(self.sign)  
-            self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
-            
-            
-            
-            
-#             self.W[-1] = np.add(self.gamma * self.W[-2],np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n                                 *self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0]))
-#             nhl.W[-1,row,col] = nhl.gamma * nhl.W[-2,row,col] + nhl.n * nhl.A[-2,row] * (nhl.A[-2,col] - nhl.sign(nhl.W[-2,row,col]) * nhl.A[-2,row] * nhl.W[-2,row,col])
-
-        elif option == 3:
-            # Prediction of stroke probability occurrence based on fuzzy cognitive maps weight update
-            # here self.n is called alpha, not sure if its the same alpha, 0 &lt;alpha&lt;0.1
-            
-            self.W[-1] = sign(self.W[0])*(np.add(self.gamma * np.abs(self.W[-2]),np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n*self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0])))
-        
-        elif option == 4:
-             self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,col] * (self.A[-2,row] - self.sign(self.W[-2,row,col]* self.A[-2,col]))
-        elif option == 5:
-            self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,row] * (self.A[-2,row] - self.sign(self.W[-2,row,col]) * self.A[-2,col] *self.W[-2,row,col])</code></pre>
+#         sign = np.vectorize(self.sign)
+        self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.update_node"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.update_node"><code class="name flex">
 <span>def <span class="ident">update_node</span></span>(<span>self, function=None)</span>
 </code></dt>
 <dd>
@@ -994,7 +948,7 @@ map.update_node(1)</p></div>
             self.A[self.steps, i] = math.tanh(A)</code></pre>
 </details>
 </dd>
-<dt id="ML.nhl_algorithm.NHL.update_termination"><code class="name flex">
+<dt id="fcmpy.ML.nhl_algorithm.NHL.update_termination"><code class="name flex">
 <span>def <span class="ident">update_termination</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1050,25 +1004,25 @@ after each step the function is checking for 2 termination conditions i.e.
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="ML" href="index.html">ML</a></code></li>
+<li><code><a title="fcmpy.ML" href="index.html">fcmpy.ML</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="ML.nhl_algorithm.NHL" href="#ML.nhl_algorithm.NHL">NHL</a></code></h4>
+<h4><code><a title="fcmpy.ML.nhl_algorithm.NHL" href="#fcmpy.ML.nhl_algorithm.NHL">NHL</a></code></h4>
 <ul class="two-column">
-<li><code><a title="ML.nhl_algorithm.NHL.add_edge" href="#ML.nhl_algorithm.NHL.add_edge">add_edge</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.add_node" href="#ML.nhl_algorithm.NHL.add_node">add_node</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.f1" href="#ML.nhl_algorithm.NHL.f1">f1</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.next_step" href="#ML.nhl_algorithm.NHL.next_step">next_step</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.sgn" href="#ML.nhl_algorithm.NHL.sgn">sgn</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.sigmoid" href="#ML.nhl_algorithm.NHL.sigmoid">sigmoid</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.sign" href="#ML.nhl_algorithm.NHL.sign">sign</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.termination" href="#ML.nhl_algorithm.NHL.termination">termination</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.update_edge" href="#ML.nhl_algorithm.NHL.update_edge">update_edge</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.update_node" href="#ML.nhl_algorithm.NHL.update_node">update_node</a></code></li>
-<li><code><a title="ML.nhl_algorithm.NHL.update_termination" href="#ML.nhl_algorithm.NHL.update_termination">update_termination</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.add_edge" href="#fcmpy.ML.nhl_algorithm.NHL.add_edge">add_edge</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.add_node" href="#fcmpy.ML.nhl_algorithm.NHL.add_node">add_node</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.f1" href="#fcmpy.ML.nhl_algorithm.NHL.f1">f1</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.next_step" href="#fcmpy.ML.nhl_algorithm.NHL.next_step">next_step</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.sgn" href="#fcmpy.ML.nhl_algorithm.NHL.sgn">sgn</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.sigmoid" href="#fcmpy.ML.nhl_algorithm.NHL.sigmoid">sigmoid</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.sign" href="#fcmpy.ML.nhl_algorithm.NHL.sign">sign</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.termination" href="#fcmpy.ML.nhl_algorithm.NHL.termination">termination</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.update_edge" href="#fcmpy.ML.nhl_algorithm.NHL.update_edge">update_edge</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.update_node" href="#fcmpy.ML.nhl_algorithm.NHL.update_node">update_node</a></code></li>
+<li><code><a title="fcmpy.ML.nhl_algorithm.NHL.update_termination" href="#fcmpy.ML.nhl_algorithm.NHL.update_termination">update_termination</a></code></li>
 </ul>
 </li>
 </ul>

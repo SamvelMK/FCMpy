@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>ML API documentation</title>
+<title>fcmpy.expert_fcm.input_validator API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,46 +19,115 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Namespace <code>ML</code></h1>
+<h1 class="title">Module <code>fcmpy.expert_fcm.input_validator</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">### Taken and modified from Simon Pirschel at https://aboutsimon.com/blog/2018/04/04/Python3-Type-Checking-And-Data-Validation-With-Type-Hints.html
+
+from typing import get_type_hints#, get_args
+from functools import wraps
+from inspect import getfullargspec
+
+
+def validate_input(obj, **kwargs):
+    hints = get_type_hints(obj)
+
+    # iterate all type hints
+    for attr_name, attr_type in hints.items():
+        if attr_name == &#39;return&#39;:
+            continue
+        if attr_name not in kwargs.keys(): # for default arguments (self)
+            continue
+        else:
+            try:
+                if not isinstance(kwargs[attr_name], attr_type):
+                    raise TypeError(
+                        &#39;Argument %r is not of type %s&#39; % (attr_name, attr_type)
+                    )
+            except: # for Union cases.
+                if not isinstance(kwargs[attr_name], get_args(attr_type)):
+                    raise TypeError(
+                        &#39;Argument %r is not of type %s&#39; % (attr_name, attr_type)
+                    )
+                
+def type_check(decorator):
+    @wraps(decorator)
+    def wrapped_decorator(*args, **kwargs):
+        # translate *args into **kwargs
+        func_args = getfullargspec(decorator)[0]
+        kwargs.update(dict(zip(func_args, args)))
+
+        validate_input(decorator, **kwargs)
+        return decorator(**kwargs)
+
+    return wrapped_decorator</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="ML.FCM_MP" href="FCM_MP.html">ML.FCM_MP</a></code></dt>
-<dd>
-<div class="desc"><p>New Idea: Inverse learning and topology post-optimization in Long-term Cognitive Network</p></div>
-</dd>
-<dt><code class="name"><a title="ML.ahl_algorithm" href="ahl_algorithm.html">ML.ahl_algorithm</a></code></dt>
+<dt id="fcmpy.expert_fcm.input_validator.type_check"><code class="name flex">
+<span>def <span class="ident">type_check</span></span>(<span>decorator)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def type_check(decorator):
+    @wraps(decorator)
+    def wrapped_decorator(*args, **kwargs):
+        # translate *args into **kwargs
+        func_args = getfullargspec(decorator)[0]
+        kwargs.update(dict(zip(func_args, args)))
+
+        validate_input(decorator, **kwargs)
+        return decorator(**kwargs)
+
+    return wrapped_decorator</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="ML.eltcn" href="eltcn.html">ML.eltcn</a></code></dt>
+<dt id="fcmpy.expert_fcm.input_validator.validate_input"><code class="name flex">
+<span>def <span class="ident">validate_input</span></span>(<span>obj, **kwargs)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="ML.graph_net" href="graph_net.html">ML.graph_net</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="ML.nhl_algorithm" href="nhl_algorithm.html">ML.nhl_algorithm</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="ML.rcga" href="rcga.html">ML.rcga</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="ML.runner" href="runner.html">ML.runner</a></code></dt>
-<dd>
-<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_input(obj, **kwargs):
+    hints = get_type_hints(obj)
+
+    # iterate all type hints
+    for attr_name, attr_type in hints.items():
+        if attr_name == &#39;return&#39;:
+            continue
+        if attr_name not in kwargs.keys(): # for default arguments (self)
+            continue
+        else:
+            try:
+                if not isinstance(kwargs[attr_name], attr_type):
+                    raise TypeError(
+                        &#39;Argument %r is not of type %s&#39; % (attr_name, attr_type)
+                    )
+            except: # for Union cases.
+                if not isinstance(kwargs[attr_name], get_args(attr_type)):
+                    raise TypeError(
+                        &#39;Argument %r is not of type %s&#39; % (attr_name, attr_type)
+                    )</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -69,15 +138,15 @@
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="ML.FCM_MP" href="FCM_MP.html">ML.FCM_MP</a></code></li>
-<li><code><a title="ML.ahl_algorithm" href="ahl_algorithm.html">ML.ahl_algorithm</a></code></li>
-<li><code><a title="ML.eltcn" href="eltcn.html">ML.eltcn</a></code></li>
-<li><code><a title="ML.graph_net" href="graph_net.html">ML.graph_net</a></code></li>
-<li><code><a title="ML.nhl_algorithm" href="nhl_algorithm.html">ML.nhl_algorithm</a></code></li>
-<li><code><a title="ML.rcga" href="rcga.html">ML.rcga</a></code></li>
-<li><code><a title="ML.runner" href="runner.html">ML.runner</a></code></li>
+<li><code><a title="fcmpy.expert_fcm" href="index.html">fcmpy.expert_fcm</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fcmpy.expert_fcm.input_validator.type_check" href="#fcmpy.expert_fcm.input_validator.type_check">type_check</a></code></li>
+<li><code><a title="fcmpy.expert_fcm.input_validator.validate_input" href="#fcmpy.expert_fcm.input_validator.validate_input">validate_input</a></code></li>
 </ul>
 </li>
 </ul>

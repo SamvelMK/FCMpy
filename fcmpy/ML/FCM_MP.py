@@ -1,5 +1,10 @@
 """
 New Idea: Inverse learning and topology post-optimization in Long-term Cognitive Network
+reference:Deterministic learning of hybrid Fuzzy Cognitive Maps and network
+reduction approaches
+Gonzalo Nápoles a,b,∗, Agnieszka Jastrzębska c, Carlos Mosquera a, Koen Vanhoof a,
+Władysław Homenda c
+
 """
 from scipy.io import arff
 from sklearn.model_selection import StratifiedKFold
@@ -15,6 +20,12 @@ import gc
 
 
 def read_arff(f, **kwargs):
+    '''
+    reading from arff file
+    :param f: filename
+    :param kwargs: dictionary of paramters
+    :return: X,Y and labels (classes)
+    '''
     data, meta = arff.loadarff(f)
     df = pd.DataFrame(data)  # dataset
     class_att = meta.names()[-1]
@@ -42,10 +53,13 @@ def expit(Y, slope=1.0, h=0.0, q=1.0, v=1.0, **kwargs):
 
 
 class Model(object):
-
+    '''
+    FCM model
+    '''
     def __init__(self, T=None, p=[], rule=0, b1=1.0, L=0, **kwargs):
         self.T, self.p = T, p
         self.weights = None
+        self.p_out = p.copy()
 
         if rule == 0:
             self.rule = lambda a, W, out: logit(np.dot(a, W), *p)
@@ -56,6 +70,15 @@ class Model(object):
                 W.diagonal() * np.sum(out[-L - 1:-1], axis=0), *p)
 
     def train(self, X_train, Y_train, verbose=False, callback=None, **kwargs):
+        '''
+
+        :param X_train: features
+        :param Y_train: labels
+        :param verbose:
+        :param callback:
+        :param kwargs: dict of params
+        writes calculated weight matrix to the self.weights
+        '''
         # W = np.array(pd.DataFrame(X_train).corr())
         W = self.map(X_train)
         W[np.isnan(W)] = 0
@@ -65,13 +88,27 @@ class Model(object):
 
         # pseudo-inverse learning
         W_out = np.dot(np.linalg.pinv(out[-1]), expit(Y_train * (U - L) + L, *self.p))
+        # normalizing the features importance[-1,1]
+        mx = np.max(np.abs(W_out))
+        if mx > 1:
+            W_out /= mx
+            self.p_out[0] *= mx
+            self.p_out[1] /= mx
+        # normalizing weights values importance[-1,1]
+        mxW = np.max(np.abs(W))
+        if mxW > 1:
+            W /= mxW
 
-        # genetic-algorithm learning
-        # W_out = ...
 
         self.weights = W, W_out
 
     def test(self, X, **kwargs):
+        '''
+        testing obtained weight tmatrix
+        :param X:
+        :param kwargs: dict of params
+        :return:
+        '''
         W, W_out = self.weights
         out = [X]
 
@@ -82,6 +119,12 @@ class Model(object):
         return (z - L) / (U - L), out
 
     def map(self, X_train, **kwargs):
+        '''
+        returns Weight matrix
+        :param X_train: features
+        :param kwargs: dict of params
+        :return:
+        '''
         n, m = X_train.shape
         T1 = np.sum(X_train, axis=0)
         T3 = np.sum(X_train ** 2, axis=0)
@@ -96,6 +139,13 @@ class Model(object):
 
 
 def cross_val(f, folds=10, **kwargs):
+    '''
+    cross valudation (loss)
+    :param f: file
+    :param folds: number of fold (def 10)
+    :param kwargs: dict of parameters
+    :return:
+    '''
     X, Y, labels = read_arff(f)
     # print(Y)
     mse = []
@@ -152,25 +202,24 @@ def cross_val(f, folds=10, **kwargs):
 
 def run(**params):
     
-    
-#     parser = argparse.ArgumentParser()
-# #     python FCM_MP.py -i irisnorm.arff
-# #     required=True
-#     parser.add_argument("-i", "--sources", nargs='+', default=['irisnorm.arff'] , help="Dataset directory or arff files")
-#     parser.add_argument("-o", "--output", help="Output csv file", default="./output.csv")
-#     parser.add_argument("-f", "--folds", type=int, help="Number of folds in a (Stratified)K-Fold", default=10)
-#     parser.add_argument("-r", "--rule", type=int, help="Reasoning rule", choices=[0, 1, 2], default=0)
-#     parser.add_argument("-T", type=int, help="FCM Iterations", default=None)
-#     parser.add_argument("-L", type=int, help="For reasoning rule 3", default=0)
-#     parser.add_argument("-M", type=int, help="Output variables", default=1)
-#     parser.add_argument("-b1", type=float, default=1.0)
+    '''
+    runs the whole algorithm for you, the only thing we ask is the parameters. Most of them can be default
+    :param params:
+    params = {
+    'L':0, # For reasoning rule 3", default=0
+    'M':1, #Output variables", default=1
+    'T':None, # FCM Iterations default=None
+    'b1':1.0,  # type=float, default=1.0
+    'folds':10, # Number of folds in a (Stratified)K-Fold"
+     'output':'./output.csv', # Output csv file", default="./output.csv"
+     'p':[1.0, 1.0, 1.0, 1.0],
+     'rule':0, # Reasoning rule", choices=[0, 1, 2], default=0
+     'sources':['irisnorm.arff'],
+     'verbose':False # store_true, verbosity }
 
-#     parser.add_argument("-p", nargs=4, type=float, help="Params for expit and logit functions",
-#                         metavar=('slope', 'h', 'q', 'v'), default=[1.0, 1.0, 1.0, 1.0])
+    :return:
+    '''
 
-#     parser.add_argument("-v", "--verbose", action="store_true", help="Verbosity")
-
-#     args = parser.parse_args()
     
     data_sources = [f for f in params['sources'] if f.endswith('.arff')]
 

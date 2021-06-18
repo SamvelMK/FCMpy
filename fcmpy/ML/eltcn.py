@@ -1,3 +1,10 @@
+'''
+For more information and details about the algorithm, please refer to
+Pattern classification with Evolving Long-term Cognitive
+Networks
+Gonzalo Nápoles a,b,⇑, Agnieszka Jastrze˛bska c, Yamisleydi Salgueiro d
+'''
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -17,6 +24,9 @@ warnings.filterwarnings("ignore")
 
 
 class WeightRegularizer(tf.keras.regularizers.Regularizer):
+    '''
+    regularizing the wieghts
+    '''
 
     def __init__(self, coef, mask):
         self.coef = coef
@@ -33,6 +43,15 @@ class WeightRegularizer(tf.keras.regularizers.Regularizer):
     
 
 def run_model(file, layers=5, folds=5, epochs=1000, verbose=True, regularize=True):
+    '''
+    :param file: expects optimize .arff values with features vals [0,1]
+    :param layers: numbers of nn layers (def 5)
+    :param folds: how many validation folds (def 5)
+    :param epochs: number of epochs (def 1000)
+    :param verbose:
+    :param regularize:
+    :return: accuracy and weights matrix
+    '''
     X, y, out = read_arff(file)
     hidden = len(X[0])
     
@@ -94,6 +113,13 @@ def coefficients(matrix):
     return coef, mask
 
 def plot_loss_weights(history, model, mask):
+    '''
+    plotting bar plots of individual weights for fully connected FCM
+    :param history: data used to plot
+    :param model: created model
+    :param mask:
+    :return:
+    '''
     fig1, axes1 = plt.subplots(figsize=(15,5))
     fig2, axes2 = plt.subplots(figsize=(15,5))
         
@@ -120,6 +146,13 @@ def plot_loss_weights(history, model, mask):
     axes2.set(ylabel='value across layers', xlabel='weight')
     
 def error(weights, coef, mask):
+    '''
+    returns error of the model for predicting correct classes
+    :param weights: weight matrix
+    :param coef: coefficients
+    :param mask:
+    :return: Error
+    '''
     if(np.sum(mask) == 0):
         return 0
     
@@ -143,8 +176,13 @@ def column(matrix, i):
     return [row[i] for row in matrix]
     
 def read_arff(file):
-    # reading from .arff file
-    # consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+    '''
+    reading from .arff file
+    consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+    :param file:
+    :return:
+    '''
+
     from scipy.io import arff
     data, meta = arff.loadarff(file)
     frame = pd.DataFrame(data)
@@ -157,6 +195,12 @@ def read_arff(file):
     return X, y, len(labels)    
     
 def run(path):
+    '''
+    takes a directory where data file is (in .arff format) and do the whole calculation for you :)
+    return fully connected FCM n x n for each fold and weight matrix n x nclasses
+    :param path:
+    :return:
+    '''
     import os
     files = os.listdir(path)
     print(f"file in your data directory {files}. make sure they are .arff files!")
@@ -166,6 +210,16 @@ def run(path):
         if ".arff" not in file:
             print(f"{file} is not an .arff file")
         acc, ent, weights = run_model(path + "/" + file)
+        # optimizing weights values for them to stay between [-1,1]
+        for i in range(len(weights)):
+
+            # print(np.abs(weights)[i])
+            mx = np.max(np.abs(weights)[i])
+            # print(f'max {mx}')
+            if mx > 1:
+                weights[i] /= mx
+                # weights[i] *= mx
+                # weights /= mx
         results.append({'acc':acc,'ent':ent,'weights':weights})
         print(file.replace('.arff','') + "," + str(acc)+ "," + str(ent))
     return results
@@ -173,5 +227,5 @@ def run(path):
 
 if __name__=='__main__':
 
-    run_exp('data')
+    print(run('data'))
     print("Done!")

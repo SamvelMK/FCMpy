@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>ML.eltcn API documentation</title>
-<meta name="description" content="" />
+<title>fcmpy.ML.eltcn API documentation</title>
+<meta name="description" content="For more information and details about the algorithm, please refer to
+Pattern classification with Evolving Long-term Cognitive
+Networks
+Gonzalo …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,14 +22,25 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>ML.eltcn</code></h1>
+<h1 class="title">Module <code>fcmpy.ML.eltcn</code></h1>
 </header>
 <section id="section-intro">
+<p>For more information and details about the algorithm, please refer to
+Pattern classification with Evolving Long-term Cognitive
+Networks
+Gonzalo Nápoles a,b,⇑, Agnieszka Jastrze˛bska c, Yamisleydi Salgueiro d</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import numpy as np
+<pre><code class="python">&#39;&#39;&#39;
+For more information and details about the algorithm, please refer to
+Pattern classification with Evolving Long-term Cognitive
+Networks
+Gonzalo Nápoles a,b,⇑, Agnieszka Jastrze˛bska c, Yamisleydi Salgueiro d
+&#39;&#39;&#39;
+
+import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn import datasets
@@ -45,6 +59,9 @@ warnings.filterwarnings(&#34;ignore&#34;)
 
 
 class WeightRegularizer(tf.keras.regularizers.Regularizer):
+    &#39;&#39;&#39;
+    regularizing the wieghts
+    &#39;&#39;&#39;
 
     def __init__(self, coef, mask):
         self.coef = coef
@@ -61,6 +78,15 @@ class WeightRegularizer(tf.keras.regularizers.Regularizer):
     
 
 def run_model(file, layers=5, folds=5, epochs=1000, verbose=True, regularize=True):
+    &#39;&#39;&#39;
+    :param file: expects optimize .arff values with features vals [0,1]
+    :param layers: numbers of nn layers (def 5)
+    :param folds: how many validation folds (def 5)
+    :param epochs: number of epochs (def 1000)
+    :param verbose:
+    :param regularize:
+    :return: accuracy and weights matrix
+    &#39;&#39;&#39;
     X, y, out = read_arff(file)
     hidden = len(X[0])
     
@@ -122,6 +148,13 @@ def coefficients(matrix):
     return coef, mask
 
 def plot_loss_weights(history, model, mask):
+    &#39;&#39;&#39;
+    plotting bar plots of individual weights for fully connected FCM
+    :param history: data used to plot
+    :param model: created model
+    :param mask:
+    :return:
+    &#39;&#39;&#39;
     fig1, axes1 = plt.subplots(figsize=(15,5))
     fig2, axes2 = plt.subplots(figsize=(15,5))
         
@@ -148,6 +181,13 @@ def plot_loss_weights(history, model, mask):
     axes2.set(ylabel=&#39;value across layers&#39;, xlabel=&#39;weight&#39;)
     
 def error(weights, coef, mask):
+    &#39;&#39;&#39;
+    returns error of the model for predicting correct classes
+    :param weights: weight matrix
+    :param coef: coefficients
+    :param mask:
+    :return: Error
+    &#39;&#39;&#39;
     if(np.sum(mask) == 0):
         return 0
     
@@ -171,8 +211,13 @@ def column(matrix, i):
     return [row[i] for row in matrix]
     
 def read_arff(file):
-    # reading from .arff file
-    # consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+    &#39;&#39;&#39;
+    reading from .arff file
+    consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+    :param file:
+    :return:
+    &#39;&#39;&#39;
+
     from scipy.io import arff
     data, meta = arff.loadarff(file)
     frame = pd.DataFrame(data)
@@ -185,6 +230,12 @@ def read_arff(file):
     return X, y, len(labels)    
     
 def run(path):
+    &#39;&#39;&#39;
+    takes a directory where data file is (in .arff format) and do the whole calculation for you :)
+    return fully connected FCM n x n for each fold and weight matrix n x nclasses
+    :param path:
+    :return:
+    &#39;&#39;&#39;
     import os
     files = os.listdir(path)
     print(f&#34;file in your data directory {files}. make sure they are .arff files!&#34;)
@@ -201,7 +252,7 @@ def run(path):
 
 if __name__==&#39;__main__&#39;:
 
-    run_exp(&#39;data&#39;)
+    run(&#39;data&#39;)
     print(&#34;Done!&#34;)</code></pre>
 </details>
 </section>
@@ -212,7 +263,7 @@ if __name__==&#39;__main__&#39;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="ML.eltcn.coefficients"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.coefficients"><code class="name flex">
 <span>def <span class="ident">coefficients</span></span>(<span>matrix)</span>
 </code></dt>
 <dd>
@@ -243,7 +294,7 @@ if __name__==&#39;__main__&#39;:
     return coef, mask</code></pre>
 </details>
 </dd>
-<dt id="ML.eltcn.column"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.column"><code class="name flex">
 <span>def <span class="ident">column</span></span>(<span>matrix, i)</span>
 </code></dt>
 <dd>
@@ -256,16 +307,27 @@ if __name__==&#39;__main__&#39;:
     return [row[i] for row in matrix]</code></pre>
 </details>
 </dd>
-<dt id="ML.eltcn.error"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.error"><code class="name flex">
 <span>def <span class="ident">error</span></span>(<span>weights, coef, mask)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>returns error of the model for predicting correct classes
+:param weights: weight matrix
+:param coef: coefficients
+:param mask:
+:return: Error</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def error(weights, coef, mask):
+    &#39;&#39;&#39;
+    returns error of the model for predicting correct classes
+    :param weights: weight matrix
+    :param coef: coefficients
+    :param mask:
+    :return: Error
+    &#39;&#39;&#39;
     if(np.sum(mask) == 0):
         return 0
     
@@ -286,16 +348,27 @@ if __name__==&#39;__main__&#39;:
     return np.sum(array)/count</code></pre>
 </details>
 </dd>
-<dt id="ML.eltcn.plot_loss_weights"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.plot_loss_weights"><code class="name flex">
 <span>def <span class="ident">plot_loss_weights</span></span>(<span>history, model, mask)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>plotting bar plots of individual weights for fully connected FCM
+:param history: data used to plot
+:param model: created model
+:param mask:
+:return:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def plot_loss_weights(history, model, mask):
+    &#39;&#39;&#39;
+    plotting bar plots of individual weights for fully connected FCM
+    :param history: data used to plot
+    :param model: created model
+    :param mask:
+    :return:
+    &#39;&#39;&#39;
     fig1, axes1 = plt.subplots(figsize=(15,5))
     fig2, axes2 = plt.subplots(figsize=(15,5))
         
@@ -322,18 +395,26 @@ if __name__==&#39;__main__&#39;:
     axes2.set(ylabel=&#39;value across layers&#39;, xlabel=&#39;weight&#39;)</code></pre>
 </details>
 </dd>
-<dt id="ML.eltcn.read_arff"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.read_arff"><code class="name flex">
 <span>def <span class="ident">read_arff</span></span>(<span>file)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>reading from .arff file
+consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+:param file:
+:return:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def read_arff(file):
-    # reading from .arff file
-    # consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+    &#39;&#39;&#39;
+    reading from .arff file
+    consistency, in the MP algorithm we take the arff without header, so we cannot req header here
+    :param file:
+    :return:
+    &#39;&#39;&#39;
+
     from scipy.io import arff
     data, meta = arff.loadarff(file)
     frame = pd.DataFrame(data)
@@ -346,16 +427,25 @@ if __name__==&#39;__main__&#39;:
     return X, y, len(labels)    </code></pre>
 </details>
 </dd>
-<dt id="ML.eltcn.run"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.run"><code class="name flex">
 <span>def <span class="ident">run</span></span>(<span>path)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>takes a directory where data file is (in .arff format) and do the whole calculation for you :)
+return fully connected FCM n x n for each fold and weight matrix n x nclasses
+:param path:
+:return:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run(path):
+    &#39;&#39;&#39;
+    takes a directory where data file is (in .arff format) and do the whole calculation for you :)
+    return fully connected FCM n x n for each fold and weight matrix n x nclasses
+    :param path:
+    :return:
+    &#39;&#39;&#39;
     import os
     files = os.listdir(path)
     print(f&#34;file in your data directory {files}. make sure they are .arff files!&#34;)
@@ -370,16 +460,31 @@ if __name__==&#39;__main__&#39;:
     return results</code></pre>
 </details>
 </dd>
-<dt id="ML.eltcn.run_model"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.run_model"><code class="name flex">
 <span>def <span class="ident">run_model</span></span>(<span>file, layers=5, folds=5, epochs=1000, verbose=True, regularize=True)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>:param file: expects optimize .arff values with features vals [0,1]
+:param layers: numbers of nn layers (def 5)
+:param folds: how many validation folds (def 5)
+:param epochs: number of epochs (def 1000)
+:param verbose:
+:param regularize:
+:return: accuracy and weights matrix</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_model(file, layers=5, folds=5, epochs=1000, verbose=True, regularize=True):
+    &#39;&#39;&#39;
+    :param file: expects optimize .arff values with features vals [0,1]
+    :param layers: numbers of nn layers (def 5)
+    :param folds: how many validation folds (def 5)
+    :param epochs: number of epochs (def 1000)
+    :param verbose:
+    :param regularize:
+    :return: accuracy and weights matrix
+    &#39;&#39;&#39;
     X, y, out = read_arff(file)
     hidden = len(X[0])
     
@@ -425,113 +530,20 @@ if __name__==&#39;__main__&#39;:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="ML.eltcn.WeightRegularizer"><code class="flex name class">
+<dt id="fcmpy.ML.eltcn.WeightRegularizer"><code class="flex name class">
 <span>class <span class="ident">WeightRegularizer</span></span>
 <span>(</span><span>coef, mask)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Regularizer base class.</p>
-<p>Regularizers allow you to apply penalties on layer parameters or layer
-activity during optimization. These penalties are summed into the loss
-function that the network optimizes.</p>
-<p>Regularization penalties are applied on a per-layer basis. The exact API will
-depend on the layer, but many layers (e.g. <code>Dense</code>, <code>Conv1D</code>, <code>Conv2D</code> and
-<code>Conv3D</code>) have a unified API.</p>
-<p>These layers expose 3 keyword arguments:</p>
-<ul>
-<li><code>kernel_regularizer</code>: Regularizer to apply a penalty on the layer's kernel</li>
-<li><code>bias_regularizer</code>: Regularizer to apply a penalty on the layer's bias</li>
-<li><code>activity_regularizer</code>: Regularizer to apply a penalty on the layer's output</li>
-</ul>
-<p>All layers (including custom layers) expose <code>activity_regularizer</code> as a
-settable property, whether or not it is in the constructor arguments.</p>
-<p>The value returned by the <code>activity_regularizer</code> is divided by the input
-batch size so that the relative weighting between the weight regularizers and
-the activity regularizers does not change with the batch size.</p>
-<p>You can access a layer's regularization penalties by calling <code>layer.losses</code>
-after calling the layer on inputs.</p>
-<h2 id="example">Example</h2>
-<pre><code class="python-repl">&gt;&gt;&gt; layer = tf.keras.layers.Dense(
-...     5, input_dim=5,
-...     kernel_initializer='ones',
-...     kernel_regularizer=tf.keras.regularizers.l1(0.01),
-...     activity_regularizer=tf.keras.regularizers.l2(0.01))
-&gt;&gt;&gt; tensor = tf.ones(shape=(5, 5)) * 2.0
-&gt;&gt;&gt; out = layer(tensor)
-</code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; # The kernel regularization term is 0.25
-&gt;&gt;&gt; # The activity regularization term (after dividing by the batch size) is 5
-&gt;&gt;&gt; tf.math.reduce_sum(layer.losses)
-&lt;tf.Tensor: shape=(), dtype=float32, numpy=5.25&gt;
-</code></pre>
-<h2 id="available-penalties">Available penalties</h2>
-<pre><code class="python">tf.keras.regularizers.l1(0.3)  # L1 Regularization Penalty
-tf.keras.regularizers.l2(0.1)  # L2 Regularization Penalty
-tf.keras.regularizers.l1_l2(l1=0.01, l2=0.01)  # L1 + L2 penalties
-</code></pre>
-<h2 id="directly-calling-a-regularizer">Directly calling a regularizer</h2>
-<p>Compute a regularization loss on a tensor by directly calling a regularizer
-as if it is a one-argument function.</p>
-<p>E.g.</p>
-<pre><code class="python-repl">&gt;&gt;&gt; regularizer = tf.keras.regularizers.l2(2.)
-&gt;&gt;&gt; tensor = tf.ones(shape=(5, 5))
-&gt;&gt;&gt; regularizer(tensor)
-&lt;tf.Tensor: shape=(), dtype=float32, numpy=50.0&gt;
-</code></pre>
-<h2 id="developing-new-regularizers">Developing new regularizers</h2>
-<p>Any function that takes in a weight matrix and returns a scalar
-tensor can be used as a regularizer, e.g.:</p>
-<pre><code class="python-repl">&gt;&gt;&gt; @tf.keras.utils.register_keras_serializable(package='Custom', name='l1')
-... def l1_reg(weight_matrix):
-...    return 0.01 * tf.math.reduce_sum(tf.math.abs(weight_matrix))
-...
-&gt;&gt;&gt; layer = tf.keras.layers.Dense(5, input_dim=5,
-...     kernel_initializer='ones', kernel_regularizer=l1_reg)
-&gt;&gt;&gt; tensor = tf.ones(shape=(5, 5))
-&gt;&gt;&gt; out = layer(tensor)
-&gt;&gt;&gt; layer.losses
-[&lt;tf.Tensor: shape=(), dtype=float32, numpy=0.25&gt;]
-</code></pre>
-<p>Alternatively, you can write your custom regularizers in an
-object-oriented way by extending this regularizer base class, e.g.:</p>
-<pre><code class="python-repl">&gt;&gt;&gt; @tf.keras.utils.register_keras_serializable(package='Custom', name='l2')
-... class L2Regularizer(tf.keras.regularizers.Regularizer):
-...   def __init__(self, l2=0.):  # pylint: disable=redefined-outer-name
-...     self.l2 = l2
-...
-...   def __call__(self, x):
-...     return self.l2 * tf.math.reduce_sum(tf.math.square(x))
-...
-...   def get_config(self):
-...     return {'l2': float(self.l2)}
-...
-&gt;&gt;&gt; layer = tf.keras.layers.Dense(
-...   5, input_dim=5, kernel_initializer='ones',
-...   kernel_regularizer=L2Regularizer(l2=0.5))
-</code></pre>
-<pre><code class="python-repl">&gt;&gt;&gt; tensor = tf.ones(shape=(5, 5))
-&gt;&gt;&gt; out = layer(tensor)
-&gt;&gt;&gt; layer.losses
-[&lt;tf.Tensor: shape=(), dtype=float32, numpy=12.5&gt;]
-</code></pre>
-<h3 id="a-note-on-serialization-and-deserialization">A note on serialization and deserialization:</h3>
-<p>Registering the regularizers as serializable is optional if you are just
-training and executing models, exporting to and from SavedModels, or saving
-and loading weight checkpoints.</p>
-<p>Registration is required for Keras <code>model_to_estimator</code>, saving and
-loading models to HDF5 formats, Keras model cloning, some visualization
-utilities, and exporting models to and from JSON. If using this functionality,
-you must make sure any python process running your model has also defined
-and registered your custom regularizer.</p>
-<p><code>tf.keras.utils.register_keras_serializable</code> is only available in TF 2.1 and
-beyond. In earlier versions of TensorFlow you must pass your custom
-regularizer to the <code>custom_objects</code> argument of methods that expect custom
-regularizers to be registered as serializable.</p></div>
+<div class="desc"><p>regularizing the wieghts</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class WeightRegularizer(tf.keras.regularizers.Regularizer):
+    &#39;&#39;&#39;
+    regularizing the wieghts
+    &#39;&#39;&#39;
 
     def __init__(self, coef, mask):
         self.coef = coef
@@ -552,7 +564,7 @@ regularizers to be registered as serializable.</p></div>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="ML.eltcn.WeightRegularizer.get_config"><code class="name flex">
+<dt id="fcmpy.ML.eltcn.WeightRegularizer.get_config"><code class="name flex">
 <span>def <span class="ident">get_config</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -589,26 +601,26 @@ utilities, and exporting models to and from JSON.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="ML" href="index.html">ML</a></code></li>
+<li><code><a title="fcmpy.ML" href="index.html">fcmpy.ML</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="two-column">
-<li><code><a title="ML.eltcn.coefficients" href="#ML.eltcn.coefficients">coefficients</a></code></li>
-<li><code><a title="ML.eltcn.column" href="#ML.eltcn.column">column</a></code></li>
-<li><code><a title="ML.eltcn.error" href="#ML.eltcn.error">error</a></code></li>
-<li><code><a title="ML.eltcn.plot_loss_weights" href="#ML.eltcn.plot_loss_weights">plot_loss_weights</a></code></li>
-<li><code><a title="ML.eltcn.read_arff" href="#ML.eltcn.read_arff">read_arff</a></code></li>
-<li><code><a title="ML.eltcn.run" href="#ML.eltcn.run">run</a></code></li>
-<li><code><a title="ML.eltcn.run_model" href="#ML.eltcn.run_model">run_model</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.coefficients" href="#fcmpy.ML.eltcn.coefficients">coefficients</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.column" href="#fcmpy.ML.eltcn.column">column</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.error" href="#fcmpy.ML.eltcn.error">error</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.plot_loss_weights" href="#fcmpy.ML.eltcn.plot_loss_weights">plot_loss_weights</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.read_arff" href="#fcmpy.ML.eltcn.read_arff">read_arff</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.run" href="#fcmpy.ML.eltcn.run">run</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.run_model" href="#fcmpy.ML.eltcn.run_model">run_model</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="ML.eltcn.WeightRegularizer" href="#ML.eltcn.WeightRegularizer">WeightRegularizer</a></code></h4>
+<h4><code><a title="fcmpy.ML.eltcn.WeightRegularizer" href="#fcmpy.ML.eltcn.WeightRegularizer">WeightRegularizer</a></code></h4>
 <ul class="">
-<li><code><a title="ML.eltcn.WeightRegularizer.get_config" href="#ML.eltcn.WeightRegularizer.get_config">get_config</a></code></li>
+<li><code><a title="fcmpy.ML.eltcn.WeightRegularizer.get_config" href="#fcmpy.ML.eltcn.WeightRegularizer.get_config">get_config</a></code></li>
 </ul>
 </li>
 </ul>

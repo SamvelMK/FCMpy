@@ -1,3 +1,10 @@
+'''
+For more information and details about the algorithm, please refer to
+Unsupervised learning techniques for fine-tuning fuzzy cognitive
+map causal links
+Elpiniki I. Papageorgioua,, Chrysostomos Styliosb, Peter P. Groumposa
+'''
+
 import numpy as np
 import math
 import copy
@@ -148,7 +155,7 @@ class NHL:
         elif (function == 'tangens') or (function == 'tanh') or (function == 'tan'):
             self.A[self.steps, i] = math.tanh(A)
 
-    def update_edge(self, option=None):
+    def update_edge(self):
         '''
         :param i: index of the target node
         :param j: index of the source node
@@ -161,32 +168,13 @@ class NHL:
         map.update_edge(1,2,option = 2)
         '''
 
-        # ignoring 0 edges and i = j
-#         if (self.W[0, row,col] == 0) or (row==col):
-#             return
 
-        if (option is None) or (option == 1):
         # according to the original one should A target,source, target -> col,row,col x,y,x Wyx , Wji, same, weights[y + x * A.length] == Wxy , weights[x + y * A.length] = Wyx
 #             print(self.A[-2].shape)
-            sign = np.vectorize(self.sign)  
-            self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
+#         sign = np.vectorize(self.sign)
+        self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
             
-            
-            
-            
-#             self.W[-1] = np.add(self.gamma * self.W[-2],np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n                                 *self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0]))
-#             nhl.W[-1,row,col] = nhl.gamma * nhl.W[-2,row,col] + nhl.n * nhl.A[-2,row] * (nhl.A[-2,col] - nhl.sign(nhl.W[-2,row,col]) * nhl.A[-2,row] * nhl.W[-2,row,col])
 
-        elif option == 3:
-            # Prediction of stroke probability occurrence based on fuzzy cognitive maps weight update
-            # here self.n is called alpha, not sure if its the same alpha, 0 <alpha<0.1
-            
-            self.W[-1] = sign(self.W[0])*(np.add(self.gamma * np.abs(self.W[-2]),np.subtract(np.multiply(self.n *self.A[-2],self.A[-2].T),np.multiply(self.n*self.A[-2],np.multiply(self.W[-2],self.A[-2]))*np.abs(sign(self.W[0]))*sign(self.W[0])))*np.abs(sign(self.W[0])))
-        
-        elif option == 4:
-             self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,col] * (self.A[-2,row] - self.sign(self.W[-2,row,col]* self.A[-2,col]))
-        elif option == 5:
-            self.W[-1,row,col] =  self.gamma* self.W[-2,row,col] + self.n * self.A[-2,row] * (self.A[-2,row] - self.sign(self.W[-2,row,col]) * self.A[-2,col] *self.W[-2,row,col])
 
             
     def termination(self):
