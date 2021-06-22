@@ -190,10 +190,12 @@ class AHL:
         # update parameters (each step, if mode is not == constant)
         if self.mode != 'constant':
             self.update_hyperparams()
-            
+        multiplyer = np.ones((self.nConcept,self.nConcept))
+        np.fill_diagonal(multiplyer,val=0)
+    
         
             
-        self.W[-1] = (1-self.gamma)*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.W[-2]*(np.ones((self.nConcept,self.nConcept)))*self.A[-2])
+        self.W[-1] = ((1-self.gamma)*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-multiplyer*self.W[-2]*(np.ones((self.nConcept,self.nConcept)))*self.A[-2]))*multiplyer
             
                         
     def termination(self):
