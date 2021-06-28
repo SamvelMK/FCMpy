@@ -196,7 +196,8 @@ def cross_val(f, folds=10, **kwargs):
         "train_error": train_error,
         "test_error": test_error,
         "training_time": elapsed.total_seconds() / folds,
-        "weights":model.weights
+        "weights":model.weights,
+        
     }
 
 
@@ -226,7 +227,7 @@ def run(**params):
 #     dirs = [dir for dir in args.sources if os.path.isdir(dir)]
 #     data_sources += [os.path.join(dir, f) for dir in dirs for f in os.listdir(dir) if f.endswith('.arff')]
 #     data_sources.sort()
-
+    results = []
     with open("./output.csv", mode='w') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         headers = None
@@ -236,13 +237,15 @@ def run(**params):
             # here the model is being created and called
             result = cross_val(f, **params) # result = cross_val(f, **vars(args))
             print(result)
+            result['filename'] = f
+            results.append(result)
             if headers is None:
                 headers = list(result.keys())
                 writer.writerow(["name"] + headers)
 
             MSE_hist += [result["test_error"]]
             writer.writerow([os.path.basename(f)[:-5]] + [result[k] for k in headers])
-
+            
             if params['verbose']:
                 print("MSE: %.4f" % MSE_hist[-1])
 
@@ -251,7 +254,7 @@ def run(**params):
             gc.collect()
 
         print("MSE Average of the model across the %d datasets: %.4f" % (len(data_sources), np.average(MSE_hist)))
-    return result 
+    return results 
 if __name__ == "__main__":
     params = {'L':0, 'M':1, 'T':None, 'b1':1.0, 'folds':10, 'output':'./output.csv', 'p':[1.0, 1.0, 1.0, 1.0], 'rule':0, 'sources':['irisnorm.arff'], 'verbose':False}
     run(**params)
