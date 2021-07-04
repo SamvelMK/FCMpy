@@ -1,12 +1,9 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
+from fcmpy.simulator.convergence import AbsDifference
 from fcmpy.simulator.inference import Kosko, ModifiedKosko, Rescaled
 from fcmpy.simulator.transfer import Sigmoid, Bivalent, Trivalent, HyperbolicTangent
+from fcmpy.simulator.convergence import AbsDifference
 from fcmpy.expert_fcm.methodsStore import GetMethod
 from fcmpy.expert_fcm.input_validator import type_check
-from abc import ABC, abstractmethod
 
 class InferenceStore(GetMethod):
     
@@ -41,3 +38,19 @@ class TransferStore(GetMethod):
             return TransferStore.__methods[method]
         else:
             raise ValueError('The transfer method is not defined.')
+
+class ConvergenceStore(GetMethod):
+
+    """
+    Methods for checking the convergence.
+    """
+
+    __methods = {'absDiff' : AbsDifference}
+
+    @staticmethod
+    @type_check
+    def get(method:str):
+        if method in ConvergenceStore.__methods.keys():
+            return ConvergenceStore.__methods[method]
+        else:
+            raise ValueError('The convergence method is not defined.')
