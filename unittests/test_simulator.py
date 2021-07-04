@@ -1,8 +1,3 @@
-import sys, os
-
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import unittest
 from fcmpy.simulator.simulator import FcmSimulator
 import pandas as pd 
@@ -51,6 +46,14 @@ class TestSimulator(unittest.TestCase):
         self.weight_matrix['C1'] = 0
         res_k = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='kosko', thresh=0.001, iterations=50, l=1)
         self.assertEqual(len(set(res_k['C1'])), 1)
+
+    def test_outputConcepts(self):
+        out = ['C4', 'C1']
+        res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1, output_concepts=out)
+        _ = res_mK[out]
+        residual = max(abs(_.loc[len(_)-1] - _.loc[len(_) - 2]))
+        self.assertLessEqual(residual, 0.001)
+        self.assertEqual([0.812650, 0.726125], list(_.loc[len(_)-1].values.round(6)))
 
 if __name__ == '__main__':
     unittest.main()
