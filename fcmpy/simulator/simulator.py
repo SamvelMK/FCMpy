@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from fcmpy.simulator.methodStore import InferenceStore, TransferStore, ConvergenceStore
+from fcmpy.store.methodsStore import InferenceStore, TransferStore, ConvergenceStore
 import warnings
 from fcmpy.expert_fcm.input_validator import type_check
 from typing import Union
