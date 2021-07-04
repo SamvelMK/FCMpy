@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-from fcmpy.intervention.methodStore import InterventionStore
+from fcmpy.store.methodsStore import InterventionStore
+
 from fcmpy.expert_fcm.input_validator import type_check
 from typing import Union
 from abc import ABC, abstractmethod
@@ -38,7 +39,7 @@ class FcmIntervention(Intervention):
         add_intervention(self, name, weights, effectiveness)
 
         remove_intervention(self, name)
-        
+
         test_intervention(self, name, iterations = None)
     """
     
