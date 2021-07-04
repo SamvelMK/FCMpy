@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from abc import ABC, abstractmethod
 
-
 class InterventionConstructor(ABC):
 
     """
