@@ -107,9 +107,9 @@ class FcmSimulator(Simulator):
 
         # Check if output concepts are in the initial_state.keys()
         if output_concepts:
-            for i in output_concepts:
-                if i not in initial_state.keys():
-                    raise ValueError(f'The specified output concept {i} is not in the list.')
+            r = set(output_concepts) - set(initial_state.keys())
+            if r:
+                raise ValueError(f'The specified output concept {r} is not in the list.')
 
         # create the empty dataframe for the results
         results = pd.DataFrame(initial_state, index=[0])
