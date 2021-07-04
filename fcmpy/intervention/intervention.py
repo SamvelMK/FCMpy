@@ -1,12 +1,6 @@
-import sys, os
-
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import pandas as pd
 import numpy as np
-from fcmpy.simulator.simulator import FcmSimulator
-import warnings
+from fcmpy.intervention.methodStore import InterventionStore
 from fcmpy.expert_fcm.input_validator import type_check
 from typing import Union
 from abc import ABC, abstractmethod
@@ -36,8 +30,15 @@ class FcmIntervention(Intervention):
 
     Methods:
         __init__(self, initial_state, weight_matrix, transfer, inference, thresh, iterations, **params)
+        
+        initialize(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
+                            transfer: str, inference: str, thresh: float, iterations: int, l=1, 
+                            output_concepts = None, convergence = 'absDiff',  **params)
+
         add_intervention(self, name, weights, effectiveness)
+
         remove_intervention(self, name)
+        
         test_intervention(self, name, iterations = None)
     """
     
@@ -78,8 +79,9 @@ class FcmIntervention(Intervention):
 
     @type_check
     def initialize(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
-                            transfer: str, inference: str, thresh: float, iterations: int, l=None, **params):
-        
+                            transfer: str, inference: str, thresh: float, iterations: int, l=1, 
+                            output_concepts = None, convergence = 'absDiff',  **params):
+
         """
         Parameters
         ----------
@@ -101,7 +103,7 @@ class FcmIntervention(Intervention):
         iterations: int
                         number of iterations
 
-        l: None
+        l: 1
             A parameter that determines the steepness of the sigmoid function at values around 0.
 
         **params: additional parameters
@@ -114,15 +116,17 @@ class FcmIntervention(Intervention):
         self.__thresh = thresh
         self.__iterations = iterations
         self.__l = l
+        self.__output_concepts = output_concepts
+        self.__convergence = convergence
         
         self.__test_results['baseline'] = self.__simulator.simulate(initial_state = self.__initial_state, weight_matrix = self.__weight_matrix,
                                                                 transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
-                                                                iterations = self.__iterations, l=self.__l)
+                                                                iterations = self.__iterations, l=self.__l, output_concepts = self.__output_concepts, convergence = self.__convergence)
         
         self.__equilibriums['baseline'] = self.test_results['baseline'].iloc[-1]
 
     @type_check
-    def add_intervention(self, name: str, impact: dict, effectiveness: Union[int, float]):
+    def add_intervention(self, name, type='continuous', **kwargs):
 
         """
         Add an intervention node with the associated causal weights to the FCM.
@@ -137,41 +141,19 @@ class FcmIntervention(Intervention):
 
         effectiveness: float
                         the degree to which the intervention was delivered (should be between [-1, 1])
+                        default --> 1
         """
 
-        # Check whether the passed intervention inputs are in the functions' domain.
-        if (min(list(impact.values())) < -1) or (max(list(impact.values())) > 1):
-            raise ValueError('the values in the causal weights are out of the domain [-1,1].')
-        elif (effectiveness < 0) or (effectiveness > 1):
-            raise ValueError('the values in the intervention effectiveness are out of the domain [0,1].')
-
-        intervention = {}
-        intervention['efectiveness'] = effectiveness
-        
-        # construct a weight matrix for a given intervention
-        if type(self.__weight_matrix) == np.ndarray:
-            temp = pd.DataFrame(self.__weight_matrix, columns=self.__initial_state)
+        if type != 'continuous':
+            s = self.__initial_state.copy()
+            s.update(kwargs['initial_state'])
+            initial_state = s.copy()
         else:
-            temp = self.__weight_matrix.copy(deep=True)
+            initial_state = self.__initial_state
 
-        temp['antecident'] = temp.columns
-        temp.set_index('antecident', inplace=True)
-        temp['intervention'] = 0
-        temp.loc[len(temp)] = 0
-        temp.rename(index = {temp.index[-1] : 'intervention'}, inplace = True)
-        
-        # add the intervention impact
-        for key in impact.keys():
-            temp.loc['intervention', key] = impact[key]
-            
-        # construct the new state vector for a given intervention (baseline + intervention effectiveness)
-        temp_vector = self.__equilibriums['baseline'].copy(deep=True)
-        temp_vector = temp_vector.append(pd.Series({'intervention': effectiveness})).to_dict()
-        
-        # add the causal weights for the intervention
-        intervention['weight_matrix'] = temp
-        intervention['state_vector'] = temp_vector
-        self.__interventions[name] = intervention    
+        constructor = InterventionStore.get(type)()
+        self.__interventions[name] = constructor.build(weight_matrix=self.__weight_matrix, initial_state=initial_state,
+                                                        equilibriums = self.__equilibriums, params=kwargs)    
     
     @type_check
     def remove_intervention(self, name: str):
@@ -212,6 +194,6 @@ class FcmIntervention(Intervention):
         
         self.__test_results[name] = self.__simulator.simulate(initial_state=state_vector, weight_matrix=weight_matrix, transfer=self.__transfer, 
                                                                 inference=self.__inference, thresh=self.__thresh, 
-                                                                iterations=iterations, l = self.__l)
+                                                                iterations=iterations, l = self.__l, output_concepts=self.__output_concepts, convergence=self.__convergence)
         
         self.__equilibriums[name] = self.__test_results[name].iloc[-1][:-1]
