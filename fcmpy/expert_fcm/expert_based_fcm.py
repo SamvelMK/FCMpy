@@ -1,9 +1,5 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 from fcmpy.expert_fcm.input_validator import type_check
-from fcmpy.expert_fcm.methodsStore import EntropyStore, ReaderStore, MembershipStore, ImplicationStore, AggregationStore, DefuzzStore
+from fcmpy.store.methodsStore import EntropyStore, ReaderStore, MembershipStore, ImplicationStore, AggregationStore, DefuzzStore
 from fcmpy.expert_fcm.transform import Transform
 
 from abc import ABC, abstractmethod
@@ -11,7 +7,6 @@ import functools
 import collections
 import pandas as pd
 import numpy as np 
-import os
 
 class FcmConstructor(ABC):
 
