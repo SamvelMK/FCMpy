@@ -144,7 +144,6 @@ class FcmSimulator(Simulator):
                 
                 # compute the residuals between the steps.
                 convergenceStatus = conv.check_convergence(output_concepts=output_concepts, results=results, threshold = thresh, params=kwargs) 
-
             else:    
                 print(f'The values converged in the {step_count+1} state (e <= {thresh})')
                 break
