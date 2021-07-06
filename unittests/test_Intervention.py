@@ -63,6 +63,6 @@ class TestFcmSimulator(unittest.TestCase):
         self.inter.add_intervention('intervention_1', type='single_shot', initial_state = {'C1': 0.9, 'C2' : 0.4})
         self.assertEqual(self.inter.interventions['intervention_1']['state_vector']['C1'], 0.9)
         self.assertEqual(self.inter.interventions['intervention_1']['state_vector']['C2'], 0.4)
-
+        
 if __name__ == '__main__':
     unittest.main()
