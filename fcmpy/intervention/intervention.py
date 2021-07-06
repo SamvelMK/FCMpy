@@ -30,7 +30,7 @@ class FcmIntervention(Intervention):
     The class includes methods for testing interventions (what-if scenarios) on top of a defined FCM structure.
 
     Methods:
-        __init__(self, initial_state, weight_matrix, transfer, inference, thresh, iterations, **params)
+        __init__(self, simulator)
         
         initialize(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
                             transfer: str, inference: str, thresh: float, iterations: int, l=1, 
@@ -122,7 +122,7 @@ class FcmIntervention(Intervention):
         
         self.__test_results['baseline'] = self.__simulator.simulate(initial_state = self.__initial_state, weight_matrix = self.__weight_matrix,
                                                                 transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
-                                                                iterations = self.__iterations, l=self.__l, output_concepts = self.__output_concepts, convergence = self.__convergence)
+                                                                iterations = self.__iterations, l=self.__l, output_concepts = self.__output_concepts, convergence = self.__convergence, params = params)
         
         self.__equilibriums['baseline'] = self.test_results['baseline'].iloc[-1]
 
@@ -136,9 +136,13 @@ class FcmIntervention(Intervention):
         ----------
         name: str
                 name of the intervention
+        
+        type: str
+                type of intervention
+                default --> continuous
 
         impact: dict
-                    keys ---> concepts the intervention impacts, value: the associated causal weight
+                    keys --> concepts the intervention impacts, value: the associated causal weight
 
         effectiveness: float
                         the degree to which the intervention was delivered (should be between [-1, 1])
@@ -197,4 +201,4 @@ class FcmIntervention(Intervention):
                                                                 inference=self.__inference, thresh=self.__thresh, 
                                                                 iterations=iterations, l = self.__l, output_concepts=self.__output_concepts, convergence=self.__convergence)
         
-        self.__equilibriums[name] = self.__test_results[name].iloc[-1][:-1]
+        self.__equilibriums[name] = self.__test_results[name].iloc[-1][:len(self.__initial_state)]
