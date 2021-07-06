@@ -23,7 +23,8 @@ class FcmSimulator(Simulator):
 
     Methods:
         simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
-                        transfer: str, inference: str, thresh:float=0.001, iterations:int=50, **params)
+                        transfer: str, inference: str, thresh:float=0.001, iterations:int=50, 
+                        output_concepts = None, convergence = 'absDiff', **kwargs)
     """
     
     @staticmethod
@@ -90,7 +91,7 @@ class FcmSimulator(Simulator):
                         convergence method
                         default --> 'absDiff': absolute difference between the simulation steps
 
-        params: additional parameters for the methods
+        kwargs: additional parameters for the methods (e.g., lambda (l) parameter for the sigmoid function)
 
         Return
         ----------
