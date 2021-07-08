@@ -24,7 +24,7 @@ class NHL:
         self.A = np.zeros([1, nConcept])  # initial A matrix
         self.doc = []  # list of indexes which nodes are doc nodes
         self.doc_values = {}  # np array with min max value or dictionay with 2 values for each key
-        self.e = e if e is not None else 0.005  # termination2 coefficient
+        self.e = e if e is not None else 0.002  # termination2 coefficient
         self.steps = 0
         self.nConcept = nConcept
         # or create a dictionary with parameters that is being checked each sept (or e.g. 100 steps) if the algorithm
@@ -128,9 +128,9 @@ class NHL:
             sigm = 1 / (1 + math.exp(-x * self.lbd))
         except OverflowError:
             print('number to big' + str(x))
-    
+
         return sigm
-    
+
 
     def update_node(self, function=None):
         '''
@@ -146,12 +146,12 @@ class NHL:
 #
         if function is None or function == 'sigmoid':
 
-                
+
 #             vf = np.vectorize(self.sigmoid)
-           
-            self.A[-1] = 1/(1 + np.exp(-self.lbd*(self.A[-2] + self.W[-2]@self.A[-2])))
-            
-            
+
+            self.A[-1] = 1/(1 + np.exp(-self.lbd*(self.A[-2] + self.A[-2]@self.W[-2]))) # + np.sum((self.W[-2].T*self.A[-2]).T,axis=1)))
+
+
         elif (function == 'tangens') or (function == 'tanh') or (function == 'tan'):
             self.A[self.steps, i] = math.tanh(A)
 
@@ -165,18 +165,22 @@ class NHL:
         they in the option 2, we function sgn is not used
         the option 3 is taken from another articles
         e.g.
-        map.update_edge(1,2,option = 2)
         '''
 
 
         # according to the original one should A target,source, target -> col,row,col x,y,x Wyx , Wji, same, weights[y + x * A.length] == Wxy , weights[x + y * A.length] = Wyx
 #             print(self.A[-2].shape)
 #         sign = np.vectorize(self.sign)
-        self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
-            
+#         self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
 
 
-            
+#         self.W[-1] = self.gamma*self.W[-2] + self.n * (np.abs(self.sgn(self.W[0])).T*self.A[-2]).T* (self.A[-2]-self.sgn(self.W[0])*self.W[-2]*(np.abs(self.sgn(self.W[0])).T*self.A[-2]).T)
+
+        self.W[-1] = self.gamma*self.W[-2] + self.n * (np.abs(self.sgn(self.W[0]))*self.A[-2])* ((np.abs(self.sgn(self.W[0])).T*self.A[-2]).T-self.sgn(self.W[0])*self.W[-2]*np.abs(self.sgn(self.W[0]))*self.A[-2])
+
+
+
+
     def termination(self):
         '''
         :return: if termination conditionas are satifying
@@ -195,7 +199,7 @@ class NHL:
         the values of termination conditions are False as default
         after each step the function is checking for 2 termination conditions i.e.
         - if the cost function value is decreasing
-        - if change between doc is smaller than defined threshold (default is 0.02)
+        - if change between doc is smaller than defined threshold (default is 0.002)
         :param step: which is the current step
         '''
         # check in nodes are in bounds
@@ -206,18 +210,18 @@ class NHL:
         if self.steps < 2:
             #             print('too soon to finish')
             return
-        
+
         #         1st termination condition
-        
+
         self.termination1 = self.f1()
 
         # checking for either one or second term
         # check if there was a change between the DOC values greater than e
-        # term2    
-        if np.all([abs(self.A[-1]-self.A[-2])[i] < self.e for i in self.doc]):
+        # term2
+        if np.all([abs(self.A[-1][i]-self.A[-2][i]) < self.e for i in self.doc]):
             self.termination2 = True
-        
-        #term3 
+
+        #term3
         # this is not the termination condition for the learning process, it is for the simulation to see if DOC is within the bounds
         # it does not have to be fulfill during the learning process!!!!
 #         rules = 0
@@ -269,11 +273,19 @@ class NHL:
             return 0
         return 1
 
-    
+
     def f1(self):
+#         score = 0
+#         for doc in self.doc_values.keys():
+#             t = sum(self.doc_values[doc])/2
+#             if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)):
+#                 score +=1
+#         return score == len(self.doc)
+
+#         since we are trying to minimizng F1, we should stop when the derivative is small (e.g. less than 0.1)
         score = 0
         for doc in self.doc_values.keys():
             t = sum(self.doc_values[doc])/2
-            if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)):
+            if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (self.doc_values[doc][0] <= self.A[-1,doc] and self.doc_values[doc][1] >= self.A[-1,doc]):
                 score +=1
         return score == len(self.doc)

@@ -3,21 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e8cbc8a7-7325-4bcb-9142-18d729e79f2d" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/FCM_MP.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/FCM_MP.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/eltcn.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/eltcn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/FCM_MP.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/ahl_algorithm.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/eltcn.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/graph_net.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/nhl_algorithm.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/rcga.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/html/ML/runner.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/rcga.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/rcga.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -28,10 +14,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="FCM_MP.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FCM_MP.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fcmpy/ML/FCM_MP.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
+            <state relative-caret-position="17">
               <caret line="100" selection-start-line="100" selection-end-line="100" />
             </state>
           </provider>
@@ -61,17 +47,26 @@
       <file leaf-file-name="runner.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fcmpy/ML/runner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="3" column="27" lean-forward="true" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+            <state relative-caret-position="51">
+              <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rcga.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rcga.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="459" column="22" lean-forward="true" selection-start-line="459" selection-end-line="460" />
+            <state relative-caret-position="476">
+              <caret line="459" column="22" selection-start-line="459" selection-end-line="460" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="nhl_algorithm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="167" selection-start-line="167" selection-end-line="167" />
             </state>
           </provider>
         </entry>
@@ -116,18 +111,18 @@
         <option value="$PROJECT_DIR$/fcmpy/ML/runner.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/rcga.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" />
-        <option value="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/eltcn.py" />
         <option value="$PROJECT_DIR$/fcmpy/__init__.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/FCM_MP.py" />
+        <option value="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
-    <option name="y" value="311" />
-    <option name="width" value="978" />
-    <option name="height" value="1089" />
+    <option name="y" value="310" />
+    <option name="width" value="979" />
+    <option name="height" value="1090" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -272,7 +267,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="249" width="782" height="871" extended-state="1" />
+    <frame x="-7" y="-7" width="1550" height="878" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.37871778" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -286,11 +282,11 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39645776" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Message" order="0" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -469,13 +465,6 @@
     <entry file="file://$PROJECT_DIR$/fcmpy/ML/graph_net.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="70" selection-start-line="4" selection-start-column="70" selection-end-line="4" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -525,17 +514,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="459" column="22" lean-forward="true" selection-start-line="459" selection-end-line="460" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fcmpy/ML/runner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="3" column="27" lean-forward="true" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+        <state relative-caret-position="51">
+          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -548,8 +530,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fcmpy/ML/FCM_MP.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
+        <state relative-caret-position="17">
           <caret line="100" selection-start-line="100" selection-end-line="100" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="167" selection-start-line="167" selection-end-line="167" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="459" column="22" selection-start-line="459" selection-end-line="460" />
         </state>
       </provider>
     </entry>
