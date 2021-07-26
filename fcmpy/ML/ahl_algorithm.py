@@ -20,7 +20,6 @@ class AHL:
         self.lbd = lbd if lbd is not None else 1 # steepness of continuous function
         self.termination1 = False
         self.termination2 = False
-        self.termination3 = False
         self.W = np.zeros([1, nConcept, nConcept])  # initial W matrix
         self.A = np.zeros([1, nConcept])  # initial A matrix
         self.doc = []  # list of indexes which nodes are doc nodes
@@ -138,7 +137,7 @@ class AHL:
         return sigm
     
 
-    def update_node(self, function=None):
+    def update_node(self,i, function=None):
         '''
         :param i: which concept, i.e. which column in weights
 
@@ -155,7 +154,7 @@ class AHL:
                 
 #             vf = np.vectorize(self.sigmoid)
            
-            self.A[-1] = 1/(1 + np.exp(-self.lbd*(self.A[-2] + self.W[-2]@self.A[-2])))
+            self.A[-1,i] = 1/(1 + np.exp(-self.lbd*(self.A[-2,i] + self.W[-2,:,i]@self.A[-2])))
             
             
         elif (function == 'tangens') or (function == 'tanh') or (function == 'tan'):
@@ -174,7 +173,7 @@ class AHL:
 
         
         
-    def update_edge(self):
+    def update_edge(self,i):
         '''
         :param i: index of the target node
         :param j: index of the source node
@@ -190,13 +189,14 @@ class AHL:
         # update parameters (each step, if mode is not == constant)
         if self.mode != 'constant':
             self.update_hyperparams()
-        multiplyer = np.ones((self.nConcept,self.nConcept))
-        np.fill_diagonal(multiplyer,val=0)
+            
+        self.W[-1,:,i] = (1-self.gamma)*self.W[-2,:,i] + self.n * self.A[-2] * (self.A[-2,i]-self.W[-2,:,i]*self.A[-2])
+        self.W[-1,i,i] = 0    
+#         self.W[-1] = ((1-self.gamma)*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-multiplyer*self.W[-2]*(np.ones((self.nConcept,self.nConcept)))*self.A[-2]))*multiplyer
+            
+#         multiplyer = np.ones((self.nConcept,self.nConcept))
+#         np.fill_diagonal(multiplyer,val=0)
     
-        
-            
-        self.W[-1] = ((1-self.gamma)*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-multiplyer*self.W[-2]*(np.ones((self.nConcept,self.nConcept)))*self.A[-2]))*multiplyer
-            
                         
     def termination(self):
         '''
@@ -216,26 +216,55 @@ class AHL:
         the values of termination conditions are False as default
         after each step the function is checking for 2 termination conditions i.e.
         - if the cost function value is decreasing
-        - if change between doc is smaller than defined threshold (default is 0.02)
+        - if change between doc is smaller than defined threshold (default is 0.002)
         :param step: which is the current step
         '''
         # check in nodes are in bounds
+        #         for node in self.doc:
+        #             if self.A[self.steps,node] > self.doc_values[node][1] or self.A[self.steps,node] < self.doc_values[node][0]:
+        #                 return
 
-        if self.steps < 2:
+        if self.steps < self.nConcept:
             #             print('too soon to finish')
             return
-        
+
         #         1st termination condition
-        
+
         self.termination1 = self.f1()
 
         # checking for either one or second term
         # check if there was a change between the DOC values greater than e
-        # term2    
-        if np.all([abs(self.A[-1]-self.A[-2])[i] < self.e for i in self.doc]):
+        # term2
+        if np.all([abs(self.A[-1][i]-self.A[-2][i]) < self.e for i in self.doc]):
             self.termination2 = True
-        
-       
+
+        #term3
+        # this is not the termination condition for the learning process, it is for the simulation to see if DOC is within the bounds
+        # it does not have to be fulfill during the learning process!!!!
+#         rules = 0
+#         for node in self.doc:
+#             if self.A[-1,node] < self.doc_values[node][1] and self.A[-1,node] > self.doc_values[node][0]:
+#                 rules += 1
+#         if rules == len(self.doc):
+#             self.termination3 = True
+
+    @staticmethod
+    def sgn(X):
+        '''
+        function used to veryfiy if the sig of the weight is the same for output weights as it is for input weights
+        '''
+        W = copy.deepcopy(X)
+        with np.nditer(W, op_flags=['readwrite']) as it:
+            for x in it:
+                if x > 0:
+                    x[...] = 1
+                elif x < 0:
+                    x[...] = -1
+                elif x == 0:
+                    x[...] = 0
+
+        return W
+
     def next_step(self):
         '''
         next step of the function
@@ -248,16 +277,35 @@ class AHL:
         # add new axis to W and A and assign the value to 0
 
         self.W = np.resize(self.W, [self.steps + 1, self.W.shape[1], self.W.shape[2]])
-        self.W[self.steps] = np.zeros([self.W.shape[1], self.W.shape[2]])
+        self.W[self.steps] = self.W[-2]
 
         self.A = np.resize(self.A, [self.steps + 1, self.A.shape[1]])
-        self.A[self.steps] = np.zeros([1, self.A.shape[1]])
+        self.A[self.steps] = self.A[-2]
 
-    
+    @staticmethod
+    def sign(x):
+        if x < 0:
+            return -1
+        if x == 0:
+            return 0
+        return 1
+
+
     def f1(self):
         score = 0
         for doc in self.doc_values.keys():
             t = sum(self.doc_values[doc])/2
-            if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)):
+
+            if (self.doc_values[doc][0] <= self.A[-1,doc] and self.doc_values[doc][1] >= self.A[-1,doc]): #and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)): # and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)):
+                
                 score +=1
+#                 print(score)
         return score == len(self.doc)
+
+#         since we are trying to minimizng F1, we should stop when the derivative is small (e.g. less than 0.1)
+#         score = 0
+#         for doc in self.doc_values.keys():
+#             t = sum(self.doc_values[doc])/2
+#             if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (self.doc_values[doc][0] <= self.A[-1,doc] and self.doc_values[doc][1] >= self.A[-1,doc]):
+#                 score +=1
+#         return score == len(self.doc)
