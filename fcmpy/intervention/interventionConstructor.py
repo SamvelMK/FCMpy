@@ -79,9 +79,14 @@ class Continuous(InterventionConstructor):
         initial_state = kwargs['initial_state']
         equilibriums = kwargs['equilibriums']
         impact = kwargs['params']['impact']
-        effectiveness = kwargs['params']['effectiveness']
+        
+        # Set the intervention effectiveness to 1 if the optional parameter is not specified.
+        try:
+            effectiveness = kwargs['params']['effectiveness']
+        except:
+            effectiveness = 1
 
-        # Check whether the passed intervention inputs are in the functions' domain.
+        # Check whether the passed intervention inputs are in the function's domain.
         if (min(list(impact.values())) < -1) or (max(list(impact.values())) > 1):
             raise ValueError('the values in the causal weights are out of the domain [-1,1].')
         elif (effectiveness < 0) or (effectiveness > 1):
