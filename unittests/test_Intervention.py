@@ -49,9 +49,9 @@ class TestFcmSimulator(unittest.TestCase):
     def test_testIntervention(self):
         # Check if the test_intervention runs properly.
         # Check if the stable concept (intervetion in this case) is indeed stable.
-        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
-        self.inter.add_intervention('intervention_2', impact={'C4':-.5}, effectiveness=1)
-        self.inter.add_intervention('intervention_3', impact={'C5':-1}, effectiveness=1)
+        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5})
+        self.inter.add_intervention('intervention_2', impact={'C4':-.5})
+        self.inter.add_intervention('intervention_3', impact={'C5':-1})
 
         self.inter.test_intervention('intervention_1')
         self.inter.test_intervention('intervention_2')
