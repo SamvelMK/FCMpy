@@ -56,6 +56,7 @@ class FcmIntervention(Intervention):
         self.__test_results = {}
         self.__equilibriums = {}
         self.__comparison_table = None
+        self.__effectiveness = 1
 
     @property
     def test_results(self):
@@ -106,6 +107,14 @@ class FcmIntervention(Intervention):
 
         l: 1
             A parameter that determines the steepness of the sigmoid function at values around 0.
+        
+        output_concepts: bool, list
+                            the output concepts for the convergence check
+                            default --> None
+        
+        convergence: str,
+                        convergence method
+                        default --> 'absDiff': absolute difference between the simulation steps
 
         **params: additional parameters
         """
@@ -148,7 +157,7 @@ class FcmIntervention(Intervention):
                         the degree to which the intervention was delivered (should be between [-1, 1])
                         default --> 1
         """
-
+        
         if type != 'continuous':
             s = self.__initial_state.copy()
             s.update(kwargs['initial_state'])
