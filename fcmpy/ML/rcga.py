@@ -28,7 +28,7 @@ class rcga:
     maxfitness - fitness value after which learning process can be stopped   
     '''
 
-    def __init__(self, nConcepts, concepts, Pmutation=None, Precombination=None, population_size=None,
+    def __init__(self, concepts, Pmutation=None, Precombination=None, population_size=None,
                  max_generations=None, historicaldata=None, fcm=None,
                  numberofsteps=None, tournamentP=None, tournamentK=None, lbd=None,maxfitness=None):
 
@@ -52,8 +52,8 @@ class rcga:
         # nmax number of generations
         self.max_generations = 100000 # 300000 if max_generations is None else max_generations
         self.current_gen = 0
-        self.generations = np.zeros((self.population_size, nConcepts, nConcepts - 1))
-        self.nConcepts = nConcepts
+        self.generations = np.zeros((self.population_size, len(concepts[0]), len(concepts[0]) - 1))
+        self.nConcepts = len(concepts[0])
 
         # HISTORICAL DATA
         # historical data obtained from fcm simulations or observations (in the format columns - concepts, rows - simulation steps)

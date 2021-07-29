@@ -24,7 +24,7 @@ def simulateFCM(concepts, weights, nsteps,lamb = 1):
         concepts = newvalues
     return out
 
-def simulator(hl_type,nConcept,learning_rate,decay,A0,W_init,doc,lbd,e=None,mode=None,l1=None,l2=None,b1=None,b2=None,maxsteps=100):
+def simulator(hl_type,learning_rate,decay,A0,W_init,doc,lbd,e=None,mode=None,l1=None,l2=None,b1=None,b2=None,maxsteps=100):
     '''
     Runs the simulation
     :param hl_type: non hebbain learning nhl or active hebbian learning ahl
@@ -61,6 +61,7 @@ def simulator(hl_type,nConcept,learning_rate,decay,A0,W_init,doc,lbd,e=None,mode
              'decayparams':[hebbian.l2,hebbian.b2],
              'lrparams':[hebbian.l1,hebbian.b1]}
      '''
+    nConcept = A0.shape[0]
     values = None
     if hl_type == 'nhl':
         
