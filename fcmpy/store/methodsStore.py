@@ -179,7 +179,6 @@ class ConvergenceStore(GetMethod):
         else:
             raise ValueError('The convergence method is not defined.')
 
-
 # Intervention
 class InterventionStore(GetMethod):
     
