@@ -19,7 +19,7 @@ class Simulator(ABC):
 class FcmSimulator(Simulator):
 
     """
-    The class includes methods for runing simulations on top of a defined FCM.
+    The class includes methods for running simulations on top of a defined FCM.
 
     Methods:
         simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
@@ -29,7 +29,7 @@ class FcmSimulator(Simulator):
     
     @staticmethod
     @type_check
-    def __getStableConcepts(weight_matrix: np.ndarray) -> np.ndarray:
+    def __getStableConcepts(weight_matrix: Union[np.ndarray, pd.DataFrame]) -> np.ndarray:
 
         """
         Extract the positions of the stable concepts (concepts with in-degree == 0).
@@ -52,6 +52,36 @@ class FcmSimulator(Simulator):
                 stables.append(i)
 
         return stables
+    
+    @staticmethod
+    @type_check
+    def __simInputTransform(weight_matrix: Union[pd.DataFrame, np.ndarray], initial_state: dict) -> tuple:
+
+        """
+        Transform the weight matrix and initial state vector for the simulation.
+        """
+
+        if type(weight_matrix) != np.ndarray:
+            # Align the initial_vector order for correct computations (vec . mat)
+            initial_state = {k : initial_state[k] for k in weight_matrix.columns}
+            weight_matrix=weight_matrix.to_numpy()
+        else:
+            warnings.warn("When passing an initial state with a weight matrix type numpy.ndarray make sure that the order of the keys in the dictionary with the initial states matches the order of the column of the numpy.ndarray!")
+        
+        return weight_matrix, initial_state
+
+    @staticmethod
+    @type_check
+    def __outputConceptCheck(output_concepts: Union[None, list], initial_state: dict):
+
+        """
+        Check if output concepts are in the initial_state.keys()
+        """
+
+        if output_concepts:
+            r = set(output_concepts) - set(initial_state.keys())
+            if r:
+                raise ValueError(f'The specified output concept {r} is not in the list.')
     
     @staticmethod
     @type_check
@@ -99,18 +129,11 @@ class FcmSimulator(Simulator):
                 results of the simulation.
         """
 
-        if type(weight_matrix) != np.ndarray:
-            # Align the initial_vector order for correct computations (vec . mat)
-            initial_state = {k : initial_state[k] for k in weight_matrix.columns}
-            weight_matrix=weight_matrix.to_numpy()
-        else:
-            warnings.warn("When passing an initial state with a weight matrix type numpy.ndarray make sure that the order of the keys in the dictionary with the initial states matches the order of the column of the numpy.ndarray!")
+        # Check the output concepts.
+        FcmSimulator.__outputConceptCheck(output_concepts=output_concepts, initial_state=initial_state)
 
-        # Check if output concepts are in the initial_state.keys()
-        if output_concepts:
-            r = set(output_concepts) - set(initial_state.keys())
-            if r:
-                raise ValueError(f'The specified output concept {r} is not in the list.')
+        # Transform the inputs if necessary.
+        weight_matrix, initial_state = FcmSimulator.__simInputTransform(weight_matrix=weight_matrix, initial_state=initial_state)
 
         # create the empty dataframe for the results
         results = pd.DataFrame(initial_state, index=[0])
