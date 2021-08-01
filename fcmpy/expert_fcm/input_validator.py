@@ -1,9 +1,5 @@
 ### Taken and modified from Simon Pirschel at https://aboutsimon.com/blog/2018/04/04/Python3-Type-Checking-And-Data-Validation-With-Type-Hints.html
 
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 from typing import get_type_hints, get_args
 from functools import wraps
 from inspect import getfullargspec
