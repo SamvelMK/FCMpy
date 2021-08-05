@@ -1,48 +1,43 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import numpy as np
 import skfuzzy as fuzz
-from fcmpy.expert_fcm.input_validator import type_check
 from abc import ABC, abstractclassmethod  
+from fcmpy.expert_fcm.input_validator import type_check
+
 
 class FuzzyMembership(ABC):
-    
     """
-    Fuzzy membership functions.
+        Fuzzy membership functions.
     """
-
     @abstractclassmethod
     def membershipFunction():
         raise NotImplementedError('membershipFunction method is not defined')
 
+
 class TriangularMembership(FuzzyMembership):
-
     """
-    Triangular Fuzzy Membership Functions. 
+        Triangular Fuzzy Membership Functions. 
     """
-
     @staticmethod
     @type_check
     def membershipFunction(**kwargs) -> dict:
-
         """
-        Generate triangular membership functions.
+            Generate triangular membership functions.
 
-        Other Parameters
-        ----------
-        **linguisticTerms: dict,
-                            terms and the associated parameters 'abc' --> e.g., {'+VL': [0.25, 0.5, 0.75]}
-        
-        **universe: numpy.ndarray,
-                    the universe of discourse
-                        
+            Other Parameters
+            ----------
+            **linguisticTerms: dict,
+                                terms and the associated parameters 
+                                'abc' --> e.g., {'+VL': [0.25, 0.5, 0.75]}
+            
+            **universe: numpy.ndarray,
+                        the universe of discourse
+                            
 
-        Return
-        ---------
-        y: dict,
-            Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
+            Return
+            ---------
+            y: dict,
+                Generated membership functions. The keys are the 
+                linguistic terms and the values are 1d arrays.
         """
         
         linguisticTerms = kwargs['linguistic_terms'] 
@@ -55,56 +50,61 @@ class TriangularMembership(FuzzyMembership):
         
         return mfs
 
+
 class GaussianMembership(FuzzyMembership):
-
     """
-    Generate Gaussian membership functions.
+        Generate Gaussian membership functions.
 
-    Other Parameters
-    ----------
-    **linguisticTerms: dict,
-                        terms and the associated parameters 'mean' and 'sigma' -> e.g., {'+VL': [0.25, 0.1]}}
-    **universe: numpy.ndarray,
-                universe of discourse
-                    
-    Return
-    ---------
-    y: dict,
-        Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
+        Other Parameters
+        ----------
+        **linguisticTerms: dict,
+                            terms and the associated parameters 
+                            'mean' and 'sigma' -> e.g., {'+VL': [0.25, 0.1]}}
+        **universe: numpy.ndarray,
+                    universe of discourse
+                        
+        Return
+        ---------
+        y: dict,
+            Generated membership functions. The keys are the linguistic terms 
+            and the values are 1d arrays.
     """
-
     @staticmethod
     @type_check
     def membershipFunction(**kwargs):
         universe = kwargs['universe']
         linguisticTerms = kwargs['linguistic_terms'] 
-
         mfs = {}
 
         for term in linguisticTerms.keys():
-            mfs[term] = fuzz.gaussmf(x = universe, mean=linguisticTerms[term][0], sigma = linguisticTerms[term][1])
+            mfs[term] = fuzz.gaussmf(x = universe, mean=linguisticTerms[term][0],
+                                        sigma = linguisticTerms[term][1])
         
         return mfs
 
+
 class TrapezoidalMembership(FuzzyMembership):
-
     """
-    Generate Trapezoidal membership functions.
-
-    Other Parameters
-    ----------
-    **linguisticTerms: dict,
-                        terms and the associated parameters 'abcd' --> e.g., {'+VL': [0, 0.25, 0.5, 0.75]}
-    **universe: numpy.ndarray,
-                universe of discourse
-
-    Return
-    ---------
-    y: dict,
-        Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
+        Trapezoidal membership function.
     """
-
+    @staticmethod
+    @type_check
     def membershipFunction(**kwargs):
+        """
+            Generate Trapezoidal membership functions.
+
+            Other Parameters
+            ----------
+            **linguisticTerms: dict,
+                                terms and the associated parameters 'abcd' --> e.g., {'+VL': [0, 0.25, 0.5, 0.75]}
+            **universe: numpy.ndarray,
+                        universe of discourse
+
+            Return
+            ---------
+            y: dict,
+                Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
+        """
         linguisticTerms = kwargs['linguistic_terms'] 
         universe = kwargs['universe'] 
 

@@ -1,52 +1,47 @@
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
-import pandas as pd 
 import numpy as np 
-from typing import Union
+import pandas as pd 
+from abc import ABC, abstractclassmethod
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.expert_fcm.transform import Transform
-from abc import ABC, abstractclassmethod
-import collections
+
 
 class Entropy(ABC):
-    
     """
-    Entropy of the expert inputs.
+        Entropy of the expert inputs.
     """
-    
     @abstractclassmethod
     def calculateEntropy(data: pd.DataFrame, activationParamter):
         raise NotImplementedError('calculateEntropy method is not defined')
+
     
 class InformationEntropy(Entropy):
-    
+    """
+        Methods for calculating the information entropy.
+    """
     @staticmethod
     @type_check
     def calculateEntropy(**kwargs) -> pd.DataFrame:
-
         """
-        Calculate the information entropy of the expert ratings.
+            Calculate the information entropy of the expert ratings.
 
-        Other Parameters
-        ----------------
-        **data: collections.OrderedDict
-                ordered dictionary with the expert inputs
-        
-        Return
-        ---------
-        y: pandas.DataFrame,
-            entropy of the concept pairs in expert ratings
+            Other Parameters
+            ----------------
+            **data: collections.OrderedDict
+                    ordered dictionary with the expert inputs
+            
+            Return
+            -------
+            y: pandas.DataFrame,
+                entropy of the concept pairs in expert ratings
         """
-
         data = kwargs['data']
-
         nExperts = len(data)
         flat_data = Transform.flatData(data=data)
         prop = {}
+
         for concepts in set(flat_data.index):
-            activation_parameter = Transform.calculateProportions(data=flat_data, conceptPair=concepts, nExperts=nExperts) 
+            activation_parameter = Transform.calculateProportions(data=flat_data, 
+                                            conceptPair=concepts, nExperts=nExperts) 
             prop[concepts] = activation_parameter
 
         entropy_concept = {}

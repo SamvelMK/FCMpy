@@ -1,7 +1,8 @@
-### Taken and modified from Simon Pirschel at https://aboutsimon.com/blog/2018/04/04/Python3-Type-Checking-And-Data-Validation-With-Type-Hints.html
+# Taken and modified from Simon Pirschel at
+# https://aboutsimon.com/blog/2018/04/04/Python3-Type-Checking-And-Data-Validation-With-Type-Hints.html
 
-from typing import get_type_hints, get_args
 from functools import wraps
+from typing import get_type_hints, get_args
 from inspect import getfullargspec
 
 
