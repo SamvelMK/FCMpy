@@ -1,43 +1,37 @@
 import numpy as np
-from simulator.transfer import Transfer
 from abc import ABC, abstractmethod
 
 
 class Inference(ABC):
-
     """
-    Class of FCM inference methods
+        Class of FCM inference methods
     """
-
     @abstractmethod
     def infer():
         raise NotImplementedError('Infer method is not defined!')
 
+
 class Kosko(Inference):
-
     """
-    Kosko's inference method.
+        Kosko's inference method.
     """
-
     @staticmethod    
     def infer(**kwargs):
-        
         """
-        Kosko's inference method.
+            Kosko's inference method.
 
-        Parameters
-        ----------
-        initial_state: numpy.array
-                            initial state vector of the concepts
-        weight_matrix: numpy.ndarray
-                        N*N weight matrix of the FCM.
-        
-        Return
-        ----------
-        y: numpy.array
-                updated state vector
+            Parameters
+            ----------
+            initial_state: numpy.array
+                                initial state vector of the concepts
+            weight_matrix: numpy.ndarray
+                            N*N weight matrix of the FCM.
+            
+            Return
+            ----------
+            y: numpy.array
+                    updated state vector
         """
-
         initial_state = kwargs['initial_state']
         weight_matrix = kwargs['weight_matrix']
 
@@ -46,31 +40,28 @@ class Kosko(Inference):
         
         return res
 
+
 class ModifiedKosko(Inference):
-
     """
-    Modified Kosko inference method.
+        Modified Kosko inference method.
     """
-
     @staticmethod    
     def infer(**kwargs):
-
         """
-        Modified Kosko inference method.
+            Modified Kosko inference method.
 
-        Parameters
-        ----------
-        initial_state: numpy.array
-                        initial state vector of the concepts
-        weight_matrix: numpy.ndarray
-                        N*N weight matrix of the FCM.
+            Parameters
+            ----------
+            initial_state: numpy.array
+                            initial state vector of the concepts
+            weight_matrix: numpy.ndarray
+                            N*N weight matrix of the FCM.
 
-        Return
-        ----------
-        y: numpy.array
-                updated state vector
+            Return
+            ----------
+            y: numpy.array
+                    updated state vector
         """
-
         initial_state = kwargs['initial_state']
         weight_matrix = kwargs['weight_matrix']
 
@@ -79,35 +70,32 @@ class ModifiedKosko(Inference):
         
         return res
 
-class Rescaled(Inference):
-    
-    """
-    Rescaled inference method.
-    """
 
+class Rescaled(Inference):
+    """
+        Rescaled inference method.
+    """
     @staticmethod    
     def infer(**kwargs):
         """
-        Rescaled inference method.
+            Rescaled inference method.
 
-        Parameters
-        ----------
-        initial_state: numpy.array
-                        initial state vector of the concepts
-        weight_matrix: numpy.ndarray
-                        N*N weight matrix of the FCM.
-        
-        Return
-        ----------
-        y: numpy.array
-                updated state vector
+            Parameters
+            ----------
+            initial_state: numpy.array
+                            initial state vector of the concepts
+            weight_matrix: numpy.ndarray
+                            N*N weight matrix of the FCM.
+            
+            Return
+            ----------
+            y: numpy.array
+                    updated state vector
         """
-
         initial_state = kwargs['initial_state']
         weight_matrix = kwargs['weight_matrix']
-
         weight_matrix = weight_matrix.T
 
-        res = weight_matrix.dot(([2*i-1 for i in initial_state]))+([2*i-1 for i in initial_state])
+        res = weight_matrix.dot(([2*i-1 for i in initial_state])) + ([2*i-1 for i in initial_state])
         
         return res

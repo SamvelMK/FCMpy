@@ -3,78 +3,71 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 class InterventionConstructor(ABC):
-
     """
-    Class of methods for building interventions.
+        Class of methods for building interventions.
     """
-
     @abstractmethod
     def build():
         raise NotImplementedError('Build method is not defined!')
 
+
 class SingleShot(InterventionConstructor):
-    
     """
-    Construct single-shot interventions
-    """
-    
+        Construct single-shot interventions
+    """ 
     @staticmethod
     def build(**kwargs):
-
         """
-        Construct a single shot intervention case
+            Construct a single shot intervention case
 
-        Parameters
-        ----------
-        state_vector: dict
-                        keys --> concepts, values --> state of the concept.
+            Parameters
+            ----------
+            state_vector: dict
+                            keys --> concepts, values --> state of the concept.
 
-        weight_matrix: pd.DataFrame
-                        causal weights between concepts
+            weight_matrix: pd.DataFrame
+                            causal weights between concepts
 
-        Return
-        ----------
-        y: dictionary
+            Return
+            ----------
+            y: dictionary
         """
-
         intervention = {}
-        
         intervention['state_vector'] = kwargs['initial_state']
         intervention['weight_matrix'] = kwargs['weight_matrix']
         
         return intervention
 
+
 class Continuous(InterventionConstructor):
     
     @staticmethod
     def build(**kwargs):
-
         """
-        Construct a continuous intervention case
+            Construct a continuous intervention case
 
-        Parameters
-        ----------
-        weight_matrix: pd.DataFrame
-                        causal weights between concepts
+            Parameters
+            ----------
+            weight_matrix: pd.DataFrame
+                            causal weights between concepts
 
-        initial_state: dict
-                        keys --> concepts, values --> state of the concept.
+            initial_state: dict
+                            keys --> concepts, values --> state of the concept.
 
-        equilibriums: dict
-                        keys --> concepts, values --> equilibrium states of the concept.
+            equilibriums: dict
+                            keys --> concepts, values --> equilibrium states of the concept.
 
-        impact: dict
-                    keys ---> concepts the intervention impacts, value: the associated causal weight
+            impact: dict
+                        keys ---> concepts the intervention impacts, value: the associated causal weight
 
-        effectiveness: float
-                        the degree to which the intervention was delivered (should be between [-1, 1])
-                        default --> 1
-                        
-        Return
-        ----------
-        y: dictionary
+            effectiveness: float
+                            the degree to which the intervention was delivered (should be between [-1, 1])
+                            default --> 1
+                            
+            Return
+            ----------
+            y: dictionary
         """
-
         weight_matrix = kwargs['weight_matrix']
         initial_state = kwargs['initial_state']
         equilibriums = kwargs['equilibriums']

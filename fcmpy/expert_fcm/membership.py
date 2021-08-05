@@ -1,4 +1,3 @@
-import numpy as np
 import skfuzzy as fuzz
 from abc import ABC, abstractclassmethod  
 from fcmpy.expert_fcm.input_validator import type_check

@@ -1,6 +1,6 @@
 import numpy as np
 from abc import ABC, abstractclassmethod  
-from expert_fcm.input_validator import type_check
+from fcmpy.expert_fcm.input_validator import type_check
 
 
 class FuzzyImplication:

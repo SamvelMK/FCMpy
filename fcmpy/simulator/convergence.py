@@ -2,11 +2,9 @@ import numpy as np
 from abc import ABC, abstractmethod
 
 class Convergence(ABC):
-
     """
-    Class of FCM convergence methods
+        Class of FCM convergence methods
     """
-
     @abstractmethod
     def check_convergence():
         raise NotImplementedError('Check_convergence method is not defined!')
@@ -16,26 +14,27 @@ class AbsDifference(Convergence):
 
     @staticmethod
     def check_convergence(**kwargs):
-
         """
-        Compute the residuals (abs difference) of the outputConcepts between the simulation steps.
-        
-        Parameters
-        ----------
-        results: pd.DataFrame
-                    the dataframe with the simulation results. Each row represents the results of a simulation step
+            Compute the residuals (abs difference) of the outputConcepts
+            between the simulation steps.
+            
+            Parameters
+            ----------
+            results: pd.DataFrame
+                        the dataframe with the simulation results. 
+                        Each row represents the results of a simulation step
 
-        outputConcepts: None, list
-                        if only specific outputConcepts should be considered then a list of these concepts (in a string) should be passed.
+            outputConcepts: None, list
+                            if only specific outputConcepts should be considered
+                            then a list of these concepts (in a string) should be passed.
 
-        threshold: float, int
-                    the threshold of the residuals to break the loop in the simulations.
-        
-        Return
-        ----------
-        bool: True if the residuals are <= the threshold, False if otherwise.
+            threshold: float, int
+                        the threshold of the residuals to break the loop in the simulations.
+            
+            Return
+            ----------
+            bool: True if the residuals are <= the threshold, False if otherwise.
         """
-        
         outputConcepts = kwargs['output_concepts']
         results = kwargs['results']
         threshold = kwargs['threshold']

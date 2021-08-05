@@ -1,7 +1,6 @@
-import numpy as np
 from abc import ABC, abstractclassmethod 
 import skfuzzy as fuzz
-from expert_fcm.input_validator import type_check
+from fcmpy.expert_fcm.input_validator import type_check
 
 
 class Defuzzification(ABC):

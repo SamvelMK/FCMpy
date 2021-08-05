@@ -7,6 +7,7 @@ from typing import Union
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.expert_fcm.transform import Transform
 
+
 class ConsistencyCheck:
     """
         Class of methods for checking the consistency of the data.
