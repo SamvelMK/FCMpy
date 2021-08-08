@@ -118,24 +118,7 @@ class AHL:
         # show values of W
         if prt is True:
             print(self.W)
-
-    def sigmoid(self, x):
-        '''
-        :param x: input value
-        :param lbd: normalizing param
-        :param h: normalizing param
-        :return: sigmoid activation function output
-
-        Sigmoid function used for updating of the node value after each step
-        '''
-        # TODO try inintial lbd as 0.5, recommended in another article
-        try:
-            sigm = 1 / (1 + math.exp(-x * self.lbd))
-        except OverflowError:
-            print('number to big' + str(x))
-    
-        return sigm
-    
+   
 
     def update_node(self,i, function=None):
         '''
@@ -152,7 +135,6 @@ class AHL:
         if function is None or function == 'sigmoid':
 
                 
-#             vf = np.vectorize(self.sigmoid)
            
             self.A[-1,i] = 1/(1 + np.exp(-self.lbd*(self.A[-2,i] + self.W[-2,:,i]@self.A[-2])))
             
@@ -192,10 +174,7 @@ class AHL:
             
         self.W[-1,:,i] = (1-self.gamma)*self.W[-2,:,i] + self.n * self.A[-2] * (self.A[-2,i]-self.W[-2,:,i]*self.A[-2])
         self.W[-1,i,i] = 0    
-#         self.W[-1] = ((1-self.gamma)*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-multiplyer*self.W[-2]*(np.ones((self.nConcept,self.nConcept)))*self.A[-2]))*multiplyer
-            
-#         multiplyer = np.ones((self.nConcept,self.nConcept))
-#         np.fill_diagonal(multiplyer,val=0)
+
     
                         
     def termination(self):
@@ -219,10 +198,6 @@ class AHL:
         - if change between doc is smaller than defined threshold (default is 0.002)
         :param step: which is the current step
         '''
-        # check in nodes are in bounds
-        #         for node in self.doc:
-        #             if self.A[self.steps,node] > self.doc_values[node][1] or self.A[self.steps,node] < self.doc_values[node][0]:
-        #                 return
 
         if self.steps < self.nConcept:
             #             print('too soon to finish')
@@ -238,15 +213,7 @@ class AHL:
         if np.all([abs(self.A[-1][i]-self.A[-2][i]) < self.e for i in self.doc]):
             self.termination2 = True
 
-        #term3
-        # this is not the termination condition for the learning process, it is for the simulation to see if DOC is within the bounds
-        # it does not have to be fulfill during the learning process!!!!
-#         rules = 0
-#         for node in self.doc:
-#             if self.A[-1,node] < self.doc_values[node][1] and self.A[-1,node] > self.doc_values[node][0]:
-#                 rules += 1
-#         if rules == len(self.doc):
-#             self.termination3 = True
+
 
     @staticmethod
     def sgn(X):
@@ -296,16 +263,9 @@ class AHL:
         for doc in self.doc_values.keys():
             t = sum(self.doc_values[doc])/2
 
-            if (self.doc_values[doc][0] <= self.A[-1,doc] and self.doc_values[doc][1] >= self.A[-1,doc]): #and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)): # and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)):
+            if (self.doc_values[doc][0] <= self.A[-1,doc] and self.doc_values[doc][1] >= self.A[-1,doc]): 
                 
                 score +=1
 #                 print(score)
         return score == len(self.doc)
 
-#         since we are trying to minimizng F1, we should stop when the derivative is small (e.g. less than 0.1)
-#         score = 0
-#         for doc in self.doc_values.keys():
-#             t = sum(self.doc_values[doc])/2
-#             if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (self.doc_values[doc][0] <= self.A[-1,doc] and self.doc_values[doc][1] >= self.A[-1,doc]):
-#                 score +=1
-#         return score == len(self.doc)

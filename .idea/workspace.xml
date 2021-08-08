@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8cbc8a7-7325-4bcb-9142-18d729e79f2d" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/fcmpy/ML/hebbian/hebbianutils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fcmpy/ML/hebbian/termination.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/ML/FCM_MP.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/ML/eltcn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/ML/rcga.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/ML/runner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fcmpy/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/fcmpy/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,59 +22,64 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="FCM_MP.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fcmpy/ML/FCM_MP.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="100" selection-start-line="100" selection-end-line="100" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fcmpy/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="51">
-              <caret line="3" column="17" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
+              <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="hebbianutils.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fcmpy/ml/hebbian/hebbianutils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
               <folding>
-                <element signature="e#0#50#0" expanded="true" />
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="eltcn.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fcmpy/ML/eltcn.py">
+      <file leaf-file-name="ahl_algorithm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fcmpy/ml/hebbian/ahl_algorithm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3468">
-              <caret line="218" column="22" selection-start-line="218" selection-start-column="22" selection-end-line="218" selection-end-column="22" />
+            <state relative-caret-position="969">
+              <caret line="61" column="23" selection-start-line="61" selection-start-column="23" selection-end-line="61" selection-end-column="23" />
+              <folding>
+                <element signature="e#201#219#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="runner.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fcmpy/ML/runner.py">
+      <file leaf-file-name="termination.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fcmpy/ml/hebbian/termination.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+            <state relative-caret-position="323">
+              <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rcga.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
+      <file leaf-file-name="simulator.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fcmpy/simulator/simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="459" column="22" selection-start-line="459" selection-end-line="460" />
+            <state>
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="nhl_algorithm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py">
+      <file leaf-file-name="methodStore.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fcmpy/simulator/methodStore.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="167" selection-start-line="167" selection-end-line="167" />
+            <state relative-caret-position="17">
+              <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="83" />
             </state>
           </provider>
         </entry>
@@ -112,15 +125,17 @@
         <option value="$PROJECT_DIR$/fcmpy/ML/rcga.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/eltcn.py" />
-        <option value="$PROJECT_DIR$/fcmpy/__init__.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/FCM_MP.py" />
         <option value="$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py" />
+        <option value="$PROJECT_DIR$/fcmpy/__init__.py" />
+        <option value="$PROJECT_DIR$/fcmpy/ml/hebbian/hebbianutils.py" />
+        <option value="$PROJECT_DIR$/fcmpy/ml/hebbian/ahl_algorithm.py" />
+        <option value="$PROJECT_DIR$/fcmpy/ml/hebbian/termination.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
-    <option name="y" value="310" />
     <option name="width" value="979" />
     <option name="height" value="1090" />
   </component>
@@ -145,7 +160,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.FCM_MP">
+  <component name="RunManager" selected="Python.ahl_algorithm">
     <configuration name="FCM_MP" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="FcmBci" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -159,6 +174,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/fcmpy/ML/FCM_MP.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="ahl_algorithm" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="FcmBci" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/fcmpy/ml/hebbian" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/fcmpy/ml/hebbian/ahl_algorithm.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -218,38 +251,20 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="transfer" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="FcmBci" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/fcmpy/simulator" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/fcmpy/simulator/transfer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <list>
-      <item itemvalue="Python.transfer" />
       <item itemvalue="Python.test" />
       <item itemvalue="Python.FCM_MP" />
       <item itemvalue="Python.eltcn" />
       <item itemvalue="Python.rcga" />
+      <item itemvalue="Python.ahl_algorithm" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.ahl_algorithm" />
         <item itemvalue="Python.FCM_MP" />
         <item itemvalue="Python.rcga" />
         <item itemvalue="Python.eltcn" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.transfer" />
       </list>
     </recent_temporary>
   </component>
@@ -270,67 +285,54 @@
     <frame x="-7" y="-7" width="1550" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.37871778" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.18010753" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32884097" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.52837837" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3716216" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.012244898" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39645776" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18010753" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.52837837" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32884097" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39645776" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.012244898" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/graph_net.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="20" lean-forward="true" selection-start-line="5" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/eltcn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="69" lean-forward="true" selection-start-line="1" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/FCM_MP.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="3" lean-forward="true" selection-start-column="3" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/FCM_MP.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" />
     <entry file="file://$PROJECT_DIR$/fcmpy/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="54" selection-start-line="2" selection-start-column="54" selection-end-line="2" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -358,39 +360,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="54" selection-start-line="2" selection-start-column="54" selection-end-line="2" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="27" selection-start-column="27" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py">
+    <entry file="file://$PROJECT_DIR$/test.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/nhl_algorithm.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/graph_net.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/graph_net.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6783">
-          <caret line="403" selection-start-line="403" selection-end-line="403" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/runner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="23" column="78" selection-start-line="23" selection-start-column="78" selection-end-line="23" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/rcga.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/runner.py" />
     <entry file="file://$PROJECT_DIR$/setup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -406,13 +385,7 @@
     <entry file="file://$PROJECT_DIR$/fcmpy/intervention/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/expert_fcm/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/fcmpy/simulator/transfer.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/simulator/methodStore.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/fcmpy/simulator/inference.py">
@@ -437,9 +410,6 @@
     <entry file="file://$PROJECT_DIR$/fcmpy/expert_fcm/expert_based_fcm.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/simulator/simulator.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/fcmpy/expert_fcm/defuzz.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -462,16 +432,10 @@
     <entry file="file://$PROJECT_DIR$/fcmpy/expert_fcm/transform.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/graph_net.py">
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/graph_net.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="27" selection-start-column="27" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py" />
     <entry file="file://$PROJECT_DIR$/fcmpy/expert_fcm/input_validator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -486,13 +450,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="3" selection-start-column="3" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ML/ahl_algorithm.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/core/fromnumeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -501,51 +459,64 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../ML/Untitled1.ipynb" />
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/__init__.py">
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/runner.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/eltcn.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/FCM_MP.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/rcga.py" />
+    <entry file="file://$PROJECT_DIR$/fcmpy/expert_fcm/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/nhl_algorithm.py" />
     <entry file="file://$PROJECT_DIR$/fcmpy/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
-          <caret line="3" column="17" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
+          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/hebbian/termination.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fcmpy/simulator/simulator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
-            <element signature="e#0#50#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/runner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/eltcn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3468">
-          <caret line="218" column="22" selection-start-line="218" selection-start-column="22" selection-end-line="218" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/FCM_MP.py">
+    <entry file="file://$PROJECT_DIR$/fcmpy/simulator/methodStore.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="100" selection-start-line="100" selection-end-line="100" />
+          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="83" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/nhl_algorithm.py">
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/hebbian/ahl_algorithm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="167" selection-start-line="167" selection-end-line="167" />
+        <state relative-caret-position="969">
+          <caret line="61" column="23" selection-start-line="61" selection-start-column="23" selection-end-line="61" selection-end-column="23" />
+          <folding>
+            <element signature="e#201#219#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fcmpy/ML/rcga.py">
+    <entry file="file://$PROJECT_DIR$/fcmpy/ml/hebbian/hebbianutils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="459" column="22" selection-start-line="459" selection-end-line="460" />
+        <state relative-caret-position="17">
+          <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

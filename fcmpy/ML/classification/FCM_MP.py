@@ -79,7 +79,6 @@ class Model(object):
         :param kwargs: dict of params
         writes calculated weight matrix to the self.weights
         '''
-        # W = np.array(pd.DataFrame(X_train).corr())
         W = self.map(X_train)
         W[np.isnan(W)] = 0
         self.weights = W, np.random.random((X_train.shape[1], Y_train.shape[1]))
@@ -147,11 +146,8 @@ def cross_val(f, folds=10, **kwargs):
     :return:
     '''
     X, Y, labels = read_arff(f)
-    # print(Y)
     mse = []
-    #print(kwargs)
     n_outputs = kwargs["M"]  # output variables
-    #print(type(kwargs))
     if X.min() < 0. or X.max() > 1.:
         print("Numerical values need to be normalized.")
         raise Exception
@@ -196,7 +192,8 @@ def cross_val(f, folds=10, **kwargs):
         "train_error": train_error,
         "test_error": test_error,
         "training_time": elapsed.total_seconds() / folds,
-        "weights":model.weights,
+        "weights":model.weights[0],
+        "importance":model.weights[1]
         
     }
 
@@ -224,9 +221,7 @@ def run(**params):
     
     data_sources = [f for f in params['sources'] if f.endswith('.arff')]
 
-#     dirs = [dir for dir in args.sources if os.path.isdir(dir)]
-#     data_sources += [os.path.join(dir, f) for dir in dirs for f in os.listdir(dir) if f.endswith('.arff')]
-#     data_sources.sort()
+
     results = []
     with open("./output.csv", mode='w') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -235,7 +230,7 @@ def run(**params):
         for f in data_sources:
             print("Processing {}".format(f))
             # here the model is being created and called
-            result = cross_val(f, **params) # result = cross_val(f, **vars(args))
+            result = cross_val(f, **params) 
             print(result)
             result['filename'] = f
             results.append(result)
@@ -255,6 +250,4 @@ def run(**params):
 
         print("MSE Average of the model across the %d datasets: %.4f" % (len(data_sources), np.average(MSE_hist)))
     return results 
-if __name__ == "__main__":
-    params = {'L':0, 'M':1, 'T':None, 'b1':1.0, 'folds':10, 'output':'./output.csv', 'p':[1.0, 1.0, 1.0, 1.0], 'rule':0, 'sources':['irisnorm.arff'], 'verbose':False}
-    run(**params)
+

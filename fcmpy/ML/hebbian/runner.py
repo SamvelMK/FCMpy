@@ -1,7 +1,7 @@
 import math
 import numpy as np 
-from fcmpy.ML.nhl_algorithm import NHL
-from fcmpy.ML.ahl_algorithm import AHL
+from fcmpy.ml.hebbian.nhl_algorithm import NHL
+from fcmpy.ml.hebbian.ahl_algorithm import AHL
 
 def simulateFCM(concepts, weights, nsteps,lamb = 1):
     '''
@@ -11,15 +11,13 @@ def simulateFCM(concepts, weights, nsteps,lamb = 1):
     :param nsteps: n of timesteps
     :return: historical data which has to be fed to the algorithm
     '''
-    # concepts should be given as a np.array((1,nConcepts))
-    # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     out = np.zeros((nsteps,concepts.shape[0]))       
     out[0] = concepts
     for j in range(1, nsteps):
         newvalues = np.zeros((concepts.shape[0]))       
-        newvalues = 1 / (1 + np.exp(-lamb*(concepts + concepts@weights))) #np.sum((weights.T*concepts).T,axis=1)
-        # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
-        # BROOOOOO
+        newvalues = 1 / (1 + np.exp(-lamb*(concepts + concepts@weights)))
+
         out[j] = newvalues
         concepts = newvalues
     return out
@@ -152,11 +150,7 @@ def simulator(hl_type,learning_rate,decay,A0,W_init,doc,lbd,e=None,mode=None,l1=
                  'mode':hebbian.mode,
                  'decayparams':[hebbian.l2,hebbian.b2],
                  'lrparams':[hebbian.l1,hebbian.b1]}
-        
-       
 
-        
-        
     return values
 
     

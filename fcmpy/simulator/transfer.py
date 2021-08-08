@@ -39,8 +39,8 @@ class Sigmoid(Transfer):
         
         x = kwargs['x']
         l = kwargs['params']['l']
-        e = np.exp(1)
-        res = 1/(1+(e**(-l*x)))
+#         e = np.exp
+        res = 1/(1+(np.exp(-l*x)))
         return res
 
 class Bivalent(Transfer):

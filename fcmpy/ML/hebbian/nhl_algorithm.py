@@ -9,7 +9,6 @@ import numpy as np
 import math
 import copy
 
-
 class NHL:
 
     def __init__(self, nConcept, e=None, n=None, gamma=None, h=None, lbd=None, beta=None):
@@ -114,22 +113,6 @@ class NHL:
         if prt is True:
             print(self.W)
 
-    def sigmoid(self, x):
-        '''
-        :param x: input value
-        :param lbd: normalizing param
-        :param h: normalizing param
-        :return: sigmoid activation function output
-
-        Sigmoid function used for updating of the node value after each step
-        '''
-        # TODO try inintial lbd as 0.5, recommended in another article
-        try:
-            sigm = 1 / (1 + math.exp(-x * self.lbd))
-        except OverflowError:
-            print('number to big' + str(x))
-
-        return sigm
 
 
     def update_node(self, function=None):
@@ -143,11 +126,9 @@ class NHL:
         map.update_node(1)
         '''
         edge = 0
-#
         if function is None or function == 'sigmoid':
 
 
-#             vf = np.vectorize(self.sigmoid)
 
             self.A[-1] = 1/(1 + np.exp(-self.lbd*(self.A[-2] + self.A[-2]@self.W[-2]))) # + np.sum((self.W[-2].T*self.A[-2]).T,axis=1)))
 
@@ -168,13 +149,6 @@ class NHL:
         '''
 
 
-        # according to the original one should A target,source, target -> col,row,col x,y,x Wyx , Wji, same, weights[y + x * A.length] == Wxy , weights[x + y * A.length] = Wyx
-#             print(self.A[-2].shape)
-#         sign = np.vectorize(self.sign)
-#         self.W[-1] = (self.gamma*self.W[-2]+self.n*self.A[-2]*np.ones((self.nConcept,self.nConcept))*((self.A[-2]*np.ones((self.nConcept,self.nConcept))).T-self.sgn(self.W[0])*self.W[-2]*(np.ones((self.nConcept,self.nConcept))*self.A[-2])))*np.abs(self.sgn(self.W[0]))
-
-
-#         self.W[-1] = self.gamma*self.W[-2] + self.n * (np.abs(self.sgn(self.W[0])).T*self.A[-2]).T* (self.A[-2]-self.sgn(self.W[0])*self.W[-2]*(np.abs(self.sgn(self.W[0])).T*self.A[-2]).T)
 
         self.W[-1] = self.gamma*self.W[-2] + self.n * (np.abs(self.sgn(self.W[0]))*self.A[-2])* ((np.abs(self.sgn(self.W[0])).T*self.A[-2]).T-self.sgn(self.W[0])*self.W[-2]*np.abs(self.sgn(self.W[0]))*self.A[-2])
 
@@ -188,7 +162,7 @@ class NHL:
         checking if simulation is completed
         '''
         # changing for or
-        if self.termination1 and self.termination2:# and self.termination3:
+        if self.termination1 and self.termination2:
             return True
         else:
             return False
@@ -202,13 +176,8 @@ class NHL:
         - if change between doc is smaller than defined threshold (default is 0.002)
         :param step: which is the current step
         '''
-        # check in nodes are in bounds
-        #         for node in self.doc:
-        #             if self.A[self.steps,node] > self.doc_values[node][1] or self.A[self.steps,node] < self.doc_values[node][0]:
-        #                 return
 
         if self.steps < 2:
-            #             print('too soon to finish')
             return
 
         #         1st termination condition
@@ -221,15 +190,7 @@ class NHL:
         if np.all([abs(self.A[-1][i]-self.A[-2][i]) < self.e for i in self.doc]):
             self.termination2 = True
 
-        #term3
-        # this is not the termination condition for the learning process, it is for the simulation to see if DOC is within the bounds
-        # it does not have to be fulfill during the learning process!!!!
-#         rules = 0
-#         for node in self.doc:
-#             if self.A[-1,node] < self.doc_values[node][1] and self.A[-1,node] > self.doc_values[node][0]:
-#                 rules += 1
-#         if rules == len(self.doc):
-#             self.termination3 = True
+
 
     @staticmethod
     def sgn(X):
@@ -275,12 +236,6 @@ class NHL:
 
 
     def f1(self):
-#         score = 0
-#         for doc in self.doc_values.keys():
-#             t = sum(self.doc_values[doc])/2
-#             if (math.sqrt((self.A[-1,doc]-t)**2)<math.sqrt((self.A[-2,doc]-t)**2)) and (math.sqrt((self.A[-2,doc]-t)**2)<math.sqrt((self.A[-3,doc]-t)**2)):
-#                 score +=1
-#         return score == len(self.doc)
 
 #         since we are trying to minimizng F1, we should stop when the derivative is small (e.g. less than 0.1)
         score = 0

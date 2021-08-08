@@ -16,7 +16,7 @@ import tqdm.auto as tq
 import matplotlib.pylab as plt
 import matplotlib
 
-#matplotlib.use("TkAgg") nice feature, do NOT use in the jupyter notebook 
+#matplotlib.use("TkAgg") # nice feature, it will plot and update fitness function during learning process !!!! do NOT use in the jupyter notebook !!!
 
 class rcga:
     '''
@@ -96,7 +96,6 @@ class rcga:
         # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         assert weights.shape == (self.nConcepts, self.nConcepts - 1), 'wrong encoding'
-        # concepts=np.reshape(concepts,(1,concepts.shape[0]))
 
 
         for j in range(1, nsteps):
@@ -105,8 +104,7 @@ class rcga:
                 idx = list(range(concepts.shape[0]))
                 idx.remove(i)
                 newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
-            # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
-            # BROOOOOO
+
 
             concepts = newvalues
         return concepts
@@ -118,7 +116,7 @@ class rcga:
         :return: fitness of the chromosome (how well this weight matrix did)
         '''
         # difference
-        alpha = 1 / ((self.numberofsteps - 1) * self.nConcepts* self.data.shape[0]) # concepts_for_testing.shape[-1]
+        alpha = 1 / ((self.numberofsteps - 1) * self.nConcepts* self.data.shape[0]) 
         # we are countin L1
         # let's say we have both historical data and fcm, so we can simply
         # simulate with new weights and calculate difference to obtain the fitness function
@@ -169,14 +167,12 @@ class rcga:
         Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
         :return:
         '''
-        mut = np.random.choice(['random','nonuniform'])#,'muhlenbein'])
-
+        mut = np.random.choice(['random','nonuniform'])
         if mut =='random':
             self.randommutation()
         elif mut =='nonuniform':
             self.numutation()
-        # if mut =='muhlenbein':
-        #     self.muhlenbeinmutation()
+
 
     def randommutation(self):
         '''
@@ -396,9 +392,7 @@ def simulateFCM(concepts, weights, nsteps):
             idx = list(range(concepts.shape[0]))
             idx.remove(i)
             newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
-        # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
-        # BROOOOOO
-        # out[j] = newvalues
+   
         concepts = newvalues
     return concepts
 
@@ -423,44 +417,7 @@ def reshapeW(W,mode):
         out = np.zeros((W.shape[0],W.shape[1]+1))
         for i in range(W.shape[0]):
             a = W[i].tolist() 
-            a.insert(i,0.0)# idx, val
+            a.insert(i,0.0)
             out[:,i] = a
         return out
     
-if __name__ == "__main__":
-    # test 1
-    # tank case
-    A0 = np.asarray([[0.4, 0.707, 0.607, 0.72, 0.3],[0.5, 0.66, 0.56, 0.78, 0.27],[0.6, 0.8, 0.5, 0.77, 0.34],[0.45,0.73,0.65,0.74,0.31]])
-    W_init = np.asarray([[0,-0.4,-0.25,0,0.3],[0.36,0,0,0,0],[0.45,0,0,0,0],[-0.9,0,0,0,0],[0,0.6,0,0.3,0]])
-
-    testc = 5
-    # nofsteps = 2
-    #
-    # historicaldata = simulateFCM(A0,W_init,nofsteps)
-
-    # test 2
-    nofsteps = 2
-    # testc =7
-    
-#     A0 = np.asarray([0.47, 0.51, 0.13, 0, 1, 0.37, 0.1])
-#     W_init1 = np.asarray([[0,0,0.20,0.3,0,0,0.45],
-#         [0,0,0,0.40,0,0,0.35],
-#         [0,0,0,0.30,0,0,0.30],
-#         [0,0,0,0,0,0,0.40],
-#         [0.30,0,0.15,0.35,0,0,0.25],
-#         [0.20,0,0.25,0.30,0,0,0.20],
-#         [0,0,0,0,0,0,0]])
-
-    W_init = reshapeW(W_init,'in')
-    historicaldata = np.zeros((A0.shape[0],A0.shape[1]))
-    for concepts,i in zip(A0,range(A0.shape[0])):
-        historicaldata[i] = simulateFCM(concepts, W_init, nofsteps)
-
-    GA = rcga(testc,A0,historicaldata=historicaldata,numberofsteps=nofsteps)
-    W_final = GA.run()
-    # writing results
-    # print(np.reshape(W_final,(100,testc*(testc-1))).shape,GA.generation_fitness.shape)
-
-
-    np.savetxt('finalweights50p2nd.txt',np.reshape(W_final,(100,testc*(testc-1))), delimiter=',')
-    np.savetxt('fitnessall50p2nd.txt',GA.generation_fitness, delimiter=',')
