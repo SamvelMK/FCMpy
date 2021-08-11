@@ -225,7 +225,3 @@ def run(path):
     return results
 
 
-if __name__=='__main__':
-
-    print(run('data'))
-    print("Done!")
