@@ -7,7 +7,7 @@ class Inference(ABC):
         Class of FCM inference methods
     """
     @abstractmethod
-    def infer():
+    def infer() -> np.array:
         raise NotImplementedError('Infer method is not defined!')
 
 
@@ -16,7 +16,7 @@ class Kosko(Inference):
         Kosko's inference method.
     """
     @staticmethod    
-    def infer(**kwargs):
+    def infer(**kwargs) -> np.array:
         """
             Kosko's inference method.
 
@@ -28,7 +28,7 @@ class Kosko(Inference):
                             N*N weight matrix of the FCM.
             
             Return
-            ----------
+            -------
             y: numpy.array
                     updated state vector
         """
@@ -46,7 +46,7 @@ class ModifiedKosko(Inference):
         Modified Kosko inference method.
     """
     @staticmethod    
-    def infer(**kwargs):
+    def infer(**kwargs) -> np.array:
         """
             Modified Kosko inference method.
 
@@ -76,7 +76,7 @@ class Rescaled(Inference):
         Rescaled inference method.
     """
     @staticmethod    
-    def infer(**kwargs):
+    def infer(**kwargs) -> np.array:
         """
             Rescaled inference method.
 
