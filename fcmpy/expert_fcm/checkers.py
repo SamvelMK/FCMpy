@@ -17,7 +17,7 @@ class ConsistencyCheck:
         """
             Extract inconsistent ratings for the given linguistic terms in the
             supplied data. The method writes out an excel file with the
-            inconsistencies and raises a ValueError if inconsistencies 
+            inconsistencies and prints out a message if inconsistencies 
             were identified.
             
             Parameters
@@ -33,9 +33,8 @@ class ConsistencyCheck:
             val = {}
             for expert in data.keys():
                 dat = data[expert].copy(deep=True)
-                dat.columns = [x.lower() for x in dat.columns]
-                dat = dat.set_index(['from', 'to']).replace(r'', np.nan)
-                dat['na'] = np.nan
+                dat.columns = [x.lower() for x in dat.columns] # set columns to lower case.
+                dat = dat.set_index(['from', 'to']).replace(r'', np.nan) # replace the empty cells to np.nan
                 dat[[i for i in dat if '-' in i]] = dat[[i for i in dat if '-' in i]] * -1
                 v = dat.loc[pair].values[np.logical_not(np.isnan(dat.loc[pair].values))]
                 if len(v) > 0:
