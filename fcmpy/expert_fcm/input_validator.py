@@ -7,6 +7,10 @@ from inspect import getfullargspec
 
 
 def validate_input(obj, **kwargs):
+    """
+    Check whether the passed arguments are of the same type
+    as the pre-specified typehints    
+    """
     hints = get_type_hints(obj)
 
     # iterate all type hints
@@ -28,6 +32,9 @@ def validate_input(obj, **kwargs):
                     )
                 
 def type_check(decorator):
+    """
+    Decorator for validating the typehints
+    """
     @wraps(decorator)
     def wrapped_decorator(*args, **kwargs):
         # translate *args into **kwargs
