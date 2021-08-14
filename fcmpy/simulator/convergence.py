@@ -1,19 +1,22 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
+
 class Convergence(ABC):
     """
         Class of FCM convergence methods
     """
     @abstractmethod
-    def check_convergence():
+    def check_convergence() -> bool:
         raise NotImplementedError('Check_convergence method is not defined!')
     
 
 class AbsDifference(Convergence):
-
+    """
+        Convergence check based on absolute difference .
+    """
     @staticmethod
-    def check_convergence(**kwargs):
+    def check_convergence(**kwargs) -> bool:
         """
             Compute the residuals (abs difference) of the outputConcepts
             between the simulation steps.
@@ -32,8 +35,9 @@ class AbsDifference(Convergence):
                         the threshold of the residuals to break the loop in the simulations.
             
             Return
-            ----------
-            bool: True if the residuals are <= the threshold, False if otherwise.
+            -------
+            y: bool
+                True if the residuals are <= the threshold, False if otherwise.
         """
         outputConcepts = kwargs['output_concepts']
         results = kwargs['results']
@@ -49,4 +53,3 @@ class AbsDifference(Convergence):
             return True
         else:
             return False
-
