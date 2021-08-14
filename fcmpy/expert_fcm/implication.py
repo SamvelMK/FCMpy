@@ -8,7 +8,7 @@ class FuzzyImplication:
         Fuzzy implication rules.
     """
     @abstractclassmethod
-    def implication():
+    def implication() -> np.ndarray:
         raise NotImplementedError('implication method is not defined.')
 
 
@@ -23,7 +23,7 @@ class Mamdani(FuzzyImplication):
             Mamdani min fuzzy implication rule.
 
             Other Parameters
-            ----------
+            ----------------
             **mf_x: numpy.ndarray,
                     membership function of a linguistic term (x)
 
@@ -32,7 +32,7 @@ class Mamdani(FuzzyImplication):
                         should be activated (i.e., the cut point)
             
             Return
-            ---------
+            -------
             y: numpy.ndarray
                 the 'activated' membership function
         """
@@ -53,7 +53,7 @@ class Larsen(FuzzyImplication):
             Larsen's product fuzzy implication rule.
 
             Other Parameters
-            ----------
+            ----------------
             **mf_x: numpy.ndarray
                     membership function of a linguistic term (x)
 
@@ -61,7 +61,7 @@ class Larsen(FuzzyImplication):
                         the weight at which the membership function x should be activated (i.e., rescaled)
             
             Return
-            ---------
+            -------
             y: numpy.ndarray
                 the activated (rescaled) membership function
         """
