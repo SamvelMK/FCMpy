@@ -110,7 +110,7 @@ class CSV(ReadData):
             Read data from a csv file.
 
             Other Parameters
-            ----------
+            ----------------
             **filepath : str
 
             **linguisticTerms: dictionary
@@ -156,9 +156,9 @@ class CSV(ReadData):
 
 
 class XLSX(ReadData):
-    """""
+    """
         Read data from .xlsx file.
-    """""
+    """
     @staticmethod
     @type_check
     def read(**kwargs) -> collections.OrderedDict:
@@ -166,11 +166,11 @@ class XLSX(ReadData):
             Read data from .xlsx file.
             
             Other Parameters
-            ----------
+            ----------------
             **filePath : str
 
             **checkConsistency: Bool
-                                check the consistency of raitings across the experts.
+                                check the consistency of ratings across the experts.
                                 default --> False
             
             **engine: str,
@@ -178,7 +178,7 @@ class XLSX(ReadData):
                         default --> "openpyxl"
             
             Return
-            ---------
+            -------
             data: collections.OrderedDict
                     ordered dictionary with the formatted data.
         """
@@ -200,7 +200,7 @@ class XLSX(ReadData):
         ColumnsCheck.checkColumns(data=data)
 
         if checkConsistency:
-            ConsistencyCheck.checkConsistency(data=data)
+            ConsistencyCheck.checkConsistency(data=data) # check whether From -> To columns exist.
         
         return data
 
