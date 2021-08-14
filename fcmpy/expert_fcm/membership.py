@@ -49,25 +49,28 @@ class TriangularMembership(FuzzyMembership):
 
 class GaussianMembership(FuzzyMembership):
     """
-        Generate Gaussian membership functions.
-
-        Other Parameters
-        ----------
-        **linguisticTerms: dict,
-                            terms and the associated parameters 
-                            'mean' and 'sigma' -> e.g., {'+VL': [0.25, 0.1]}}
-        **universe: numpy.ndarray,
-                    universe of discourse
-                        
-        Return
-        ---------
-        y: dict,
-            Generated membership functions. The keys are the linguistic terms 
-            and the values are 1d arrays.
+        Gaussian Fuzzy Membership Functions. 
     """
     @staticmethod
     @type_check
     def membershipFunction(**kwargs):
+        """
+            Generate Gaussian membership functions.
+
+            Other Parameters
+            ----------------
+            **linguisticTerms: dict,
+                                terms and the associated parameters 
+                                'mean' and 'sigma' -> e.g., {'+VL': [0.25, 0.1]}}
+            **universe: numpy.ndarray,
+                        universe of discourse
+                            
+            Return
+            -------
+            y: dict,
+                Generated membership functions. The keys are the linguistic terms 
+                and the values are 1d arrays.
+        """
         universe = kwargs['universe']
         linguisticTerms = kwargs['linguistic_terms'] 
         mfs = {}
@@ -90,14 +93,14 @@ class TrapezoidalMembership(FuzzyMembership):
             Generate Trapezoidal membership functions.
 
             Other Parameters
-            ----------
+            ----------------
             **linguisticTerms: dict,
                                 terms and the associated parameters 'abcd' --> e.g., {'+VL': [0, 0.25, 0.5, 0.75]}
             **universe: numpy.ndarray,
                         universe of discourse
 
             Return
-            ---------
+            -------
             y: dict,
                 Generated membership functions. The keys are the linguistic terms and the values are 1d arrays.
         """
