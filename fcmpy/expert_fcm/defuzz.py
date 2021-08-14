@@ -8,7 +8,7 @@ class Defuzzification(ABC):
         Defuzzification methods.
     """
     @abstractclassmethod
-    def defuzz():
+    def defuzz() -> float:
         raise NotImplementedError('defuzzification method is not defined!')
 
 
@@ -29,6 +29,11 @@ class Centroid(Defuzzification):
             
             **mfx: numpy.ndarray,
                         "aggregated" membership functions
+            
+            Return
+            -------
+            y: float
+                defuzzified value
         """
         method = kwargs['method']
         x = kwargs['x']
@@ -54,6 +59,11 @@ class Bisector(Defuzzification):
             
             **mfx: numpy.ndarray,
                         "aggregated" membership functions
+            
+            Return
+            -------
+            y: float
+                defuzzified value
         """
         method = kwargs['method']
         x = kwargs['x']
@@ -79,6 +89,11 @@ class MeanOfMax(Defuzzification):
             
             **mfx: numpy.ndarray,
                         "aggregated" membership functions
+            
+            Return
+            -------
+            y: float
+                defuzzified value
         """
         method = kwargs['method']
         x = kwargs['x']
@@ -104,6 +119,11 @@ class MinOfMax(Defuzzification):
             
             **mfx: numpy.ndarray,
                         "aggregated" membership functions
+            
+            Return
+            -------
+            y: float
+                defuzzified value
         """
         method = kwargs['method']
         x = kwargs['x']
@@ -129,6 +149,11 @@ class MaxOfMax(Defuzzification):
             
             **mfx: numpy.ndarray,
                         "aggregated" membership functions
+            
+            Return
+            -------
+            y: float
+                defuzzified value
         """
         method = kwargs['method']
         x = kwargs['x']
