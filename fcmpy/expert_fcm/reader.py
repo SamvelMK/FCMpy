@@ -197,10 +197,10 @@ class XLSX(ReadData):
         data = pd.read_excel(filePath, sheet_name=None,  engine=engine)
         data = collections.OrderedDict(data)
 
-        ColumnsCheck.checkColumns(data=data)
+        ColumnsCheck.checkColumns(data=data) # check whether From -> To columns exist.
 
         if checkConsistency:
-            ConsistencyCheck.checkConsistency(data=data) # check whether From -> To columns exist.
+            ConsistencyCheck.checkConsistency(data=data) # check the consistency of the linguistic ratings.
         
         return data
 
@@ -216,15 +216,15 @@ class JSON(ReadData):
             Read data from a .json file.
 
             Other Parameters
-            ----------
+            ----------------
             **filePath : str, path object or file-like object
 
             **checkConsistency: Bool
-                                check the consistency of raitings across the experts.
+                                check the consistency of ratings across the experts.
                                 default --> False
             
             Return
-            ---------
+            -------
             data: collections.OrderedDict
                     ordered dictionary with the formatted data.
         """
@@ -243,9 +243,9 @@ class JSON(ReadData):
             d[i] = dataJson[i]
         data = collections.OrderedDict([(i, pd.DataFrame(d[i]).replace(r'^\s*$', np.nan, regex=True)) for i in d])
 
-        ColumnsCheck.checkColumns(data=data)
+        ColumnsCheck.checkColumns(data=data) # check whether From -> To columns exist.
 
         if checkConsistency:
-            ConsistencyCheck.checkConsistency(data=data)
+            ConsistencyCheck.checkConsistency(data=data) # check the consistency of the linguistic ratings.
 
         return data
