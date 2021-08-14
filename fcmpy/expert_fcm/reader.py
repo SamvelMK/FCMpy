@@ -14,13 +14,13 @@ class ReadData(ABC):
         Class of methods for reading in data.
     """
     @abstractmethod
-    def read():
+    def read() -> collections.OrderedDict:
         raise NotImplementedError('read method is not defined!')
 
 
 class CSV(ReadData):
     """
-        Read data from .csv file.
+        Read data from a .csv file.
     """
     def __init__(self):
         pass
@@ -29,7 +29,7 @@ class CSV(ReadData):
     def __conceptParser(self, string: str, sepConcept: str) -> dict:
         """
             Parse the csv file column names. Extract the antecedent, 
-            concequent pairs and the polarity of the causal relationship.
+            consequent pairs and the polarity of the causal relationship.
 
             Parameters
             ----------
@@ -38,45 +38,47 @@ class CSV(ReadData):
             
             sepConcept: str
                         the separation symbol (e.g., '->') that separates 
-                        the antecedent from the concequent in the columns of a csv file
+                        the antecedent from the consequent in the columns of a csv file
             
             Return
             ---------
             y: dict
-                keys --> antecedent, concequent, polarity
+                keys --> antecedent, consequent, polarity
         """
         dt = {}
-        pattern = f'[a-zA-Z]+.+->.+.(\(\+\)|\(\-\))'
+        pattern = f'[a-zA-Z]+.+->.+.(\(\+\)|\(\-\))' # detect the column head pattern: antesedent -> consequent (polarity)
         patterMatch = bool(re.search(pattern, string))
         
         if patterMatch:
             dt['polarity'] = re.search(r'\((.*?)\)', string).group(1)
             concepts = string.split(sepConcept)
             dt['antecedent'] = re.sub(r'\([^)]*\)', '', concepts[0]).strip() 
-            dt['concequent'] = re.sub(r'\([^)]*\)', '', concepts[1]).strip()
+            dt['consequent'] = re.sub(r'\([^)]*\)', '', concepts[1]).strip()
             return dt
         else:
-            raise ValueError('The $antecedent$ $->$ $concequent (sign)$ \
+            raise ValueError('The $antecedent$ $->$ $consequent (sign)$ \
                                 format is not detected! Check the data format!')
     
     @type_check
     def __extractRowData(self, data: dict, sepConcept: str, 
                             linguisticTerms: list) -> pd.DataFrame:
         """
-            Convert csv data fromat to a dataframe with columns representing the linguistic terms.
+            Convert csv data fromat to a dataframe with columns representing the linguistic terms
+            and rows representing the participants inputs (i.e., expert inputs).
 
             Parameters
             ----------
-            data: dict,
+            data: dict
                     data to be extracted
             sepConcept: str
-                        the separation symbol (e.g., '->') that separates the antecedent from the concequent in the columns of a csv file
+                        the separation symbol (e.g., '->') that separates the antecedent from the
+                        consequent in the columns of a csv file
             
             linguisticTerms: list
                                 list of linguistic terms
             
             Return
-            ---------
+            -------
             y: pandas.DataFrame
         """
         ltValence = [i.lower().strip('+-') for i in linguisticTerms if i.startswith(('-', '+'), 0, 1)] # get the terms that have valence
@@ -87,7 +89,7 @@ class CSV(ReadData):
             _ = {i: 0 for i in linguisticTerms}
             conceptsParsed = self.__conceptParser(string=i, sepConcept=sepConcept)
             _['From'] = conceptsParsed['antecedent']
-            _['To'] = conceptsParsed['concequent']
+            _['To'] = conceptsParsed['consequent']
 
             # no causality cases
             if data[i].lower() in ltValence:
@@ -121,7 +123,7 @@ class CSV(ReadData):
                         separator of the csv file (read more in pandas.read_csv)
 
             Return
-            ---------
+            -------
             data: collections.OrderedDict
                     ordered dictionary with the formatted data.
         """
@@ -136,7 +138,7 @@ class CSV(ReadData):
         
         try:
             csvSep = kwargs['params']['csv_sep']
-        except:
+        except: # set the default csv sep to ','
             csvSep = ','
 
         data = pd.read_csv(filePath, sep=csvSep)
@@ -148,7 +150,7 @@ class CSV(ReadData):
         
         data = dataOd
 
-        ColumnsCheck.checkColumns(data=data)
+        ColumnsCheck.checkColumns(data=data) # check whether From -> To columns exist.
 
         return data
 
