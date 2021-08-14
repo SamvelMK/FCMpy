@@ -28,7 +28,7 @@ class CSV(ReadData):
     @type_check
     def __conceptParser(self, string: str, sepConcept: str) -> dict:
         """
-            Parse the csv file column names. Extract the antecedent, 
+            Parse the csv file column names. Extract the antecedent -> 
             consequent pairs and the polarity of the causal relationship.
 
             Parameters
@@ -41,7 +41,7 @@ class CSV(ReadData):
                         the antecedent from the consequent in the columns of a csv file
             
             Return
-            ---------
+            -------
             y: dict
                 keys --> antecedent, consequent, polarity
         """
@@ -206,9 +206,9 @@ class XLSX(ReadData):
 
 
 class JSON(ReadData):
-    """""
+    """
     Read data from .json file.
-    """""
+    """
     @staticmethod
     @type_check
     def read(**kwargs) -> collections.OrderedDict:
