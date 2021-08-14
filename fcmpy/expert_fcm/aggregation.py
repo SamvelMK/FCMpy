@@ -7,7 +7,7 @@ class Aggregate(ABC):
         Fuzzy aggregation rule.
     """
     @abstractmethod
-    def aggregate():
+    def aggregate() -> np.ndarray:
         raise NotImplementedError('aggregate method is not defined.')
 
 
@@ -17,7 +17,7 @@ class Fmax(Aggregate):
     """
     @staticmethod
     @type_check
-    def aggregate(**kwargs) -> float:
+    def aggregate(**kwargs) -> np.ndarray:
         """
             Family max aggregation rule.
 
@@ -28,8 +28,8 @@ class Fmax(Aggregate):
                             that need to be aggregated
             
             Return
-            ---------
-            y: float
+            -------
+            y: np.ndarray
                 an aggregated membership function
         """
         x = kwargs['x']
@@ -44,7 +44,7 @@ class AlgSum(Aggregate):
     """
     @staticmethod
     @type_check
-    def aggregate(**kwargs) -> float:
+    def aggregate(**kwargs) -> np.ndarray:
         """
             Family Algebraic sum aggregation rule.
 
@@ -54,8 +54,8 @@ class AlgSum(Aggregate):
                         "activated" membership functions of the linguistic terms that need to be aggregated
             
             Return
-            ---------
-            y: float
+            -------
+            y: np.ndarray
                 an aggregated membership function
         """
         x = kwargs['x']
@@ -70,7 +70,7 @@ class EinsteinSum(Aggregate):
     """
     @staticmethod
     @type_check
-    def aggregate(**kwargs) -> float:
+    def aggregate(**kwargs) -> np.ndarray:
         """
             Family Einstein sum aggregation rule.
 
@@ -80,7 +80,7 @@ class EinsteinSum(Aggregate):
                         "activated" membership functions of the linguistic terms that need to be aggregated
             
             Return
-            ---------
+            -------
             y: float
                 an aggregated membership function
         """
@@ -96,7 +96,7 @@ class HamacherSum(Aggregate):
     """
     @staticmethod
     @type_check
-    def aggregate(**kwargs) -> float:
+    def aggregate(**kwargs) -> np.ndarray:
         """
             Family Hamacher sum aggregation rule.
 
@@ -107,8 +107,8 @@ class HamacherSum(Aggregate):
                         to be aggregated
             
             Return
-            ---------
-            y: float
+            -------
+            y: np.ndarray
                 an aggregated membership function
         """
         x = kwargs['x']
