@@ -15,18 +15,17 @@ from fcmpy.expert_fcm.transform import Transform
 
 class FcmConstructor(ABC):
     @abstractmethod
-    def read_data(file_path, **kwargs):
+    def read_data(file_path, **kwargs) -> collections.OrderedDict:
         raise NotImplementedError('read_data method is not defined!')
 
     @abstractmethod
     def build(data: collections.OrderedDict, implication_method:str, 
-                    aggregation_method:str, defuzz_method:str):
+                    aggregation_method:str, defuzz_method:str) -> pd.DataFrame:
                     
         raise NotImplementedError('build method is not defined!')
 
 
 class ExpertFcm(FcmConstructor):
-    
     """
         Construct Expert FCMs based on qualitative input data.
 
