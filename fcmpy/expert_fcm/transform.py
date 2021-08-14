@@ -6,7 +6,7 @@ from fcmpy.expert_fcm.input_validator import type_check
 
 class Transform:
     """
-        Create a Flat data and Calculate the proportions of answers to each linguistic term.
+        Collection of data transformation (static) methods.
     """
     @staticmethod
     @type_check
@@ -25,7 +25,7 @@ class Transform:
                             should be constructed
 
             Return
-            ---------
+            -------
             y: dict,
                 keys ---> linguistic terms, values ---> proportion
                 of expert ratings.
@@ -47,7 +47,7 @@ class Transform:
                     keys ---> expertId, values ---> pandas.DataFrame
             
             Return
-            ---------
+            -------
             y: pandas.DataFrame
                 data with all the expert inputs in one dataframe.
         """
