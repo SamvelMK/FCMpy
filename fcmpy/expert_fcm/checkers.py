@@ -49,6 +49,7 @@ class ConsistencyCheck:
             print(f'{list(res.index)} pairs of concepts were rated inconsistently across the experts. \
                  For more information check the inconsistentRatings_{current_date.day}_{current_date.month}_{current_date.year}.xlsx')
 
+
 class ColumnsCheck:
     """
         Check the columns of the data.
@@ -57,7 +58,7 @@ class ColumnsCheck:
     @type_check
     def checkColumns(data: Union[dict, collections.OrderedDict]):
         """
-            Checks whether the dataframe includes From ---> To column. It raises an error, if the columns are not found. 
+            Checks whether the dataframe includes From --> To column. It raises an error, if the columns are not found. 
             
             Parameters
             ----------
