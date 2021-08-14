@@ -8,7 +8,7 @@ class FuzzyMembership(ABC):
         Fuzzy membership functions.
     """
     @abstractclassmethod
-    def membershipFunction():
+    def membershipFunction() -> dict:
         raise NotImplementedError('membershipFunction method is not defined')
 
 
@@ -53,7 +53,7 @@ class GaussianMembership(FuzzyMembership):
     """
     @staticmethod
     @type_check
-    def membershipFunction(**kwargs):
+    def membershipFunction(**kwargs) -> dict:
         """
             Generate Gaussian membership functions.
 
@@ -88,7 +88,7 @@ class TrapezoidalMembership(FuzzyMembership):
     """
     @staticmethod
     @type_check
-    def membershipFunction(**kwargs):
+    def membershipFunction(**kwargs) -> dict:
         """
             Generate Trapezoidal membership functions.
 
