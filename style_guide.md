@@ -47,4 +47,3 @@ FCMpy package follows PEP-8 style guide.
 * Constants -> UPPERCASE
 * Package -> lowercase
 * Do not use 'l', 'O', or 'I' as a single variable name
-
