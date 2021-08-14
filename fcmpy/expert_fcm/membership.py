@@ -23,25 +23,22 @@ class TriangularMembership(FuzzyMembership):
             Generate triangular membership functions.
 
             Other Parameters
-            ----------
+            ----------------
             **linguisticTerms: dict,
                                 terms and the associated parameters 
                                 'abc' --> e.g., {'+VL': [0.25, 0.5, 0.75]}
             
             **universe: numpy.ndarray,
-                        the universe of discourse
-                            
+                        the universe of discourse                 
 
             Return
-            ---------
+            -------
             y: dict,
                 Generated membership functions. The keys are the 
                 linguistic terms and the values are 1d arrays.
         """
-        
         linguisticTerms = kwargs['linguistic_terms'] 
         universe = kwargs['universe'] 
-
         mfs = {}
 
         for term in linguisticTerms.keys():
