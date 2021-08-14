@@ -58,7 +58,8 @@ class ColumnsCheck:
     @type_check
     def checkColumns(data: Union[dict, collections.OrderedDict]):
         """
-            Checks whether the dataframe includes From --> To column. It raises an error, if the columns are not found. 
+            Checks whether the dataframe includes From --> To column. 
+            It raises an error, if the columns are not found. 
             
             Parameters
             ----------
