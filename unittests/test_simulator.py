@@ -1,6 +1,6 @@
 import unittest
+import pandas as pd
 from fcmpy.simulator.simulator import FcmSimulator
-import pandas as pd 
 
 class TestSimulator(unittest.TestCase):
     
