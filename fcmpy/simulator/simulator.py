@@ -147,7 +147,7 @@ class FcmSimulator(Simulator):
         convergenceStatus = False
         step_count = 0
 
-        for i in range(iterations):
+        for _ in range(iterations):
             if not convergenceStatus:    
                 infered = inference.infer(initial_state=state_vector, weight_matrix=weight_matrix, params=kwargs)
                 state_vector = transfer.transfer(x=infered, params=kwargs)
