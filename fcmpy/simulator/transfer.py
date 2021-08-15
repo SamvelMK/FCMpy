@@ -7,7 +7,7 @@ class Transfer(ABC):
         Class of FCM transfer methods.
     """ 
     @abstractmethod
-    def transfer():
+    def transfer() -> np.array:
          raise NotImplementedError('Transfer method is not defined!')
 
 
@@ -16,7 +16,7 @@ class Sigmoid(Transfer):
         Sigmoid transfer method
     """
     @staticmethod
-    def transfer(**kwargs):
+    def transfer(**kwargs) -> np.array:
         """ 
             Sigmoid transfer function.
                 
@@ -47,7 +47,7 @@ class Bivalent(Transfer):
         Bivalent transfer method
     """
     @staticmethod
-    def transfer(**kwargs):
+    def transfer(**kwargs) -> np.array:
         """ 
             Bivalent transfer function.
                 
@@ -74,7 +74,7 @@ class Trivalent(Transfer):
         Trivalent transfer function.
     """
     @staticmethod
-    def transfer(**kwargs):
+    def transfer(**kwargs) -> np.array:
         """ 
             Trivalent transfer function.
                 
@@ -101,7 +101,7 @@ class HyperbolicTangent(Transfer):
         Hyperbolic tangent transfer function.
     """
     @staticmethod
-    def transfer(**kwargs):
+    def transfer(**kwargs) -> np.array:
         """ 
             Hyperbolic tangent transfer function.
 
