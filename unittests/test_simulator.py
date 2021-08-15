@@ -42,6 +42,27 @@ class TestSimulator(unittest.TestCase):
         self.assertEqual([round(i, 4) for i in eql_mK], [round(i, 4) for i in equilibrium_mK])
         self.assertEqual([round(i, 4) for i in eql_r], [round(i, 4) for i in equilibrium_r])
 
+    def test_simulation_bi(self):
+        res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='bi', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertEqual(len(set(res_mK.values.flatten())), 2)
+        self.assertEqual(max(res_mK.values.flatten()), 1)
+        self.assertEqual(min(res_mK.values.flatten()), 0)
+
+    def test_simulation_tri(self):
+        init_state = self.init_state.copy()
+        init_state['C1'] = -1
+        res_mK = self.sim.simulate(initial_state=init_state, weight_matrix=self.weight_matrix, transfer='tri', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertEqual(len(set(res_mK.values.flatten())), 3)
+        self.assertEqual(max(res_mK.values.flatten()), 1)
+        self.assertEqual(min(res_mK.values.flatten()), -1)
+
+    def test_simulation_tanh(self):
+        init_state = self.init_state.copy()
+        init_state['C1'] = -1
+        res_mK = self.sim.simulate(initial_state=init_state, weight_matrix=self.weight_matrix, transfer='tanh', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertEqual(max(res_mK.values.flatten()), 1)
+        self.assertEqual(min(res_mK.values.flatten()), -1)
+
     def test_stableConcepts(self):
         self.weight_matrix['C1'] = 0
         res_k = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='kosko', thresh=0.001, iterations=50, l=1)
