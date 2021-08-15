@@ -18,7 +18,7 @@ class Sigmoid(Transfer):
     @staticmethod
     def transfer(**kwargs):
         """ 
-            Sigmoidal transfer function.
+            Sigmoid transfer function.
                 
             Parameters
             ----------
@@ -28,7 +28,7 @@ class Sigmoid(Transfer):
                     A parameter that determines the steepness of the sigmoid function at values around 0. 
             
             Return
-            ----------
+            -------
             y : numpy.array,
                     domain R,
                     range [0,1].
@@ -57,7 +57,7 @@ class Bivalent(Transfer):
                     the results of the FCM update function.
             
             Return
-            ----------
+            -------
             y : numpy.array,
                     domain R,
                     range [0;1].
@@ -111,11 +111,11 @@ class HyperbolicTangent(Transfer):
                     the results of the FCM update function.
             
             Return
-            ----------
+            -------
             y : numpy.array,
                     domain R,
                     range [-1,1].
         """
         x = kwargs['x']
 
-        return np.tanh(x)    
+        return np.tanh(x)
