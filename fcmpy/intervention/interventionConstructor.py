@@ -7,7 +7,7 @@ class InterventionConstructor(ABC):
         Class of methods for building interventions.
     """
     @abstractmethod
-    def build():
+    def build() -> dict:
         raise NotImplementedError('Build method is not defined!')
 
 
@@ -16,7 +16,7 @@ class SingleShot(InterventionConstructor):
         Construct single-shot interventions
     """ 
     @staticmethod
-    def build(**kwargs):
+    def build(**kwargs) -> dict:
         """
             Construct a single shot intervention case
 
@@ -42,7 +42,7 @@ class SingleShot(InterventionConstructor):
 class Continuous(InterventionConstructor):
     
     @staticmethod
-    def build(**kwargs):
+    def build(**kwargs) -> dict:
         """
             Construct a continuous intervention case
 
