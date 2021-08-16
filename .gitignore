@@ -18,3 +18,7 @@ test.py
 .vscode
 *.ipynb
 *jss_data.csv
+.idea
+*.csv
+fcmpy/ML/data
+html
