@@ -149,8 +149,8 @@ class FcmSimulator(Simulator):
 
         for _ in range(iterations):
             if not convergenceStatus:    
-                infered = inference.infer(initial_state=state_vector, weight_matrix=weight_matrix, params=kwargs)
-                state_vector = transfer.transfer(x=infered, params=kwargs)
+                infered = inference.infer(initial_state=state_vector, weight_matrix=weight_matrix, params=kwargs) # Inference
+                state_vector = transfer.transfer(x=infered, params=kwargs) # Apply transfer func on the results
                 
                 # Reset the stable values
                 state_vector[stableConceptPos] = satble_values
