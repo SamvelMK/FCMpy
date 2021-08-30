@@ -19,7 +19,7 @@ class InferenceStore(GetMethod):
         if method in InferenceStore.__methods.keys():
             return InferenceStore.__methods[method]
         else:
-            raise ValueError('The ifnerence method is not defined.')
+            raise ValueError('The inference method is not defined.')
 
 class TransferStore(GetMethod):
 
