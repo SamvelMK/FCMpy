@@ -3,7 +3,7 @@ from fcmpy.simulator.simulator import FcmSimulator
 from fcmpy.intervention.intervention import FcmIntervention
 import pandas as pd
 
-class TestFcmSimulator(unittest.TestCase):
+class TestIntervention(unittest.TestCase):
     
     def setUp(self):
 
