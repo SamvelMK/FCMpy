@@ -194,7 +194,7 @@ def read_arff(file):
     X = np.array(frame)[:,0:-1]
     return X, y, len(labels)    
     
-def run(path):
+def run(path,folds=5):
     '''
     takes a directory where data file is (in .arff format) and do the whole calculation for you :)
     return fully connected FCM n x n for each fold and weight matrix n x nclasses
@@ -205,7 +205,7 @@ def run(path):
     files = os.listdir(path)
     print(f"file in your data directory {files}. make sure they are .arff files!")
     print("running...")
-    results = []
+    results = {}
     for file in files:
         if ".arff" not in file:
             print(f"{file} is not an .arff file")
@@ -220,7 +220,10 @@ def run(path):
                 weights[i] /= mx
                 # weights[i] *= mx
                 # weights /= mx
-        results.append({'acc':acc,'ent':ent,'weights':weights})
+             
+        avgW = (weights[0]+weights[2]+weights[4]+weights[6]+weights[8])/folds
+        classW = (weights[1]+weights[3]+weights[5]+weights[7]+weights[9])/folds
+        results[file] = {'acc':acc,'ent':ent,'weights':weights,'avgW':avgW, 'classW':classW}
         print(file.replace('.arff','') + "," + str(acc)+ "," + str(ent))
     return results
 
