@@ -220,10 +220,13 @@ def run(path,folds=5):
                 weights[i] /= mx
                 # weights[i] *= mx
                 # weights /= mx
-             
-        avgW = (weights[0]+weights[2]+weights[4]+weights[6]+weights[8])/folds
-        classW = (weights[1]+weights[3]+weights[5]+weights[7]+weights[9])/folds
-        results[file] = {'acc':acc,'ent':ent,'weights':weights,'avgW':avgW, 'classW':classW}
+        avgW = np.zeros((weights[0].shape[0],weights[0].shape[1]))     
+        for i in np.arange(0,folds,step=2):
+            avgW += weights[i]
+        classW = np.zeros((weights[0].shape[0],weights[0].shape[1]))     
+        for i in np.arange(1,folds,step=2):
+            classW += weights[i]
+        results[file] = {'acc':acc,'ent':ent,'weights':weights,'avgW':avgW/folds, 'classW':classW/folds}
         print(file.replace('.arff','') + "," + str(acc)+ "," + str(ent))
     return results
 
