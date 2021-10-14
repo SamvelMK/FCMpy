@@ -230,4 +230,3 @@ def run(path,folds=5):
         print(file.replace('.arff','') + "," + str(acc)+ "," + str(ent))
     return results
 
-
