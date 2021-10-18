@@ -1,8 +1,5 @@
 import pandas as pd
-import numpy as np
 import warnings
-from abc import ABC
-from abc import abstractmethod
 from typing import Union
 from tqdm import tqdm
 from fcmpy.expert_fcm.input_validator import type_check
