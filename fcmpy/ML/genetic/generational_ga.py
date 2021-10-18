@@ -175,7 +175,6 @@ class GRCGA(GA):
                 os.system('clear')
                 print(f"Best fitness: {best_candidate['fitness']}.")
 
-            
             # Step 7: Check termination
             if best_candidate['fitness'] >= threshold:
                 print(f'RCGA identified a solution with fitness score <= {threshold}.')
