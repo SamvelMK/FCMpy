@@ -1,11 +1,9 @@
-from fcmpy.expert_fcm.input_validator import type_check
 import numpy as np
-import pandas as pd
 from abc import ABC
 from abc import abstractmethod
+from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.store.methodsStore import InferenceStore
 from fcmpy.store.methodsStore import TransferStore
-from fcmpy.expert_fcm.input_validator import type_check
 
 class UpdateStateVector(ABC):
     
