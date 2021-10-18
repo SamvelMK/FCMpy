@@ -17,7 +17,7 @@ class HebbianLearning(ABC):
         Hebbian Based Learning for FCMs.
     """
     @abstractmethod
-    def run() -> pd.DataFrame:
+    def run(**kwargs) -> pd.DataFrame:
         raise NotImplementedError('run method is not defined.')
 
 
