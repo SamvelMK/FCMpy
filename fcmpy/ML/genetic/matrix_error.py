@@ -1,7 +1,6 @@
 ###########################################################################
 ##                   Classes for matrix error methods                    ##
 ###########################################################################
-
 from abc import ABC
 from abc import abstractmethod
 import numpy as np

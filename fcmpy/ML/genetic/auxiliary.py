@@ -1,7 +1,6 @@
 ###########################################################################
 ##       Classes for auxiliary methods for the fitness scores            ##
 ###########################################################################
-
 from abc import ABC
 from abc import abstractmethod
 

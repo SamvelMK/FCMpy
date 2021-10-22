@@ -1,7 +1,6 @@
 ###########################################################################
-##                    Classes for selection methods                      ##
+##                    Classes for selection strategies                   ##
 ###########################################################################
-
 import numpy as np
 from abc import ABC
 from abc import abstractmethod

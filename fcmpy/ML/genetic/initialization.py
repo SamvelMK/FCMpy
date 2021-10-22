@@ -1,7 +1,6 @@
 ###########################################################################
 ##       Classes for initializing a population of candidate solutions    ##
 ###########################################################################
-
 import numpy as np
 from abc import ABC
 from abc import abstractmethod

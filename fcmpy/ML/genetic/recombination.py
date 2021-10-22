@@ -1,7 +1,6 @@
 ###########################################################################
-##            Classes for recombination operations                       ##
+##            Classes for recombination strategies                       ##
 ###########################################################################
-
 import numpy as np
 from abc import ABC
 from abc import abstractmethod
@@ -11,6 +10,7 @@ class Recombination(ABC):
     """
         Interface for recombination classes for RCGA.
     """
+    @abstractmethod
     def recombine(**kwargs):
         raise NotImplementedError('recombine method is not defined.')
 
@@ -51,4 +51,5 @@ class OnePointCrossover(Recombination):
 
 class TwoPointCrossover(Recombination):
     def recombine(**kwargs):
+        # for future
         pass

@@ -1,7 +1,6 @@
 ###########################################################################
 ##       Classes for evaluating the solutions of candidate solutions     ##
 ###########################################################################
-
 import pandas as pd
 from abc import ABC
 from abc import abstractmethod
@@ -195,5 +194,4 @@ class ChromosomeEvaluation(Evaluation):
                                                     inference=inference, l=l, params=kwargs)
         
         fit = fitness.calculate_fitness(data_simulated=res, data=data, normalization_type=normalization_type, p=p, a=a, params=kwargs)
-
         return fit

@@ -1,3 +1,6 @@
+###########################################################################
+##                    Implementation of the Generationa GA               ##
+###########################################################################
 import os
 from tqdm import tqdm
 import numpy as np

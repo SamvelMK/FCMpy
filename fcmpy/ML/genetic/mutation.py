@@ -1,7 +1,6 @@
 ###########################################################################
 ##                   Classes for mutation operations                     ##
 ###########################################################################
-
 import numpy as np
 from abc import ABC
 from abc import abstractmethod

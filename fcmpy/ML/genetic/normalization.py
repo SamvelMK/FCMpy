@@ -1,10 +1,10 @@
 ###########################################################################
 ##            Classes for normalization of matrix error scores           ##
 ###########################################################################
-
 from abc import ABC
 from abc import abstractmethod
 from fcmpy.expert_fcm.input_validator import type_check
+
 
 class Normalization(ABC):
     """
