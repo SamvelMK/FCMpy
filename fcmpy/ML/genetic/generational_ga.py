@@ -12,7 +12,7 @@ from fcmpy.store.methodsStore import SelectionStore
 from fcmpy.store.methodsStore import RecombinationStore
 from fcmpy.store.methodsStore import MutationStore
 from fcmpy.ml.genetic.evaluation import PopulationEvaluation
-
+import copy
 
 class GRCGA(GA):
     """
@@ -131,12 +131,12 @@ class GRCGA(GA):
         # Set up the recombination method
         recombination = RecombinationStore.get(recombination_type)
         # Create a copy of the initial population
-        old_population = self.__population.copy()
+        old_population = copy.deepcopy(self.__population)
         # Set up an obj. for the best candidate
         best_candidate = {'solution':None, 'fitness':0}
-        print(f"Best fitness: {best_candidate['fitness']}.")
+        pbar = tqdm(range(n_iterations))
 
-        for iteration in tqdm(range(n_iterations)):
+        for iteration in pbar:
             new_pop = {}
             for _ in range(len(old_population)//2): # to maintain the population size
                 # Step 1: Selection
@@ -175,8 +175,7 @@ class GRCGA(GA):
             # Update the best candidate if the best candidate of the current generation is better
             if _['fitness'] > best_candidate['fitness']:
                 best_candidate = _
-                os.system('clear')
-                print(f"Best fitness: {best_candidate['fitness']}.")
+                pbar.set_postfix({'fitness': _['fitness']})
 
             # Step 7: Check termination
             if best_candidate['fitness'] >= threshold:
