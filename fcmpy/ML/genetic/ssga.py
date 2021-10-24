@@ -2,9 +2,9 @@
 ##                    Implementation of the Steady State GA              ##
 ###########################################################################
 import os
-from tqdm import tqdm
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.ml.genetic.ga_interface import GA
 from fcmpy.store.methodsStore import InitializationStore
@@ -98,8 +98,9 @@ class SSGA(GA):
         ev = ChromosomeEvaluation()
         old_population = copy.deepcopy(self.__population)
         best_candidate = {'solution': None, 'fitness':0}
-
-        for iteration in tqdm(range(n_iterations)):
+        pbar = tqdm(range(n_iterations))
+        
+        for iteration in pbar:
             # Step 1: Selection
             select_method = np.random.choice(list(SelectionStore._SelectionStore__methods.keys()))
             selection = SelectionStore.get(method=select_method)
@@ -112,36 +113,35 @@ class SSGA(GA):
             if change:
                 parent1 = selected[selected_indexes[0]]
                 parent2 = selected[selected_indexes[1]]
-                childOne, childTwo = recombination.recombine(parentOne=parent1, parentTwo=parent2)
+                childOne, childTwo = recombination.recombine(parentOne=copy.deepcopy(parent1), parentTwo=copy.deepcopy(parent2))
             else:
                 childOne, childTwo = selected[selected_indexes[0]], selected[selected_indexes[1]]
 
             # Step 5: Mutation
             mutation_type =  np.random.choice(list(MutationStore._MutationStore__methods.keys())) 
             mutation = MutationStore.get(mutation_type)
-            childOne = mutation.mutate(chromosome=childOne.copy(), p_mutation=p_mutation, 
+            childOne = mutation.mutate(chromosome=copy.deepcopy(childOne), p_mutation=p_mutation, 
                                                         max_generations=n_iterations, nth_Iteration=iteration, b=b)
-            childTwo = mutation.mutate(chromosome=childTwo.copy(), p_mutation=p_mutation, 
+            childTwo = mutation.mutate(chromosome=copy.deepcopy(childTwo), p_mutation=p_mutation, 
                                                         max_generations=n_iterations, nth_Iteration=iteration, b=b)
             # Step 6: Evaluate the fitness of each solution
             childOne['fitness'] = ev.evaluate(child=childOne, data=self.__data, l=self.__l, 
                                             transfer=self.__transfer, inference=self.__inference,
                                             fitness_type=self.__fitness_type, normalization_type=self.__normalization_type,
-                                            a=self.__a, p=self.__p)
+                                            a=self.__a, p=self.__p).copy()
             childTwo['fitness'] = ev.evaluate(child=childTwo, data=self.__data, l=self.__l, 
                                             transfer=self.__transfer, inference=self.__inference,
                                             fitness_type=self.__fitness_type, normalization_type=self.__normalization_type,
-                                            a=self.__a, p=self.__p)
+                                            a=self.__a, p=self.__p).copy()
             # Step 7: Replace
-            old_population = replacement.replace(child=copy.deepcopy(childOne), population=old_population)
-            old_population = replacement.replace(child=copy.deepcopy(childTwo), population=old_population)
+            old_population = replacement.replace(child=copy.deepcopy(childOne), population=copy.deepcopy(old_population))
+            old_population = replacement.replace(child=copy.deepcopy(childTwo), population=copy.deepcopy(old_population))
             
             # Get the best candidate of the current generation
             _ = copy.deepcopy(old_population[list(dict(sorted(old_population.items(), key=lambda k: k[1]['fitness'],reverse=True)).keys())[0]])
             # Update the best candidate if the best candidate of the current generation is better
             if _['fitness'] > best_candidate['fitness']:
-                os.system('clear')
-                print(f'Best fitness: {best_candidate["fitness"]}.')
+                pbar.set_postfix({'fitness': _['fitness']})
             best_candidate = _
             # Step 8: Check termination
             if best_candidate['fitness'] >= threshold:
