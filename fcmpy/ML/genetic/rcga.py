@@ -1,3 +1,6 @@
+###########################################################################
+##                       RCGA fro FCMs                                   ##
+###########################################################################
 import pandas as pd
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.ml.genetic.ga_interface import GA
@@ -88,6 +91,8 @@ class RCGA(GA):
         self.__l=l
         self.__rcga = RcgaStore.get(ga_type)
         self.__kwargs = kwargs
+        self.fitness = None
+        self.solution = None
 
     def run(self, n_iterations:int=100000, n_participants:int=5, recombination_type:str='one_point_crossover',
                 p_recombination:float=0.9, p_mutation:float=0.5, b:int=5, threshold:float=0.9, **params): 
@@ -134,4 +139,7 @@ class RCGA(GA):
         res = rcga.run(n_iterations=n_iterations, n_participants=n_participants, recombination_type=recombination_type,
                             p_recombination=p_recombination, p_mutation=p_mutation, b=b, threshold=threshold, params=params)  
 
-        return res
+        df = pd.DataFrame(res['solution'], columns=self.__data.keys(), index=self.__data.keys())
+        
+        self.fitness = res['fitness']
+        self.solution = df
