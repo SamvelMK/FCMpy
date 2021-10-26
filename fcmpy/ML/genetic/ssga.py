@@ -1,7 +1,6 @@
 ###########################################################################
 ##                    Implementation of the Steady State GA              ##
 ###########################################################################
-import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
