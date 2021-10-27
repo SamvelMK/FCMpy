@@ -19,6 +19,7 @@ from tensorflow.keras import regularizers
 import matplotlib.pyplot as plt
 from scipy.stats import entropy
 from math import log, e
+import os 
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -201,7 +202,7 @@ def run(path,folds=5):
     :param path:
     :return:
     '''
-    import os
+  
     files = os.listdir(path)
     print(f"file in your data directory {files}. make sure they are .arff files!")
     print("running...")
