@@ -27,7 +27,7 @@ class TransferStore(GetMethod):
     Methods of FCM Transfer.
     """
 
-    __methods = {'sigmoid' : Sigmoid, 'bi' : Bivalent, 'tri' : Trivalent, 'tanh' : HyperbolicTangent}
+    __methods = {'sigmoid' : Sigmoid, 'bivalent' : Bivalent, 'trivalent' : Trivalent, 'tanh' : HyperbolicTangent}
 
     
     @staticmethod
