@@ -1,14 +1,9 @@
-import sys, os
-
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import unittest
 from fcmpy.simulator.simulator import FcmSimulator
 from fcmpy.intervention.intervention import FcmIntervention
-import pandas as pd 
+import pandas as pd
 
-class TestFcmSimulator(unittest.TestCase):
+class TestIntervention(unittest.TestCase):
     
     def setUp(self):
 
@@ -52,17 +47,22 @@ class TestFcmSimulator(unittest.TestCase):
         self.assertEqual(nInter, 0, msg="The intervention was not removed from the constructor!")
 
     def test_testIntervention(self):
-        # Check if the itest_intervention runs properly.
+        # Check if the test_intervention runs properly.
         # Check if the stable concept (intervetion in this case) is indeed stable.
-        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
-        self.inter.add_intervention('intervention_2', impact={'C4':-.5}, effectiveness=1)
-        self.inter.add_intervention('intervention_3', impact={'C5':-1}, effectiveness=1)
+        self.inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5})
+        self.inter.add_intervention('intervention_2', impact={'C4':-.5})
+        self.inter.add_intervention('intervention_3', impact={'C5':-1})
 
         self.inter.test_intervention('intervention_1')
         self.inter.test_intervention('intervention_2')
         self.inter.test_intervention('intervention_3')
         
         self.assertEqual(len(set(self.inter.test_results['intervention_1']['intervention'])), 1)
+    
+    def test_singleShot(self):
+        self.inter.add_intervention('intervention_1', type='single_shot', initial_state = {'C1': 0.9, 'C2' : 0.4})
+        self.assertEqual(self.inter.interventions['intervention_1']['state_vector']['C1'], 0.9)
+        self.assertEqual(self.inter.interventions['intervention_1']['state_vector']['C2'], 0.4)
         
 if __name__ == '__main__':
     unittest.main()

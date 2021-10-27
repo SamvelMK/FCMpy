@@ -1,11 +1,6 @@
-import sys, os
-
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import unittest
+import pandas as pd
 from fcmpy.simulator.simulator import FcmSimulator
-import pandas as pd 
 
 class TestSimulator(unittest.TestCase):
     
@@ -47,10 +42,39 @@ class TestSimulator(unittest.TestCase):
         self.assertEqual([round(i, 4) for i in eql_mK], [round(i, 4) for i in equilibrium_mK])
         self.assertEqual([round(i, 4) for i in eql_r], [round(i, 4) for i in equilibrium_r])
 
+    def test_simulation_bi(self):
+        res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='bi', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertEqual(len(set(res_mK.values.flatten())), 2)
+        self.assertEqual(max(res_mK.values.flatten()), 1)
+        self.assertEqual(min(res_mK.values.flatten()), 0)
+
+    def test_simulation_tri(self):
+        init_state = self.init_state.copy()
+        init_state['C1'] = -1
+        res_mK = self.sim.simulate(initial_state=init_state, weight_matrix=self.weight_matrix, transfer='tri', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertEqual(len(set(res_mK.values.flatten())), 3)
+        self.assertEqual(max(res_mK.values.flatten()), 1)
+        self.assertEqual(min(res_mK.values.flatten()), -1)
+
+    def test_simulation_tanh(self):
+        init_state = self.init_state.copy()
+        init_state['C1'] = -1
+        res_mK = self.sim.simulate(initial_state=init_state, weight_matrix=self.weight_matrix, transfer='tanh', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertEqual(max(res_mK.values.flatten()), 1)
+        self.assertEqual(min(res_mK.values.flatten()), -1)
+
     def test_stableConcepts(self):
         self.weight_matrix['C1'] = 0
         res_k = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='kosko', thresh=0.001, iterations=50, l=1)
         self.assertEqual(len(set(res_k['C1'])), 1)
+
+    def test_outputConcepts(self):
+        out = ['C4', 'C1']
+        res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1, output_concepts=out)
+        _ = res_mK[out]
+        residual = max(abs(_.loc[len(_)-1] - _.loc[len(_) - 2]))
+        self.assertLessEqual(residual, 0.001)
+        self.assertEqual([0.812650, 0.726125], list(_.loc[len(_)-1].values.round(6)))
 
 if __name__ == '__main__':
     unittest.main()

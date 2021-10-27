@@ -1,8 +1,4 @@
 import sys, os
-
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import unittest
 from fcmpy.expert_fcm.expert_based_fcm import ExpertFcm
 import itertools
@@ -12,9 +8,6 @@ import xlrd
 import warnings
 import functools
 import numpy as np
-import matplotlib
-matplotlib.use('Qt5Agg')
-import matplotlib.pyplot as plt
 
 class TestDataProcessor(unittest.TestCase):
 
