@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>fcmpy.ML.rcga API documentation</title>
+<meta name="description" content="For more information and details about the algorithm, please refer to PhD thesis of Wojciech Stach
+LEARNING AND AGGREGATION OF FUZZY COGNITIVE MAPS – …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fcmpy.ML.rcga</code></h1>
+</header>
+<section id="section-intro">
+<p>For more information and details about the algorithm, please refer to PhD thesis of Wojciech Stach
+LEARNING AND AGGREGATION OF FUZZY COGNITIVE MAPS – AN
+EVOLUTIONARY APPROACH
+by
+Wojciech Stach</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python
+# coding: utf-8
+# updated!!!!
+
+&#39;&#39;&#39;
+For more information and details about the algorithm, please refer to PhD thesis of Wojciech Stach
+LEARNING AND AGGREGATION OF FUZZY COGNITIVE MAPS – AN
+EVOLUTIONARY APPROACH
+by
+Wojciech Stach
+
+&#39;&#39;&#39;
+import numpy as np
+import copy
+import tqdm.auto as tq
+import matplotlib.pylab as plt
+import matplotlib
+
+#matplotlib.use(&#34;TkAgg&#34;) nice feature, do NOT use in the jupyter notebook 
+
+class rcga:
+    &#39;&#39;&#39;
+    RCGA algrithm for creating FCM based on the sample valuee,
+    nConcepts - number of concepts (nodes), concetps: initial concepts values,
+    Pmutation: probability of mutation (default 0.5), Precombination: probability of crossover (0.9),
+    population_size (default 100), max_generations: max nubmer of steps (def 100000),
+    numberofsteps - number of simulation steps, should be the same as in the historical data,
+    maxfitness - fitness value after which learning process can be stopped   
+    &#39;&#39;&#39;
+
+    def __init__(self, nConcepts, concepts, Pmutation=None, Precombination=None, population_size=None,
+                 max_generations=None, historicaldata=None, fcm=None,
+                 numberofsteps=None, tournamentP=None, tournamentK=None, lbd=None,maxfitness=None):
+
+        # GENERAL PARAMS
+        # types of mutations are randomly choosen according to authors of the article W.Stach et al. 2005
+        self.mutation_methods = [&#39;random&#39;, &#39;nonuniform&#39;, &#39;Muhlenbein&#39;]
+        # types of selection are randomly choosen according to authors of the article W.Stach et al. 2005
+        self.selection_methods = [&#39;rulette&#39;, &#39;tournament&#39;]
+        # proability of cell mutatiing
+        self.prob_mutation = 0.5 if Pmutation is None else Pmutation
+        self.prob_recombination = 0.9 if Precombination is None else Precombination
+        self.tournamentP = 1 if tournamentP is None else tournamentP
+        self.tournamentK = 5 if tournamentK is None else tournamentK  # or 10....
+        self.lbd = 1 if lbd is None else lbd  # this is the operator of the sigmoid function, in a lot of papers it&#39;s set to 1 (elpiniki), Stach suggested 5
+
+        # GENERATION PROPERTIES
+        # size of the population, number of chromosomes in each population
+        self.population_size = 100 if population_size is None else population_size
+        if self.population_size % 2 != 0:
+            raise ValueError(&#39;Population size must be an EVEN number&#39;)
+        # nmax number of generations
+        self.max_generations = 100000 # 300000 if max_generations is None else max_generations
+        self.current_gen = 0
+        self.generations = np.zeros((self.population_size, nConcepts, nConcepts - 1))
+        self.nConcepts = nConcepts
+
+        # HISTORICAL DATA
+        # historical data obtained from fcm simulations or observations (in the format columns - concepts, rows - simulation steps)
+        if historicaldata is None and fcm is None:
+            raise ValueError(&#39;Cannot run the learning process without previous FCM architecture or historical data!!!&#39;)
+        self.data = historicaldata
+        # fcm which we are optimizing
+        self.fcm = fcm
+
+        # FITNESS FUNCTION
+        self.generation_fitness = np.zeros((1, self.population_size))
+        self.maxfitness = 0.999 if maxfitness is None else maxfitness
+        self.concepts_for_testing = concepts
+        # number of steps we have to run the simulation in order to calculate fintess function (in Stach paper - 1 step)
+        self.numberofsteps = 2  # 5 if numberofsteps is None else numberofsteps # suggested 1
+        # termination conditions
+        self.termination = False
+
+    def intitialize(self):
+        # initialize 1st population
+        self.generations = np.random.uniform(low=-1, high=1,
+                                                size=(self.population_size, self.nConcepts, self.nConcepts - 1))
+
+
+
+    # -------------------- FITNESS OF THE GENERATION --------------------------------------
+
+    def simulateFCM(self, concepts, weights, nsteps):
+        &#39;&#39;&#39;
+        we have to simulate fcm with current weights in order to calculate fitness function
+        concepts should be given as a np.array((1,nConcepts))
+        :param concepts: conept vector
+        :param weights: weight array
+        :param nsteps: number of time step for the FCM simulation
+        :return: concepts values after nsteps
+        &#39;&#39;&#39;
+
+
+        # VERY IMPORTANT
+        # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        assert weights.shape == (self.nConcepts, self.nConcepts - 1), &#39;wrong encoding&#39;
+        # concepts=np.reshape(concepts,(1,concepts.shape[0]))
+
+
+        for j in range(1, nsteps):
+            newvalues = np.zeros((concepts.shape[0]))
+            for i in range(concepts.shape[0]):
+                idx = list(range(concepts.shape[0]))
+                idx.remove(i)
+                newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
+            # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
+            # BROOOOOO
+
+            concepts = newvalues
+        return concepts
+
+    def calculate_fitness(self, weights):
+        &#39;&#39;&#39;
+        calculate fitness for each of the chromosome
+        :param weights: generated weight array, then tested
+        :return: fitness of the chromosome (how well this weight matrix did)
+        &#39;&#39;&#39;
+        # difference
+        alpha = 1 / ((self.numberofsteps - 1) * self.nConcepts* self.data.shape[0]) # concepts_for_testing.shape[-1]
+        # we are countin L1
+        # let&#39;s say we have both historical data and fcm, so we can simply
+        # simulate with new weights and calculate difference to obtain the fitness function
+        error = 0
+        for row, testcase in zip(self.data,self.concepts_for_testing):
+            error += np.sum(
+                np.abs(np.subtract(row, self.simulateFCM(testcase, weights, self.numberofsteps))))
+        return 1 / (100 * alpha*error + 1)
+
+    # -------------------- CROSSOVER  --------------------------------------
+
+    def crossover(self):
+        &#39;&#39;&#39;
+        crossover - swiping the values between the chromosomes in the generation e.g. 0:15 weights from weights1 are swaped with
+        weights 15:: in weights2
+        :return: crossedovered pair
+        &#39;&#39;&#39;
+        crossover_pairs = self.generations
+        a = list(np.random.choice([False, True], p=[1 - self.prob_recombination, self.prob_recombination],
+                                  size=self.population_size).astype(int) * range(self.population_size))
+        a = list(filter(lambda x: x != 0, a))
+        # we are applying one point corssover and mixing 1st with 2nd, 3rd with 4th and so on...
+        for i in range(0, len(a), 2):  # population size (defaul 100), every even idx
+            # choosing if the crossover will happen
+            # 1 take two crossover pairs
+            chromA = crossover_pairs[i]
+            chromB = crossover_pairs[i + 1]
+            # 2 flatten them
+            chromA = np.reshape(chromA, (self.nConcepts * (self.nConcepts - 1)))
+            chromB = np.reshape(chromB, (self.nConcepts * (self.nConcepts - 1)))
+            # 3 randomly choose the &#39;crossing point&#39;
+            point = np.random.choice(range(self.nConcepts * (self.nConcepts - 1)))
+            # 4 swap the values
+            chromA[point:] = chromB[point:]
+            chromB[:point] = chromA[:point]
+            # 5 reshape to (nconcepts,nconcepts)
+            chromA = np.reshape(chromA, (self.nConcepts, self.nConcepts - 1))
+            chromB = np.reshape(chromB, (self.nConcepts, self.nConcepts - 1))
+        # after crossover, crossover_pairs are the latest generation
+
+        self.generations = crossover_pairs
+
+    # -------------------- MUTATION --------------------------------------
+    def mutation(self):
+        &#39;&#39;&#39;
+        randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+        both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        :return:
+        &#39;&#39;&#39;
+        mut = np.random.choice([&#39;random&#39;,&#39;nonuniform&#39;])#,&#39;muhlenbein&#39;])
+
+        if mut ==&#39;random&#39;:
+            self.randommutation()
+        elif mut ==&#39;nonuniform&#39;:
+            self.numutation()
+        # if mut ==&#39;muhlenbein&#39;:
+        #     self.muhlenbeinmutation()
+
+    def randommutation(self):
+        &#39;&#39;&#39;
+        randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+        both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        :return:
+        &#39;&#39;&#39;
+        # applying mutation
+        # choosing x % indexes for mutation
+        a = list(np.random.choice([False, True], p=[1 - self.prob_mutation, self.prob_mutation], size=self.population_size).astype(int) * range(self.population_size))
+        a = list(filter(lambda x: x != 0, a))
+        for i in a:
+            # muation is happening with probability
+
+            # random method
+            j = np.random.choice(range(self.nConcepts), size=1)
+            k = np.random.choice(range(self.nConcepts - 1), size=1)
+
+            self.generations[i, j,k] = np.random.uniform(-1,1)
+
+    def numutation(self):
+        &#39;&#39;&#39;
+        randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+        both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        :return:
+        &#39;&#39;&#39;
+        # choosing p % of chromosomes in the generation
+        a = list(np.random.choice([False, True], p=[1 - self.prob_mutation, self.prob_mutation],
+                                  size=self.population_size).astype(int) * range(self.population_size))
+        a = list(filter(lambda x: x != 0, a))
+        # randomly choose max 3 elements in the chromosome and change their vals
+        d = round((self.max_generations-self.current_gen)/(self.max_generations/2))
+        for i in a:
+            # randomly choosing d% of the elements to mutate, it decreases with the n of generations
+
+            for change in range(d):
+                j = np.random.choice(range(self.nConcepts), size=1)
+                k = np.random.choice(range(self.nConcepts - 1), size=1)
+                self.generations[i, j, k] = np.random.uniform(-1, 1)
+
+
+    # -------------------- SELECTION OF THE BEST CANDIDATES FOR THE NEXT GENERATION --------------------------------------
+
+    def selection(self):
+        &#39;&#39;&#39;
+        selecting the candidates from the last generation to the new generation
+        as paper suggestd we are randomly choosing the way to choose gene for crossover
+        ref: Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        calls one of the selection methods rullete or tournament
+        &#39;&#39;&#39;
+
+
+        cross = np.random.choice([&#39;rulette&#39;, &#39;tournament&#39;])
+        if cross == &#39;rulette&#39;:
+            crossover_pairs = self.rulette()
+        elif cross == &#39;tournament&#39;:
+            crossover_pairs = self.tournament()
+
+    def rulette(self):
+        &#39;&#39;&#39;
+        choosing candidates for crossover with probability according to the fitness function of each chromosome
+        more information https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+        :return:
+        &#39;&#39;&#39;
+
+        selection = np.zeros((self.population_size, self.nConcepts, self.nConcepts - 1))
+        # initial probability list
+        p = self.generation_fitness[-2] / np.sum(self.generation_fitness[-2])
+        for i in range(self.population_size):
+            # choice with probability, choosing index of chromosome
+            selection[i] = self.generations[np.random.choice(list(range(self.population_size)), p=list(
+                p))]  # &#39;last&#39; population is still an array of zeros
+        # selected chromosomes pass to next generation
+        self.generations = selection
+
+    def tournament(self):
+        &#39;&#39;&#39;
+        we choose randomly k chromosomes from the generation, then we would choose the best one with probability p,
+        the 2nd best with p*(1-p), 3rd best wih p*((1-p)^2) and so on
+        more information https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+        :return:
+        &#39;&#39;&#39;
+        # if p == 1, we would always choose the &#39;fittest one&#39; from the k candidates
+        selection = np.zeros((self.population_size, self.nConcepts, self.nConcepts - 1))
+
+        for j in range(self.population_size):
+            # choose k random chromosomes or rather their indexes
+            candidates = np.random.choice(list(range(self.population_size)), size=self.tournamentK)
+            # choosing candidate
+            if self.tournamentP == 1:
+                # get fitness of each candidate
+                chosen = (0, 0)  # index,fitness
+                for index in candidates:
+                    if self.generation_fitness[-2, index] &gt; chosen[1]:
+                        chosen = (index, self.generation_fitness[-2, index])
+            # choosing crossovers to create new gen
+            selection[j] = self.generations[chosen[0]]
+          
+        self.generations = selection
+
+    # -------------------- check termination --------------------------------------
+
+    def check_termination(self):
+        &#39;&#39;&#39;
+        checking for termination conditions
+        1 if max n of generations was reached
+        2 fitness fucntion is dope, less than threshold, then choosing the best gene of the generation
+        :return:
+        &#39;&#39;&#39;
+
+        if self.current_gen &lt;2:
+            return
+        elif (self.current_gen &gt;= self.max_generations) or (np.any(self.generation_fitness[-2] &gt;= self.maxfitness)):
+            self.termination = True
+
+            # -------------------- expands dimensions --------------------------------------
+
+    def expand_dims(self):
+        &#39;&#39;&#39;
+        making space for one more generations
+
+        :return:
+        &#39;&#39;&#39;
+        self.generation_fitness = np.append(self.generation_fitness, np.zeros((1, self.population_size)), axis=0)
+
+        # -------------------- RUNNING THE OPTIMIZATION PROCESS  --------------------------------------
+ 
+    
+    def run(self):
+        &#39;&#39;&#39;
+        running the learning process for you, just wait and enjoy :)
+        :return:
+        &#39;&#39;&#39;
+        # run the optimization process
+        # if we start from 1st step, randomly initialize first generation
+        self.intitialize()
+        self.current_gen += 1
+        # calculate fitness for 1st gen
+        # there was some issue so better deepcopy before calling f
+        for i in range(self.population_size):
+            chromosome = copy.deepcopy(self.calculate_fitness(self.generations[i]))
+            self.generation_fitness[0, i] = chromosome
+
+        # update termination condition
+        self.check_termination()
+
+        # ploting fitness
+        # interactive mode
+        plt.ion()
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        line1, = ax.plot(list(range(self.current_gen)), np.max(self.generation_fitness[0]))
+        fig.canvas.draw()
+        plt.show(block=False)
+        # plt.show()
+        # if it is not true
+        while not (self.termination):
+
+            # NEW GENERATION
+            self.current_gen += 1
+            # print(self.current_gen)
+            if self.current_gen % 100 == 0:
+                print(f&#39;We are at {self.current_gen}/{self.max_generations}&#39;)
+                print(f&#39;max fitness function so far is {np.max(self.generation_fitness[-2])}&#39;)
+                line1.set_xdata(list(range(self.current_gen-2)))
+                line1.set_ydata(np.max(self.generation_fitness[:-1],axis=1))
+                # re-drawing the figure
+                ax.relim()
+                ax.autoscale_view(True, True, True)
+                fig.canvas.draw()
+                plt.pause(0.02)
+
+                # to flush the GUI events
+                # fig.canvas.flush_events()
+                # print(f&#39;sample weights {self.generations[-1,30]}&#39;)
+
+            # 1. expanding dims for new generation
+            self.expand_dims()
+
+            # 2. crossover with probability pCross
+            self.crossover()
+            # 3. mutate with probability pMutate
+            self.mutation()
+
+            # 4. calculate fitness
+            for i in range(self.population_size):
+                chromosome = self.calculate_fitness(copy.deepcopy(self.generations[i]))
+                self.generation_fitness[-2, i] = chromosome
+
+            # 5. selection process - &gt; new generation is being created
+            self.selection()
+
+            # 6. update termination condiation
+            self.check_termination()
+
+        # return the most fitted candidate of last generation
+        return self.generations[np.where(self.generation_fitness[-1] == np.max(self.generation_fitness[-1]))]
+
+def simulateFCM(concepts, weights, nsteps):
+    &#39;&#39;&#39;
+    simulates fcm in ordert to create historical data
+    :param concepts: initial values of concetps (can be multiple initial vectors)
+    :param weights: weight matrix
+    :param nsteps: n of timesteps
+    :return: historical data which has to be fed to the algorithm
+    &#39;&#39;&#39;
+    # concepts should be given as a np.array((1,nConcepts))
+    # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    for j in range(1, nsteps):
+        newvalues = np.zeros((concepts.shape[0]))
+        for i in range(concepts.shape[0]):
+            idx = list(range(concepts.shape[0]))
+            idx.remove(i)
+            newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
+        # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
+        # BROOOOOO
+        # out[j] = newvalues
+        concepts = newvalues
+    return concepts
+
+def reshapeW(W,mode):
+    &#39;&#39;&#39;
+
+    :param W: weights
+    # mode &#34;in&#34; - reshape to n,n-1
+    # mode &#34;out&#34; - reshape to n,n
+    :return reshaped weight matrix
+    &#39;&#39;&#39;
+
+
+    if mode == &#34;in&#34;:       
+        out = np.zeros((W.shape[0],W.shape[1]-1))
+        for i in range(W.shape[0]):
+            a = W[:,i].tolist()
+            a.pop(i)
+            out[i] = a 
+        return out
+    if mode == &#34;out&#34;:
+        out = np.zeros((W.shape[0],W.shape[1]+1))
+        for i in range(W.shape[0]):
+            a = W[i].tolist() 
+            a.insert(i,0.0)# idx, val
+            out[:,i] = a
+        return out
+    
+if __name__ == &#34;__main__&#34;:
+    # test 1
+    # tank case
+    A0 = np.asarray([[0.4, 0.707, 0.607, 0.72, 0.3],[0.5, 0.66, 0.56, 0.78, 0.27],[0.6, 0.8, 0.5, 0.77, 0.34],[0.45,0.73,0.65,0.74,0.31]])
+    W_init = np.asarray([[0,-0.4,-0.25,0,0.3],[0.36,0,0,0,0],[0.45,0,0,0,0],[-0.9,0,0,0,0],[0,0.6,0,0.3,0]])
+
+    testc = 5
+    # nofsteps = 2
+    #
+    # historicaldata = simulateFCM(A0,W_init,nofsteps)
+
+    # test 2
+    nofsteps = 2
+    # testc =7
+    
+#     A0 = np.asarray([0.47, 0.51, 0.13, 0, 1, 0.37, 0.1])
+#     W_init1 = np.asarray([[0,0,0.20,0.3,0,0,0.45],
+#         [0,0,0,0.40,0,0,0.35],
+#         [0,0,0,0.30,0,0,0.30],
+#         [0,0,0,0,0,0,0.40],
+#         [0.30,0,0.15,0.35,0,0,0.25],
+#         [0.20,0,0.25,0.30,0,0,0.20],
+#         [0,0,0,0,0,0,0]])
+
+    W_init = reshapeW(W_init,&#39;in&#39;)
+    historicaldata = np.zeros((A0.shape[0],A0.shape[1]))
+    for concepts,i in zip(A0,range(A0.shape[0])):
+        historicaldata[i] = simulateFCM(concepts, W_init, nofsteps)
+
+    GA = rcga(testc,A0,historicaldata=historicaldata,numberofsteps=nofsteps)
+    W_final = GA.run()
+    # writing results
+    # print(np.reshape(W_final,(100,testc*(testc-1))).shape,GA.generation_fitness.shape)
+
+
+    np.savetxt(&#39;finalweights50p2nd.txt&#39;,np.reshape(W_final,(100,testc*(testc-1))), delimiter=&#39;,&#39;)
+    np.savetxt(&#39;fitnessall50p2nd.txt&#39;,GA.generation_fitness, delimiter=&#39;,&#39;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fcmpy.ML.rcga.reshapeW"><code class="name flex">
+<span>def <span class="ident">reshapeW</span></span>(<span>W, mode)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>:param W: weights</p>
+<h1 id="mode-in-reshape-to-nn-1">mode "in" - reshape to n,n-1</h1>
+<h1 id="mode-out-reshape-to-nn">mode "out" - reshape to n,n</h1>
+<p>:return reshaped weight matrix</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reshapeW(W,mode):
+    &#39;&#39;&#39;
+
+    :param W: weights
+    # mode &#34;in&#34; - reshape to n,n-1
+    # mode &#34;out&#34; - reshape to n,n
+    :return reshaped weight matrix
+    &#39;&#39;&#39;
+
+
+    if mode == &#34;in&#34;:       
+        out = np.zeros((W.shape[0],W.shape[1]-1))
+        for i in range(W.shape[0]):
+            a = W[:,i].tolist()
+            a.pop(i)
+            out[i] = a 
+        return out
+    if mode == &#34;out&#34;:
+        out = np.zeros((W.shape[0],W.shape[1]+1))
+        for i in range(W.shape[0]):
+            a = W[i].tolist() 
+            a.insert(i,0.0)# idx, val
+            out[:,i] = a
+        return out</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.simulateFCM"><code class="name flex">
+<span>def <span class="ident">simulateFCM</span></span>(<span>concepts, weights, nsteps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>simulates fcm in ordert to create historical data
+:param concepts: initial values of concetps (can be multiple initial vectors)
+:param weights: weight matrix
+:param nsteps: n of timesteps
+:return: historical data which has to be fed to the algorithm</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def simulateFCM(concepts, weights, nsteps):
+    &#39;&#39;&#39;
+    simulates fcm in ordert to create historical data
+    :param concepts: initial values of concetps (can be multiple initial vectors)
+    :param weights: weight matrix
+    :param nsteps: n of timesteps
+    :return: historical data which has to be fed to the algorithm
+    &#39;&#39;&#39;
+    # concepts should be given as a np.array((1,nConcepts))
+    # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    for j in range(1, nsteps):
+        newvalues = np.zeros((concepts.shape[0]))
+        for i in range(concepts.shape[0]):
+            idx = list(range(concepts.shape[0]))
+            idx.remove(i)
+            newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
+        # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
+        # BROOOOOO
+        # out[j] = newvalues
+        concepts = newvalues
+    return concepts</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fcmpy.ML.rcga.rcga"><code class="flex name class">
+<span>class <span class="ident">rcga</span></span>
+<span>(</span><span>nConcepts, concepts, Pmutation=None, Precombination=None, population_size=None, max_generations=None, historicaldata=None, fcm=None, numberofsteps=None, tournamentP=None, tournamentK=None, lbd=None, maxfitness=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>RCGA algrithm for creating FCM based on the sample valuee,
+nConcepts - number of concepts (nodes), concetps: initial concepts values,
+Pmutation: probability of mutation (default 0.5), Precombination: probability of crossover (0.9),
+population_size (default 100), max_generations: max nubmer of steps (def 100000),
+numberofsteps - number of simulation steps, should be the same as in the historical data,
+maxfitness - fitness value after which learning process can be stopped</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class rcga:
+    &#39;&#39;&#39;
+    RCGA algrithm for creating FCM based on the sample valuee,
+    nConcepts - number of concepts (nodes), concetps: initial concepts values,
+    Pmutation: probability of mutation (default 0.5), Precombination: probability of crossover (0.9),
+    population_size (default 100), max_generations: max nubmer of steps (def 100000),
+    numberofsteps - number of simulation steps, should be the same as in the historical data,
+    maxfitness - fitness value after which learning process can be stopped   
+    &#39;&#39;&#39;
+
+    def __init__(self, nConcepts, concepts, Pmutation=None, Precombination=None, population_size=None,
+                 max_generations=None, historicaldata=None, fcm=None,
+                 numberofsteps=None, tournamentP=None, tournamentK=None, lbd=None,maxfitness=None):
+
+        # GENERAL PARAMS
+        # types of mutations are randomly choosen according to authors of the article W.Stach et al. 2005
+        self.mutation_methods = [&#39;random&#39;, &#39;nonuniform&#39;, &#39;Muhlenbein&#39;]
+        # types of selection are randomly choosen according to authors of the article W.Stach et al. 2005
+        self.selection_methods = [&#39;rulette&#39;, &#39;tournament&#39;]
+        # proability of cell mutatiing
+        self.prob_mutation = 0.5 if Pmutation is None else Pmutation
+        self.prob_recombination = 0.9 if Precombination is None else Precombination
+        self.tournamentP = 1 if tournamentP is None else tournamentP
+        self.tournamentK = 5 if tournamentK is None else tournamentK  # or 10....
+        self.lbd = 1 if lbd is None else lbd  # this is the operator of the sigmoid function, in a lot of papers it&#39;s set to 1 (elpiniki), Stach suggested 5
+
+        # GENERATION PROPERTIES
+        # size of the population, number of chromosomes in each population
+        self.population_size = 100 if population_size is None else population_size
+        if self.population_size % 2 != 0:
+            raise ValueError(&#39;Population size must be an EVEN number&#39;)
+        # nmax number of generations
+        self.max_generations = 100000 # 300000 if max_generations is None else max_generations
+        self.current_gen = 0
+        self.generations = np.zeros((self.population_size, nConcepts, nConcepts - 1))
+        self.nConcepts = nConcepts
+
+        # HISTORICAL DATA
+        # historical data obtained from fcm simulations or observations (in the format columns - concepts, rows - simulation steps)
+        if historicaldata is None and fcm is None:
+            raise ValueError(&#39;Cannot run the learning process without previous FCM architecture or historical data!!!&#39;)
+        self.data = historicaldata
+        # fcm which we are optimizing
+        self.fcm = fcm
+
+        # FITNESS FUNCTION
+        self.generation_fitness = np.zeros((1, self.population_size))
+        self.maxfitness = 0.999 if maxfitness is None else maxfitness
+        self.concepts_for_testing = concepts
+        # number of steps we have to run the simulation in order to calculate fintess function (in Stach paper - 1 step)
+        self.numberofsteps = 2  # 5 if numberofsteps is None else numberofsteps # suggested 1
+        # termination conditions
+        self.termination = False
+
+    def intitialize(self):
+        # initialize 1st population
+        self.generations = np.random.uniform(low=-1, high=1,
+                                                size=(self.population_size, self.nConcepts, self.nConcepts - 1))
+
+
+
+    # -------------------- FITNESS OF THE GENERATION --------------------------------------
+
+    def simulateFCM(self, concepts, weights, nsteps):
+        &#39;&#39;&#39;
+        we have to simulate fcm with current weights in order to calculate fitness function
+        concepts should be given as a np.array((1,nConcepts))
+        :param concepts: conept vector
+        :param weights: weight array
+        :param nsteps: number of time step for the FCM simulation
+        :return: concepts values after nsteps
+        &#39;&#39;&#39;
+
+
+        # VERY IMPORTANT
+        # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        assert weights.shape == (self.nConcepts, self.nConcepts - 1), &#39;wrong encoding&#39;
+        # concepts=np.reshape(concepts,(1,concepts.shape[0]))
+
+
+        for j in range(1, nsteps):
+            newvalues = np.zeros((concepts.shape[0]))
+            for i in range(concepts.shape[0]):
+                idx = list(range(concepts.shape[0]))
+                idx.remove(i)
+                newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
+            # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
+            # BROOOOOO
+
+            concepts = newvalues
+        return concepts
+
+    def calculate_fitness(self, weights):
+        &#39;&#39;&#39;
+        calculate fitness for each of the chromosome
+        :param weights: generated weight array, then tested
+        :return: fitness of the chromosome (how well this weight matrix did)
+        &#39;&#39;&#39;
+        # difference
+        alpha = 1 / ((self.numberofsteps - 1) * self.nConcepts* self.data.shape[0]) # concepts_for_testing.shape[-1]
+        # we are countin L1
+        # let&#39;s say we have both historical data and fcm, so we can simply
+        # simulate with new weights and calculate difference to obtain the fitness function
+        error = 0
+        for row, testcase in zip(self.data,self.concepts_for_testing):
+            error += np.sum(
+                np.abs(np.subtract(row, self.simulateFCM(testcase, weights, self.numberofsteps))))
+        return 1 / (100 * alpha*error + 1)
+
+    # -------------------- CROSSOVER  --------------------------------------
+
+    def crossover(self):
+        &#39;&#39;&#39;
+        crossover - swiping the values between the chromosomes in the generation e.g. 0:15 weights from weights1 are swaped with
+        weights 15:: in weights2
+        :return: crossedovered pair
+        &#39;&#39;&#39;
+        crossover_pairs = self.generations
+        a = list(np.random.choice([False, True], p=[1 - self.prob_recombination, self.prob_recombination],
+                                  size=self.population_size).astype(int) * range(self.population_size))
+        a = list(filter(lambda x: x != 0, a))
+        # we are applying one point corssover and mixing 1st with 2nd, 3rd with 4th and so on...
+        for i in range(0, len(a), 2):  # population size (defaul 100), every even idx
+            # choosing if the crossover will happen
+            # 1 take two crossover pairs
+            chromA = crossover_pairs[i]
+            chromB = crossover_pairs[i + 1]
+            # 2 flatten them
+            chromA = np.reshape(chromA, (self.nConcepts * (self.nConcepts - 1)))
+            chromB = np.reshape(chromB, (self.nConcepts * (self.nConcepts - 1)))
+            # 3 randomly choose the &#39;crossing point&#39;
+            point = np.random.choice(range(self.nConcepts * (self.nConcepts - 1)))
+            # 4 swap the values
+            chromA[point:] = chromB[point:]
+            chromB[:point] = chromA[:point]
+            # 5 reshape to (nconcepts,nconcepts)
+            chromA = np.reshape(chromA, (self.nConcepts, self.nConcepts - 1))
+            chromB = np.reshape(chromB, (self.nConcepts, self.nConcepts - 1))
+        # after crossover, crossover_pairs are the latest generation
+
+        self.generations = crossover_pairs
+
+    # -------------------- MUTATION --------------------------------------
+    def mutation(self):
+        &#39;&#39;&#39;
+        randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+        both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        :return:
+        &#39;&#39;&#39;
+        mut = np.random.choice([&#39;random&#39;,&#39;nonuniform&#39;])#,&#39;muhlenbein&#39;])
+
+        if mut ==&#39;random&#39;:
+            self.randommutation()
+        elif mut ==&#39;nonuniform&#39;:
+            self.numutation()
+        # if mut ==&#39;muhlenbein&#39;:
+        #     self.muhlenbeinmutation()
+
+    def randommutation(self):
+        &#39;&#39;&#39;
+        randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+        both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        :return:
+        &#39;&#39;&#39;
+        # applying mutation
+        # choosing x % indexes for mutation
+        a = list(np.random.choice([False, True], p=[1 - self.prob_mutation, self.prob_mutation], size=self.population_size).astype(int) * range(self.population_size))
+        a = list(filter(lambda x: x != 0, a))
+        for i in a:
+            # muation is happening with probability
+
+            # random method
+            j = np.random.choice(range(self.nConcepts), size=1)
+            k = np.random.choice(range(self.nConcepts - 1), size=1)
+
+            self.generations[i, j,k] = np.random.uniform(-1,1)
+
+    def numutation(self):
+        &#39;&#39;&#39;
+        randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+        both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        :return:
+        &#39;&#39;&#39;
+        # choosing p % of chromosomes in the generation
+        a = list(np.random.choice([False, True], p=[1 - self.prob_mutation, self.prob_mutation],
+                                  size=self.population_size).astype(int) * range(self.population_size))
+        a = list(filter(lambda x: x != 0, a))
+        # randomly choose max 3 elements in the chromosome and change their vals
+        d = round((self.max_generations-self.current_gen)/(self.max_generations/2))
+        for i in a:
+            # randomly choosing d% of the elements to mutate, it decreases with the n of generations
+
+            for change in range(d):
+                j = np.random.choice(range(self.nConcepts), size=1)
+                k = np.random.choice(range(self.nConcepts - 1), size=1)
+                self.generations[i, j, k] = np.random.uniform(-1, 1)
+
+
+    # -------------------- SELECTION OF THE BEST CANDIDATES FOR THE NEXT GENERATION --------------------------------------
+
+    def selection(self):
+        &#39;&#39;&#39;
+        selecting the candidates from the last generation to the new generation
+        as paper suggestd we are randomly choosing the way to choose gene for crossover
+        ref: Genetic learning offuzzy cognitive maps
+        Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+        calls one of the selection methods rullete or tournament
+        &#39;&#39;&#39;
+
+
+        cross = np.random.choice([&#39;rulette&#39;, &#39;tournament&#39;])
+        if cross == &#39;rulette&#39;:
+            crossover_pairs = self.rulette()
+        elif cross == &#39;tournament&#39;:
+            crossover_pairs = self.tournament()
+
+    def rulette(self):
+        &#39;&#39;&#39;
+        choosing candidates for crossover with probability according to the fitness function of each chromosome
+        more information https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+        :return:
+        &#39;&#39;&#39;
+
+        selection = np.zeros((self.population_size, self.nConcepts, self.nConcepts - 1))
+        # initial probability list
+        p = self.generation_fitness[-2] / np.sum(self.generation_fitness[-2])
+        for i in range(self.population_size):
+            # choice with probability, choosing index of chromosome
+            selection[i] = self.generations[np.random.choice(list(range(self.population_size)), p=list(
+                p))]  # &#39;last&#39; population is still an array of zeros
+        # selected chromosomes pass to next generation
+        self.generations = selection
+
+    def tournament(self):
+        &#39;&#39;&#39;
+        we choose randomly k chromosomes from the generation, then we would choose the best one with probability p,
+        the 2nd best with p*(1-p), 3rd best wih p*((1-p)^2) and so on
+        more information https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+        :return:
+        &#39;&#39;&#39;
+        # if p == 1, we would always choose the &#39;fittest one&#39; from the k candidates
+        selection = np.zeros((self.population_size, self.nConcepts, self.nConcepts - 1))
+
+        for j in range(self.population_size):
+            # choose k random chromosomes or rather their indexes
+            candidates = np.random.choice(list(range(self.population_size)), size=self.tournamentK)
+            # choosing candidate
+            if self.tournamentP == 1:
+                # get fitness of each candidate
+                chosen = (0, 0)  # index,fitness
+                for index in candidates:
+                    if self.generation_fitness[-2, index] &gt; chosen[1]:
+                        chosen = (index, self.generation_fitness[-2, index])
+            # choosing crossovers to create new gen
+            selection[j] = self.generations[chosen[0]]
+          
+        self.generations = selection
+
+    # -------------------- check termination --------------------------------------
+
+    def check_termination(self):
+        &#39;&#39;&#39;
+        checking for termination conditions
+        1 if max n of generations was reached
+        2 fitness fucntion is dope, less than threshold, then choosing the best gene of the generation
+        :return:
+        &#39;&#39;&#39;
+
+        if self.current_gen &lt;2:
+            return
+        elif (self.current_gen &gt;= self.max_generations) or (np.any(self.generation_fitness[-2] &gt;= self.maxfitness)):
+            self.termination = True
+
+            # -------------------- expands dimensions --------------------------------------
+
+    def expand_dims(self):
+        &#39;&#39;&#39;
+        making space for one more generations
+
+        :return:
+        &#39;&#39;&#39;
+        self.generation_fitness = np.append(self.generation_fitness, np.zeros((1, self.population_size)), axis=0)
+
+        # -------------------- RUNNING THE OPTIMIZATION PROCESS  --------------------------------------
+ 
+    
+    def run(self):
+        &#39;&#39;&#39;
+        running the learning process for you, just wait and enjoy :)
+        :return:
+        &#39;&#39;&#39;
+        # run the optimization process
+        # if we start from 1st step, randomly initialize first generation
+        self.intitialize()
+        self.current_gen += 1
+        # calculate fitness for 1st gen
+        # there was some issue so better deepcopy before calling f
+        for i in range(self.population_size):
+            chromosome = copy.deepcopy(self.calculate_fitness(self.generations[i]))
+            self.generation_fitness[0, i] = chromosome
+
+        # update termination condition
+        self.check_termination()
+
+        # ploting fitness
+        # interactive mode
+        plt.ion()
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        line1, = ax.plot(list(range(self.current_gen)), np.max(self.generation_fitness[0]))
+        fig.canvas.draw()
+        plt.show(block=False)
+        # plt.show()
+        # if it is not true
+        while not (self.termination):
+
+            # NEW GENERATION
+            self.current_gen += 1
+            # print(self.current_gen)
+            if self.current_gen % 100 == 0:
+                print(f&#39;We are at {self.current_gen}/{self.max_generations}&#39;)
+                print(f&#39;max fitness function so far is {np.max(self.generation_fitness[-2])}&#39;)
+                line1.set_xdata(list(range(self.current_gen-2)))
+                line1.set_ydata(np.max(self.generation_fitness[:-1],axis=1))
+                # re-drawing the figure
+                ax.relim()
+                ax.autoscale_view(True, True, True)
+                fig.canvas.draw()
+                plt.pause(0.02)
+
+                # to flush the GUI events
+                # fig.canvas.flush_events()
+                # print(f&#39;sample weights {self.generations[-1,30]}&#39;)
+
+            # 1. expanding dims for new generation
+            self.expand_dims()
+
+            # 2. crossover with probability pCross
+            self.crossover()
+            # 3. mutate with probability pMutate
+            self.mutation()
+
+            # 4. calculate fitness
+            for i in range(self.population_size):
+                chromosome = self.calculate_fitness(copy.deepcopy(self.generations[i]))
+                self.generation_fitness[-2, i] = chromosome
+
+            # 5. selection process - &gt; new generation is being created
+            self.selection()
+
+            # 6. update termination condiation
+            self.check_termination()
+
+        # return the most fitted candidate of last generation
+        return self.generations[np.where(self.generation_fitness[-1] == np.max(self.generation_fitness[-1]))]</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="fcmpy.ML.rcga.rcga.calculate_fitness"><code class="name flex">
+<span>def <span class="ident">calculate_fitness</span></span>(<span>self, weights)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>calculate fitness for each of the chromosome
+:param weights: generated weight array, then tested
+:return: fitness of the chromosome (how well this weight matrix did)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def calculate_fitness(self, weights):
+    &#39;&#39;&#39;
+    calculate fitness for each of the chromosome
+    :param weights: generated weight array, then tested
+    :return: fitness of the chromosome (how well this weight matrix did)
+    &#39;&#39;&#39;
+    # difference
+    alpha = 1 / ((self.numberofsteps - 1) * self.nConcepts* self.data.shape[0]) # concepts_for_testing.shape[-1]
+    # we are countin L1
+    # let&#39;s say we have both historical data and fcm, so we can simply
+    # simulate with new weights and calculate difference to obtain the fitness function
+    error = 0
+    for row, testcase in zip(self.data,self.concepts_for_testing):
+        error += np.sum(
+            np.abs(np.subtract(row, self.simulateFCM(testcase, weights, self.numberofsteps))))
+    return 1 / (100 * alpha*error + 1)</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.check_termination"><code class="name flex">
+<span>def <span class="ident">check_termination</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>checking for termination conditions
+1 if max n of generations was reached
+2 fitness fucntion is dope, less than threshold, then choosing the best gene of the generation
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_termination(self):
+    &#39;&#39;&#39;
+    checking for termination conditions
+    1 if max n of generations was reached
+    2 fitness fucntion is dope, less than threshold, then choosing the best gene of the generation
+    :return:
+    &#39;&#39;&#39;
+
+    if self.current_gen &lt;2:
+        return
+    elif (self.current_gen &gt;= self.max_generations) or (np.any(self.generation_fitness[-2] &gt;= self.maxfitness)):
+        self.termination = True</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.crossover"><code class="name flex">
+<span>def <span class="ident">crossover</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>crossover - swiping the values between the chromosomes in the generation e.g. 0:15 weights from weights1 are swaped with
+weights 15:: in weights2
+:return: crossedovered pair</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def crossover(self):
+    &#39;&#39;&#39;
+    crossover - swiping the values between the chromosomes in the generation e.g. 0:15 weights from weights1 are swaped with
+    weights 15:: in weights2
+    :return: crossedovered pair
+    &#39;&#39;&#39;
+    crossover_pairs = self.generations
+    a = list(np.random.choice([False, True], p=[1 - self.prob_recombination, self.prob_recombination],
+                              size=self.population_size).astype(int) * range(self.population_size))
+    a = list(filter(lambda x: x != 0, a))
+    # we are applying one point corssover and mixing 1st with 2nd, 3rd with 4th and so on...
+    for i in range(0, len(a), 2):  # population size (defaul 100), every even idx
+        # choosing if the crossover will happen
+        # 1 take two crossover pairs
+        chromA = crossover_pairs[i]
+        chromB = crossover_pairs[i + 1]
+        # 2 flatten them
+        chromA = np.reshape(chromA, (self.nConcepts * (self.nConcepts - 1)))
+        chromB = np.reshape(chromB, (self.nConcepts * (self.nConcepts - 1)))
+        # 3 randomly choose the &#39;crossing point&#39;
+        point = np.random.choice(range(self.nConcepts * (self.nConcepts - 1)))
+        # 4 swap the values
+        chromA[point:] = chromB[point:]
+        chromB[:point] = chromA[:point]
+        # 5 reshape to (nconcepts,nconcepts)
+        chromA = np.reshape(chromA, (self.nConcepts, self.nConcepts - 1))
+        chromB = np.reshape(chromB, (self.nConcepts, self.nConcepts - 1))
+    # after crossover, crossover_pairs are the latest generation
+
+    self.generations = crossover_pairs</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.expand_dims"><code class="name flex">
+<span>def <span class="ident">expand_dims</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>making space for one more generations</p>
+<p>:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expand_dims(self):
+    &#39;&#39;&#39;
+    making space for one more generations
+
+    :return:
+    &#39;&#39;&#39;
+    self.generation_fitness = np.append(self.generation_fitness, np.zeros((1, self.population_size)), axis=0)</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.intitialize"><code class="name flex">
+<span>def <span class="ident">intitialize</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def intitialize(self):
+    # initialize 1st population
+    self.generations = np.random.uniform(low=-1, high=1,
+                                            size=(self.population_size, self.nConcepts, self.nConcepts - 1))</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.mutation"><code class="name flex">
+<span>def <span class="ident">mutation</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mutation(self):
+    &#39;&#39;&#39;
+    randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+    both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+    Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+    :return:
+    &#39;&#39;&#39;
+    mut = np.random.choice([&#39;random&#39;,&#39;nonuniform&#39;])#,&#39;muhlenbein&#39;])
+
+    if mut ==&#39;random&#39;:
+        self.randommutation()
+    elif mut ==&#39;nonuniform&#39;:
+        self.numutation()</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.numutation"><code class="name flex">
+<span>def <span class="ident">numutation</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def numutation(self):
+    &#39;&#39;&#39;
+    randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+    both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+    Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+    :return:
+    &#39;&#39;&#39;
+    # choosing p % of chromosomes in the generation
+    a = list(np.random.choice([False, True], p=[1 - self.prob_mutation, self.prob_mutation],
+                              size=self.population_size).astype(int) * range(self.population_size))
+    a = list(filter(lambda x: x != 0, a))
+    # randomly choose max 3 elements in the chromosome and change their vals
+    d = round((self.max_generations-self.current_gen)/(self.max_generations/2))
+    for i in a:
+        # randomly choosing d% of the elements to mutate, it decreases with the n of generations
+
+        for change in range(d):
+            j = np.random.choice(range(self.nConcepts), size=1)
+            k = np.random.choice(range(self.nConcepts - 1), size=1)
+            self.generations[i, j, k] = np.random.uniform(-1, 1)</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.randommutation"><code class="name flex">
+<span>def <span class="ident">randommutation</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def randommutation(self):
+    &#39;&#39;&#39;
+    randomly chooses one of implemented mutation technique and applies it on the wieght matrix
+    both random and nmutation use techniqes described in Genetic learning offuzzy cognitive maps
+    Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+    :return:
+    &#39;&#39;&#39;
+    # applying mutation
+    # choosing x % indexes for mutation
+    a = list(np.random.choice([False, True], p=[1 - self.prob_mutation, self.prob_mutation], size=self.population_size).astype(int) * range(self.population_size))
+    a = list(filter(lambda x: x != 0, a))
+    for i in a:
+        # muation is happening with probability
+
+        # random method
+        j = np.random.choice(range(self.nConcepts), size=1)
+        k = np.random.choice(range(self.nConcepts - 1), size=1)
+
+        self.generations[i, j,k] = np.random.uniform(-1,1)</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.rulette"><code class="name flex">
+<span>def <span class="ident">rulette</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>choosing candidates for crossover with probability according to the fitness function of each chromosome
+more information <a href="https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)">https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)</a>
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rulette(self):
+    &#39;&#39;&#39;
+    choosing candidates for crossover with probability according to the fitness function of each chromosome
+    more information https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+    :return:
+    &#39;&#39;&#39;
+
+    selection = np.zeros((self.population_size, self.nConcepts, self.nConcepts - 1))
+    # initial probability list
+    p = self.generation_fitness[-2] / np.sum(self.generation_fitness[-2])
+    for i in range(self.population_size):
+        # choice with probability, choosing index of chromosome
+        selection[i] = self.generations[np.random.choice(list(range(self.population_size)), p=list(
+            p))]  # &#39;last&#39; population is still an array of zeros
+    # selected chromosomes pass to next generation
+    self.generations = selection</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>running the learning process for you, just wait and enjoy :)
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self):
+    &#39;&#39;&#39;
+    running the learning process for you, just wait and enjoy :)
+    :return:
+    &#39;&#39;&#39;
+    # run the optimization process
+    # if we start from 1st step, randomly initialize first generation
+    self.intitialize()
+    self.current_gen += 1
+    # calculate fitness for 1st gen
+    # there was some issue so better deepcopy before calling f
+    for i in range(self.population_size):
+        chromosome = copy.deepcopy(self.calculate_fitness(self.generations[i]))
+        self.generation_fitness[0, i] = chromosome
+
+    # update termination condition
+    self.check_termination()
+
+    # ploting fitness
+    # interactive mode
+    plt.ion()
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    line1, = ax.plot(list(range(self.current_gen)), np.max(self.generation_fitness[0]))
+    fig.canvas.draw()
+    plt.show(block=False)
+    # plt.show()
+    # if it is not true
+    while not (self.termination):
+
+        # NEW GENERATION
+        self.current_gen += 1
+        # print(self.current_gen)
+        if self.current_gen % 100 == 0:
+            print(f&#39;We are at {self.current_gen}/{self.max_generations}&#39;)
+            print(f&#39;max fitness function so far is {np.max(self.generation_fitness[-2])}&#39;)
+            line1.set_xdata(list(range(self.current_gen-2)))
+            line1.set_ydata(np.max(self.generation_fitness[:-1],axis=1))
+            # re-drawing the figure
+            ax.relim()
+            ax.autoscale_view(True, True, True)
+            fig.canvas.draw()
+            plt.pause(0.02)
+
+            # to flush the GUI events
+            # fig.canvas.flush_events()
+            # print(f&#39;sample weights {self.generations[-1,30]}&#39;)
+
+        # 1. expanding dims for new generation
+        self.expand_dims()
+
+        # 2. crossover with probability pCross
+        self.crossover()
+        # 3. mutate with probability pMutate
+        self.mutation()
+
+        # 4. calculate fitness
+        for i in range(self.population_size):
+            chromosome = self.calculate_fitness(copy.deepcopy(self.generations[i]))
+            self.generation_fitness[-2, i] = chromosome
+
+        # 5. selection process - &gt; new generation is being created
+        self.selection()
+
+        # 6. update termination condiation
+        self.check_termination()
+
+    # return the most fitted candidate of last generation
+    return self.generations[np.where(self.generation_fitness[-1] == np.max(self.generation_fitness[-1]))]</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.selection"><code class="name flex">
+<span>def <span class="ident">selection</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>selecting the candidates from the last generation to the new generation
+as paper suggestd we are randomly choosing the way to choose gene for crossover
+ref: Genetic learning offuzzy cognitive maps
+Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+calls one of the selection methods rullete or tournament</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def selection(self):
+    &#39;&#39;&#39;
+    selecting the candidates from the last generation to the new generation
+    as paper suggestd we are randomly choosing the way to choose gene for crossover
+    ref: Genetic learning offuzzy cognitive maps
+    Wojciech Stach, Lukasz Kurgan∗, Witold Pedrycz, Marek Reforma
+    calls one of the selection methods rullete or tournament
+    &#39;&#39;&#39;
+
+
+    cross = np.random.choice([&#39;rulette&#39;, &#39;tournament&#39;])
+    if cross == &#39;rulette&#39;:
+        crossover_pairs = self.rulette()
+    elif cross == &#39;tournament&#39;:
+        crossover_pairs = self.tournament()</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.simulateFCM"><code class="name flex">
+<span>def <span class="ident">simulateFCM</span></span>(<span>self, concepts, weights, nsteps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>we have to simulate fcm with current weights in order to calculate fitness function
+concepts should be given as a np.array((1,nConcepts))
+:param concepts: conept vector
+:param weights: weight array
+:param nsteps: number of time step for the FCM simulation
+:return: concepts values after nsteps</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def simulateFCM(self, concepts, weights, nsteps):
+    &#39;&#39;&#39;
+    we have to simulate fcm with current weights in order to calculate fitness function
+    concepts should be given as a np.array((1,nConcepts))
+    :param concepts: conept vector
+    :param weights: weight array
+    :param nsteps: number of time step for the FCM simulation
+    :return: concepts values after nsteps
+    &#39;&#39;&#39;
+
+
+    # VERY IMPORTANT
+    # weights as np.array((nConcepts,nConcepts-1)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    assert weights.shape == (self.nConcepts, self.nConcepts - 1), &#39;wrong encoding&#39;
+    # concepts=np.reshape(concepts,(1,concepts.shape[0]))
+
+
+    for j in range(1, nsteps):
+        newvalues = np.zeros((concepts.shape[0]))
+        for i in range(concepts.shape[0]):
+            idx = list(range(concepts.shape[0]))
+            idx.remove(i)
+            newvalues[i] = round(1 / (1 + np.exp(-(concepts[i] + concepts[idx] @ weights[i]))), 8)
+        # unfortunately using this way we will change the values of the concepts in the same time step, that is why we need to operate on more variables
+        # BROOOOOO
+
+        concepts = newvalues
+    return concepts</code></pre>
+</details>
+</dd>
+<dt id="fcmpy.ML.rcga.rcga.tournament"><code class="name flex">
+<span>def <span class="ident">tournament</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>we choose randomly k chromosomes from the generation, then we would choose the best one with probability p,
+the 2nd best with p<em>(1-p), 3rd best wih p</em>((1-p)^2) and so on
+more information <a href="https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)">https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)</a>
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tournament(self):
+    &#39;&#39;&#39;
+    we choose randomly k chromosomes from the generation, then we would choose the best one with probability p,
+    the 2nd best with p*(1-p), 3rd best wih p*((1-p)^2) and so on
+    more information https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+    :return:
+    &#39;&#39;&#39;
+    # if p == 1, we would always choose the &#39;fittest one&#39; from the k candidates
+    selection = np.zeros((self.population_size, self.nConcepts, self.nConcepts - 1))
+
+    for j in range(self.population_size):
+        # choose k random chromosomes or rather their indexes
+        candidates = np.random.choice(list(range(self.population_size)), size=self.tournamentK)
+        # choosing candidate
+        if self.tournamentP == 1:
+            # get fitness of each candidate
+            chosen = (0, 0)  # index,fitness
+            for index in candidates:
+                if self.generation_fitness[-2, index] &gt; chosen[1]:
+                    chosen = (index, self.generation_fitness[-2, index])
+        # choosing crossovers to create new gen
+        selection[j] = self.generations[chosen[0]]
+      
+    self.generations = selection</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fcmpy.ML" href="index.html">fcmpy.ML</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fcmpy.ML.rcga.reshapeW" href="#fcmpy.ML.rcga.reshapeW">reshapeW</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.simulateFCM" href="#fcmpy.ML.rcga.simulateFCM">simulateFCM</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fcmpy.ML.rcga.rcga" href="#fcmpy.ML.rcga.rcga">rcga</a></code></h4>
+<ul class="two-column">
+<li><code><a title="fcmpy.ML.rcga.rcga.calculate_fitness" href="#fcmpy.ML.rcga.rcga.calculate_fitness">calculate_fitness</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.check_termination" href="#fcmpy.ML.rcga.rcga.check_termination">check_termination</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.crossover" href="#fcmpy.ML.rcga.rcga.crossover">crossover</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.expand_dims" href="#fcmpy.ML.rcga.rcga.expand_dims">expand_dims</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.intitialize" href="#fcmpy.ML.rcga.rcga.intitialize">intitialize</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.mutation" href="#fcmpy.ML.rcga.rcga.mutation">mutation</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.numutation" href="#fcmpy.ML.rcga.rcga.numutation">numutation</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.randommutation" href="#fcmpy.ML.rcga.rcga.randommutation">randommutation</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.rulette" href="#fcmpy.ML.rcga.rcga.rulette">rulette</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.run" href="#fcmpy.ML.rcga.rcga.run">run</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.selection" href="#fcmpy.ML.rcga.rcga.selection">selection</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.simulateFCM" href="#fcmpy.ML.rcga.rcga.simulateFCM">simulateFCM</a></code></li>
+<li><code><a title="fcmpy.ML.rcga.rcga.tournament" href="#fcmpy.ML.rcga.rcga.tournament">tournament</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
