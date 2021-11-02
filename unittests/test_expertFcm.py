@@ -67,27 +67,9 @@ class TestDataProcessor(unittest.TestCase):
                                     '+H': [0.5, 0.75, 1],
                                     '+VH':  [0.75, 1, 1]
                                     }
-        data = self.fcm.read_data(os.path.abspath('unittests/test_cases/data_test.csv'), sep_concept='->', csv_sep=';')
+        data = self.fcm.read_data(os.path.abspath('unittests/test_cases/jss_data.csv'), sep_concept='->', csv_sep=';')
         self.assertIsInstance(data, collections.OrderedDict)
-        self.assertEqual(len(data), self.nExpert)
-        
-    def test_readCsvUnsure(self):
-        self.fcm.linguistic_terms = {
-                                    '-VH':  [-1, -1, -0.75],
-                                    '-H':  [-1, -0.75, -0.50],
-                                    '-M': [-0.75, -0.5, -0.25], 
-                                    '-L': [-0.5, -0.25, 0],
-                                    '-VL': [-0.25, 0, 0],
-                                    'No Causality': [-0.001, 0, 0.001],
-                                    '+VL': [0, 0, 0.25],
-                                    '+L': [0, 0.25, 0.50],
-                                    '+M': [0.25, 0.5, 0.75],
-                                    '+H': [0.5, 0.75, 1],
-                                    '+VH':  [0.75, 1, 1]
-                                    }
-        data = self.fcm.read_data(os.path.abspath('unittests/test_cases/data_test_unsure.csv'), sep_concept='->', csv_sep=';')
-        self.assertIsInstance(data, collections.OrderedDict)
-        self.assertEqual(len(data), self.nExpert)
+        self.assertEqual(len(data), 5)
 
     def test_entropy(self):
         data = self.fcm.read_data(os.path.abspath('unittests/test_cases/data_test_entropy.xlsx'))

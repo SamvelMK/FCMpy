@@ -43,7 +43,7 @@ class TestSimulator(unittest.TestCase):
         self.assertEqual([round(i, 4) for i in eql_r], [round(i, 4) for i in equilibrium_r])
 
     def test_simulation_bi(self):
-        res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='bi', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        res_mK = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='bivalent', inference='mKosko', thresh=0.001, iterations=50, l=1)
         self.assertEqual(len(set(res_mK.values.flatten())), 2)
         self.assertEqual(max(res_mK.values.flatten()), 1)
         self.assertEqual(min(res_mK.values.flatten()), 0)
@@ -51,7 +51,7 @@ class TestSimulator(unittest.TestCase):
     def test_simulation_tri(self):
         init_state = self.init_state.copy()
         init_state['C1'] = -1
-        res_mK = self.sim.simulate(initial_state=init_state, weight_matrix=self.weight_matrix, transfer='tri', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        res_mK = self.sim.simulate(initial_state=init_state, weight_matrix=self.weight_matrix, transfer='trivalent', inference='mKosko', thresh=0.001, iterations=50, l=1)
         self.assertEqual(len(set(res_mK.values.flatten())), 3)
         self.assertEqual(max(res_mK.values.flatten()), 1)
         self.assertEqual(min(res_mK.values.flatten()), -1)
