@@ -1,10 +1,9 @@
 ###########################################################################
 ##                    Implementation of the Generationa GA               ##
 ###########################################################################
-import os
-from tqdm import tqdm
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.ml.genetic.ga_interface import GA
 from fcmpy.store.methodsStore import InitializationStore
@@ -13,6 +12,7 @@ from fcmpy.store.methodsStore import RecombinationStore
 from fcmpy.store.methodsStore import MutationStore
 from fcmpy.ml.genetic.evaluation import PopulationEvaluation
 import copy
+
 
 class GRCGA(GA):
     """
@@ -25,40 +25,40 @@ class GRCGA(GA):
         
         init_type: str
                     type of initialization
-                        default -> 'uniform'
+                    default --> 'uniform'
         
         population_size: int
                             number of candidates to generate 
                             as an initial population
-                            default -> 100
+                            default --> 100
         
         fitness_type: str
                         fitness function
-                        default -> 'stach_fitness'
+                        default --> 'stach_fitness'
         
         normalization_type: str
                             type of normalization for the matrix error
-                            default -> 'L2'
+                            default --> 'L2'
 
         a: int
             coefficient for the auxiliary function
-            default -> 100
+            default --> 100
 
         p: int
             coefficient for the matrix error
-            default -> 2 (for L2 norm.)
+            default --> 2 (for L2 norm.)
         
         inference: str
                     inference type for the FCM update function
-                    default -> 'mKosko'
+                    default --> 'mKosko'
         
         tranfer: str
                  type of transfer function to be applied during the FCM update
-                 default -> 'sigmoid'
+                 default --> 'sigmoid'
         
         l: int
-            lambda parameter for the sigmoid function
-            default -> 1
+            slope parameter for the sigmoid function
+            default --> 1
     """
     @type_check
     def __init__(self, data:pd.DataFrame, init_type:str='uniform', population_size:int=100,
