@@ -5,6 +5,7 @@ from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.store.methodsStore import InferenceStore
 from fcmpy.store.methodsStore import TransferStore
 
+
 class UpdateStateVector(ABC):
     
     @abstractmethod
