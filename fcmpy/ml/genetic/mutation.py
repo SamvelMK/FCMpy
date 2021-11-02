@@ -27,8 +27,8 @@ class RandomMutation(Mutation):
             Parameters
             ----------
             chromosome: dict
-                        the candidate FCM solution (chromosome). key -> solution,
-                        fitness, value -> np.ndarray, float
+                        the candidate FCM solution (chromosome). key --> solution,
+                        fitness, value --> np.ndarray, float
             
             p_mutation: float
                             the mutation rate
@@ -92,7 +92,7 @@ class NonUniformMutation(Mutation):
             ----------
             chromosome: dict
                         the candidate FCM solution (chromosome). key -> solution,
-                        fitness, value -> np.ndarray, float
+                        fitness, value --> np.ndarray, float
 
             p_mutation: float
                             mutation rate

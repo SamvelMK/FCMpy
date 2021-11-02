@@ -27,20 +27,21 @@ class SSGA(GA):
         
         init_type: str
                     type of initialization
-                        default -> 'uniform'
+                        default --> 'uniform'
         
         population_size: int
                             number of candidates to generate 
                             as an initial population
-                            default -> 100
+                            default --> 100
         
         fitness_type: str
                         fitness function
-                        default -> 'stach_fitness'
+                        default --> 'stach_fitness'
         
         normalization_type: str
-                            type of normalization for the matrix error
-                            default -> 'L2'
+                            type of normalization to apply onto the matrix error
+                            normalization type --> "L1", "L2", "LInf"
+                            default --> L2
         a: int
             coefficient for the auxiliary function
             default -> 100
@@ -50,16 +51,18 @@ class SSGA(GA):
             default -> 2 (for L2 norm.)
         
         inference: str
-                    inference type for the FCM update function
+                    inference method for the FCM update
+                    inference method --> "kosko", "mKosko", "rescaled"
                     default -> 'mKosko'
         
-        tranfer: str
-                 type of transfer function to be applied during the FCM update
-                 default -> 'sigmoid'
+        transfer: str
+                    transfer function to be applied on the updated concept values
+                    transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+                    default --> "sigmoid"
         
         l: int
-            lambda parameter for the sigmoid function
-            default -> 1
+            slope parameter for the sigmoid transfer function
+            default --> 1
     """
     @type_check
     def __init__(self, data:pd.DataFrame, init_type:str='uniform', population_size:int=100,

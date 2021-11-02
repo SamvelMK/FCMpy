@@ -62,7 +62,7 @@ class NhlWeightUpdate(WeightUpdate):
         res = a + abs(np.sign(w))*b*(s-c.T).T
         
         # convert it back to df
-        res = pd.DataFrame(res, columns = weight_matrix.columns, index = weight_matrix.index)
+        res = pd.DataFrame(res, columns = weight_matrix.columns, index = weight_matrix.columns)
         return res
 
 

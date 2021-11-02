@@ -5,6 +5,7 @@ from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.store.methodsStore import InferenceStore
 from fcmpy.store.methodsStore import TransferStore
 
+
 class UpdateStateVector(ABC):
     
     @abstractmethod
@@ -50,8 +51,8 @@ class FcmUpdate(UpdateStateVector):
         inference = InferenceStore.get(inference_method)()
         transfer = TransferStore.get(transfer_method)()
 
-        infered = inference.infer(initial_state=state_array, weight_matrix=weight_mat, params=kwargs) # Inference
-        state_vector = transfer.transfer(x=infered, params=kwargs) # Apply transfer func on the results
+        inferred = inference.infer(initial_state=state_array, weight_matrix=weight_mat, params=kwargs) # Inference
+        state_vector = transfer.transfer(x=inferred, params=kwargs) # Apply transfer func on the results
         
         # convert to dict
         res = {i:y for i,y in zip(kwargs['weight_matrix'].columns, state_vector)}
