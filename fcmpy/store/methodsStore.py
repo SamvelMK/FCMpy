@@ -154,7 +154,7 @@ class TransferStore(GetMethod):
     from fcmpy.simulator.transfer import Bivalent
     from fcmpy.simulator.transfer import Trivalent
     from fcmpy.simulator.transfer import HyperbolicTangent
-    __methods = {'sigmoid' : Sigmoid, 'bi' : Bivalent, 'tri' : Trivalent, 'tanh' : HyperbolicTangent}
+    __methods = {'sigmoid' : Sigmoid, 'bivalent' : Bivalent, 'trivalent' : Trivalent, 'tanh' : HyperbolicTangent}
     
     @staticmethod
     @type_check

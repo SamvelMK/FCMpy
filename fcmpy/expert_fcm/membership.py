@@ -106,7 +106,7 @@ class TrapezoidalMembership(FuzzyMembership):
         """
         linguisticTerms = kwargs['linguistic_terms'] 
         universe = kwargs['universe'] 
-
+        mfs = {}
         for term in linguisticTerms.keys():
             assert linguisticTerms[term][0] <= linguisticTerms[term][1] <= linguisticTerms[term][2] <= linguisticTerms[term][3]
             mfs[term] = fuzz.trapmf(x = universe, abcd=linguisticTerms[term])
