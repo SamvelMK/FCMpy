@@ -61,22 +61,28 @@ class NHL(HebbianLearning):
             Parameters
             ----------
             decay: float,
-                    decay coefficient
+                    default --> 1
             
             learning_rate: int/float
-                    learning rate
+                            default --> 0.01
             
             iterations: int
                         iterations for the NHL algorithm to run
+                        default --> 100
 
             transfer: str
                         transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+                        default -> "sigmoid"
+
+            l: float
+                parameter for the sigmoid transfer function
 
             inference: str
                         inference method --> "kosko", "mKosko", "rescaled"
 
             thresh: float
                         threshold of error for the F2 termination condition for NHL algorithm
+                        default --> 0.002
 
             Return
             -------

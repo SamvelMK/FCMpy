@@ -11,6 +11,7 @@ from .termination import SecondCriterion
 from .update_parameters import Eta
 from .update_parameters import Gamma
 
+
 class AHL(HebbianLearning):
     """
         AHL algorithm for FCMs.
@@ -53,10 +54,39 @@ class AHL(HebbianLearning):
     
     @type_check
     def run(self, decay=0.03, learning_rate=0.01, iterations:int= 100, transfer:str= 'sigmoid', 
-                    thresh:float = 0, l:Union[float, int]=0.98, auto_learn=False, **kwargs) -> pd.DataFrame:
+                    thresh:float = 0.002, l:Union[float, int]=0.98, auto_learn=False, **kwargs) -> pd.DataFrame:
         
         """
-            Run the AHL algorithm for FCMs.
+            Run the AHL algorithm for FCMs
+
+            Parameters
+            ----------
+            decay: float
+                    default --> 0.03
+            
+            learning_rate: float
+                            default --> 0.01
+            
+            iterations: int
+                        default --> 100
+            
+            transfer: str
+                        transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+                        default --> "sigmoid"
+            
+            thresh: float
+                        default --> 0.002
+            
+            l: Union[float, int]
+                    default --> 0.98
+            
+            auto_learn: bool
+                        default --> False
+
+            Return
+            ------
+            y: pd.DataFrame
+                the optimized weight matrix
         """
         w_prior = self.__weight_matrix.copy()
         s_prior = self.__state_vector.copy()

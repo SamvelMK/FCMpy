@@ -37,23 +37,25 @@ class RCGA(GA):
         data: pd.DataFrame
 
         ga_type: str
-                    type of genetic algorithm
-                    default -> generational
+                    type of genetic algorithm --> "generational", "ssga"
+                    default --> "generational"
         
         init_type: str
                     type of initialization
-                    default -> uniform
+                    default --> "uniform"
         
         population_size: int
                             number of chromosome to be generated in the population
+                            default --> 100
         
         fitness_type: str
                         fitness function
                         default -> "stach_fitness"
         
-        normalization: str
-                        type of normalization
-                        default -> "L2"
+        normalization_type: str
+                            type of normalization to apply onto the matrix error
+                            normalization type --> "L1", "L2", "LInf"
+                            default --> L2
         
         a: int
             parameter for the fitness function
@@ -61,19 +63,21 @@ class RCGA(GA):
         
         p: int
             parameter for the fitness function
-            2
+            default --> 2
 
         inference: str
-                    type of inference used for the FCM simulations
-                    default -> "mKosko"
+                    inference method for the FCM update
+                    inference method --> "kosko", "mKosko", "rescaled"
+                    default -> 'mKosko'
         
         transfer: str
-                    type of transfer function to use for the FCM simulations
-                    default -> "sigmoid"
+                    transfer function to be applied on the updated concept values
+                    transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+                    default --> "sigmoid"
         
         l: int
-            parameter for the sigmoid function
-            default -> 1        
+            slope parameter for the sigmoid transfer function
+            default --> 1        
     """
     def __init__(self, data:pd.DataFrame, ga_type:str='generational', init_type:str='uniform', population_size:int=100,
                     fitness_type:str='stach_fitness', normalization_type:str='L2', a:int=100, p:int=2,

@@ -28,7 +28,7 @@ class H(Auxiliary):
                 a coefficient established experimentally
             
             x: float
-                fitness score
+                normalized matrix error
         
             Return
             ------

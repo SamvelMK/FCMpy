@@ -16,6 +16,9 @@ class Recombination(ABC):
 
 
 class OnePointCrossover(Recombination):
+    """
+        One point crossover
+    """
     def recombine(**kwargs)->tuple:
         """
             One-point crossover operation
