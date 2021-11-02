@@ -76,8 +76,8 @@ class RCGA(GA):
                     default --> "sigmoid"
         
         l: int
-            parameter for the sigmoid function
-            default -> 1        
+            slope parameter for the sigmoid transfer function
+            default --> 1        
     """
     def __init__(self, data:pd.DataFrame, ga_type:str='generational', init_type:str='uniform', population_size:int=100,
                     fitness_type:str='stach_fitness', normalization_type:str='L2', a:int=100, p:int=2,
