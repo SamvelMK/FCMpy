@@ -378,8 +378,9 @@ class ExpertFcm(FcmConstructor):
         # Create an empty weight matrix
         cols = set(flat_data.index.get_level_values('to'))
         index = set(flat_data.index.get_level_values('from'))
-        weight_matrix = pd.DataFrame(columns=cols, index=index)
-
+        index = sorted(index.union(cols))
+        weight_matrix = pd.DataFrame(0,columns=index, index=index)
+        print(flat_data.index)
         # main part for calculating the weights
         for concepts in set(flat_data.index):
             # for a given pair of concepts calculate the propostions (weights) for the

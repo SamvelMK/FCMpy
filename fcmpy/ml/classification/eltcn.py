@@ -19,6 +19,7 @@ from tensorflow.keras import regularizers
 import matplotlib.pyplot as plt
 from scipy.stats import entropy
 from math import log, e
+import os 
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -194,18 +195,18 @@ def read_arff(file):
     X = np.array(frame)[:,0:-1]
     return X, y, len(labels)    
     
-def run(path):
+def run(path,folds=5):
     '''
     takes a directory where data file is (in .arff format) and do the whole calculation for you :)
     return fully connected FCM n x n for each fold and weight matrix n x nclasses
     :param path:
     :return:
     '''
-    import os
+  
     files = os.listdir(path)
     print(f"file in your data directory {files}. make sure they are .arff files!")
     print("running...")
-    results = []
+    results = {}
     for file in files:
         if ".arff" not in file:
             print(f"{file} is not an .arff file")
@@ -220,8 +221,13 @@ def run(path):
                 weights[i] /= mx
                 # weights[i] *= mx
                 # weights /= mx
-        results.append({'acc':acc,'ent':ent,'weights':weights})
+        avgW = np.zeros((weights[0].shape[0],weights[0].shape[1]))     
+        for i in np.arange(0,folds,step=2):
+            avgW += weights[i]
+        classW = np.zeros((weights[0].shape[0],weights[0].shape[1]))     
+        for i in np.arange(1,folds,step=2):
+            classW += weights[i]
+        results[file] = {'acc':acc,'ent':ent,'weights':weights,'avgW':avgW/folds, 'classW':classW/folds}
         print(file.replace('.arff','') + "," + str(acc)+ "," + str(ent))
     return results
-
 
