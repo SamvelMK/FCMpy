@@ -39,11 +39,17 @@ class PopulationEvaluation(Evaluation):
                             N*N weight matrix of the FCM.
 
             transfer: str
+                        transfer function to be applied on the updated concept values
                         transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
 
             inference: str
+                        inference method for the FCM update
                         inference method --> "kosko", "mKosko", "rescaled"
             
+            l: Union[float, int]
+                    slop parameter for the sigmoid transfer function
+                    default --> 0.98
+
             Return
             ------
             y: pd.DataFrame
@@ -76,15 +82,17 @@ class PopulationEvaluation(Evaluation):
             
             inference: str
                         inference method for the FCM update
+                        inference method --> "kosko", "mKosko", "rescaled"
                         default -> 'mKosko'
             
             transfer: str
                         transfer function to be applied on the updated concept values
-                        default -> 'sigmoid'
+                        transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+                        default --> 'sigmoid'
             
             l: int
-                parameter for the sigmoid transfer function
-                default -> 1
+                slop parameter for the sigmoid transfer function
+                default --> 1
             
             fitness_type: str
                             type of fitness function to use
@@ -92,7 +100,8 @@ class PopulationEvaluation(Evaluation):
 
             normalization_type: str
                                 type of normalization to apply onto the matrix error
-                                default -> L2
+                                normalization type --> "L1", "L2", "LInf"
+                                default --> L2
         
             Return
             ------
@@ -148,23 +157,26 @@ class ChromosomeEvaluation(Evaluation):
             
             inference: str
                         inference method for the FCM update
+                        inference method --> "kosko", "mKosko", "rescaled"
                         default -> 'mKosko'
             
             transfer: str
                         transfer function to be applied on the updated concept values
-                        default -> 'sigmoid'
+                        transfer function --> "sigmoid", "bivalent", "trivalent", "tanh"
+                        default --> 'sigmoid'
             
             l: int
-                parameter for the sigmoid transfer function
-                default -> 1
+                slop parameter for the sigmoid transfer function
+                default --> 1
             
             fitness_type: str
                             type of fitness function to use
-                            default -> 'stach_fitness'
+                            default --> 'stach_fitness'
 
             normalization_type: str
                                 type of normalization to apply onto the matrix error
-                                default -> L2
+                                normalization type --> "L1", "L2", "LInf"
+                                default --> L2
         
             Return
             ------
