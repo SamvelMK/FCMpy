@@ -145,7 +145,7 @@ class FcmIntervention(Intervention):
                         keys --> concepts the intervention impacts, value: the associated causal weight
 
             effectiveness: float
-                            the degree to which the intervention was delivered (should be between [-1, 1])
+                            the degree to which the intervention was delivered (should be between [0, 1])
                             default --> 1
         """
         if type != 'continuous':
