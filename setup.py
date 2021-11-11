@@ -5,7 +5,7 @@ def readme():
         return fh.read()
 
 
-with open('requirments.txt') as fid:
+with open('requirements.txt') as fid:
     INSTALL_REQUIRES = []
     for line in fid.readlines():
         if line == '' or line[0] == '#' or line[0].isspace():
