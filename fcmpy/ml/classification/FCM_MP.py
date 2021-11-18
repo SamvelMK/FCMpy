@@ -217,11 +217,20 @@ def run(**params):
 
     :return:
     '''
+    if 'sources' not in params.keys():
+            raise KeyError("You have to provide path to .arff files!")
+        
+    paramsdefault = {'L':0, 'M':1,
+                    'T':None, 'b1':1.0, 'folds':10,
+                    'output':'./output.csv', 'p':[1.0, 1.0, 1.0, 1.0],
+                    'rule':0, 'verbose':False}
+
+    for key in ['L', 'M', 'T', 'b1', 'folds', 'output', 'p', 'rule','verbose']:
+        if key not in params.keys():
+            params[key] = paramsdefault[key]
 
     
     data_sources = [f for f in params['sources'] if f.endswith('.arff')]
-
-
     results = []
     with open("./output.csv", mode='w') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
