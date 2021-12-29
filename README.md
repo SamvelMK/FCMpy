@@ -6,7 +6,13 @@ The fcmpy is Python package for automatically generating causal weights for fuzz
 * ExpertFcm
 * Simulation
 * Intervention
-* ---> (ML TBA)
+* NHL
+* AHL
+* RCGA
+* Eltcn
+* FCM_MP
+
+Read more about the package at: https://arxiv.org/abs/2111.12749 
 
 <a href="expert_based_fcm\expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
 <a href="simulator\simulator.md"> The FcmSimulator module </a> provides methods for running simulations on top of a given FCM structure. <br>
