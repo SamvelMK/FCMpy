@@ -27,9 +27,7 @@ class FcmIntervention(Intervention):
     """
         The class includes methods for testing interventions (what-if scenarios) on top of a defined FCM structure.
 
-        Methods:
-            __init__(self, simulator)
-            
+        Methods:            
             initialize(self, initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
                                 transfer: str, inference: str, thresh: float, iterations: int, l=1, 
                                 output_concepts = None, convergence = 'absDiff',  **params)
@@ -123,7 +121,8 @@ class FcmIntervention(Intervention):
         
         self.__test_results['baseline'] = self.__simulator.simulate(initial_state = self.__initial_state, weight_matrix = self.__weight_matrix,
                                                                 transfer = self.__transfer, inference = self.__inference, thresh = self.__thresh, 
-                                                                iterations = self.__iterations, l=self.__l, output_concepts = self.__output_concepts, convergence = self.__convergence, params = params)
+                                                                iterations = self.__iterations, l=self.__l, output_concepts = self.__output_concepts,
+                                                                convergence = self.__convergence, params = params)
         
         self.__equilibriums['baseline'] = self.test_results['baseline'].iloc[-1]
 
