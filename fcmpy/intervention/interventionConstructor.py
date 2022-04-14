@@ -106,7 +106,7 @@ class Continuous(InterventionConstructor):
             
         # construct the new state vector for a given intervention (baseline + intervention effectiveness)
         temp_vector = equilibriums['baseline'].copy(deep=True)
-        temp_vector = temp_vector.append(pd.Series({'intervention': effectiveness})).to_dict()
+        temp_vector = pd.concat([temp_vector, pd.Series({'intervention': effectiveness})]).to_dict()
         
         # add the causal weights for the intervention
         intervention['weight_matrix'] = temp
