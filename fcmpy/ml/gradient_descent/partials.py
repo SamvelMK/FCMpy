@@ -11,6 +11,14 @@ class Gradient(ABC):
         raise NotImplementedError('compute method is not defined.')
 
 
+class DxSquaredErrors(Gradient):
+    """
+        Partial derivative of the squared errors w.r.t. matrix W.
+    """
+    def compute(simulated, observed):
+        return 2*(simulated-observed)
+
+
 class DxSigmoid(Gradient):
     """
         Partial derivative of the sigmoid transfer function w.r.t. matrix W.
