@@ -23,3 +23,4 @@ test.py
 *.csv
 fcmpy/ML/data
 html
+myenv
