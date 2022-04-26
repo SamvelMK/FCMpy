@@ -11,7 +11,7 @@ class Update(ABC):
     """
     @abstractmethod
     def calculate(**kwargs):
-        raise NotImplementedError('update method is not defined.')
+        raise NotImplementedError('calculate method is not defined.')
 
 
 class DeltaW(Update):
