@@ -366,3 +366,25 @@ class ReplacementStore(GetMethod):
             return ReplacementStore.__methods[method]
         else:
             raise ValueError('The replace function is not defined.')
+
+
+class GradientStore(GetMethod):
+    """
+        Methods of claculating the partial derivatives w.r.t matrix W.
+    """
+    from fcmpy.ml.gradient_descent.partials import DxSquaredErrors
+    from fcmpy.ml.gradient_descent.partials import DxSigmoid
+    from fcmpy.ml.gradient_descent.partials import DxTanh
+    from fcmpy.ml.gradient_descent.partials import DxKosko
+    from fcmpy.ml.gradient_descent.partials import DxRescaled
+
+    __methods = {'dxSquared': DxSquaredErrors, 'sigmoid': DxSigmoid,
+                'tanh':DxTanh, 'kosko':DxKosko, 'rescaled':DxRescaled}
+
+    @staticmethod
+    @type_check
+    def get(method:str):
+        if method in GradientStore.__methods.keys():
+            return GradientStore.__methods[method]
+        else:
+            raise ValueError('The replace function is not defined.')
