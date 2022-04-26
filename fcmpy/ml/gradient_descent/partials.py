@@ -15,8 +15,10 @@ class DxSquaredErrors(Gradient):
     """
         Partial derivative of the squared errors w.r.t. matrix W.
     """
-    def compute(simulated, observed):
-        return 2*(simulated-observed)
+    def compute(**kwargs):
+        simulated = kwargs['simulated']
+        observed = kwargs['observed']
+        return 2*(observed - simulated)
 
 
 class DxSigmoid(Gradient):
@@ -25,7 +27,7 @@ class DxSigmoid(Gradient):
     """
 
     @staticmethod
-    def compute(x, l):
+    def compute(**kwargs):
         """
             Compute the derivative of the sigmoid transfer function w.r.t. matrix W.
 
@@ -43,8 +45,8 @@ class DxSigmoid(Gradient):
                     range [0,1].
         """
         sigmoid = TransferStore.get('sigmoid').transfer
-        
-        return sigmoid(x,l)*(1-sigmoid(x,l))
+        x = kwargs['x']
+        return sigmoid(x, params = kwargs)*(1-sigmoid(x, params = kwargs))
 
 
 class DxTanh(Gradient):
@@ -52,7 +54,7 @@ class DxTanh(Gradient):
         Partial derivative of the tanh transfer function w.r.t. matrix W.
     """
     @staticmethod
-    def compute(x):
+    def compute(**kwargs):
         """
             Compute the derivative of the hyperbolic tangent transfer function w.r.t. matrix W.
 
@@ -68,7 +70,7 @@ class DxTanh(Gradient):
                     range [0,1].
         """
         tanh = TransferStore.get('tanh').transfer
-        
+        x = kwargs['x']
         return tanh(x)*(1-tanh(x)**2)
 
 
@@ -77,7 +79,7 @@ class DxKosko(Gradient):
         Partial derivative of the Kosko's (modified kosko's) inference method w.r.t. matrix W.
     """
     @staticmethod
-    def compute(state_vector):
+    def compute(**kwargs):
         """
             Compute the partial derivative of the ksoko's (and modified kosko's) inference function w.r.t. matrix W.
 
@@ -92,6 +94,7 @@ class DxKosko(Gradient):
                     domain R,
                     range [0,1].
         """
+        state_vector = kwargs['state_vector']
         return state_vector.reshape(len(state_vector), 1)
 
 
@@ -100,7 +103,7 @@ class DxRescaled(Gradient):
         Partial derivative of the rescaled Kosko's (modified kosko's) inference method w.r.t. matrix W.
     """
     @staticmethod
-    def compute(state_vector):
+    def compute(**kwargs):
         """
             Compute the partial derivative of the rescaled ksoko's inference function w.r.t. matrix W.
 
@@ -115,5 +118,6 @@ class DxRescaled(Gradient):
                     domain R,
                     range [0,1].
         """
+        state_vector = kwargs['state_vector']
         x = (2 * state_vector - 1)
         return x.reshape(len(x), 1)
