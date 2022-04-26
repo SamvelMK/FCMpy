@@ -32,8 +32,8 @@ class StachError(MatrixError):
             data: numpy.ndarray
                     training data
             
-            p: int
-                normalization parameter
+            p: int for p={1,2} or np.inf for infinity norm.
+                normalization type
             
             Return
             ------
@@ -44,4 +44,4 @@ class StachError(MatrixError):
         data = kwargs['data']
         p = kwargs['p']
         
-        return np.sum(np.sum(np.abs(data_simulated - data)**p))
+        return np.linalg.norm(data - data_simulated, p)

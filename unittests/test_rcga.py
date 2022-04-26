@@ -29,7 +29,7 @@ class TestRcga(unittest.TestCase):
         self.error = MatrixErrorStore.get('stach_error')
 
     def test_fitness(self):
-        matError= self.error.calculate(data_simulated=self.data, data=(self.data), p=5)
+        matError= self.error.calculate(data_simulated=self.data, data=(self.data), p=2)
         normalized = self.normalization.normalize(x=matError, n=5, t=6)
         aux = self.auxiliary.f(x=normalized, a = 10000)
         self.assertEqual(aux, 1)
