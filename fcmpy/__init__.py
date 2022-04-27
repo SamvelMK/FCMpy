@@ -8,3 +8,4 @@ from .ml.validation import HebbianValidate
 from .ml.validation import ISE
 from .ml.validation import OSE
 from .ml import *
+from .ml.gradient_descent.sgd import SGD
