@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from fcmpy.store.methodsStore import TransferStore
-
+from fcmpy.store.methodsStore import InferenceStore, TransferStore
+import numpy as np
 
 class Gradient(ABC):
     """
@@ -18,7 +18,7 @@ class DxSquaredErrors(Gradient):
     def compute(**kwargs):
         simulated = kwargs['simulated']
         observed = kwargs['observed']
-        return 2*(observed - simulated)
+        return -2*(observed-simulated)
 
 
 class DxSigmoid(Gradient):
@@ -33,8 +33,7 @@ class DxSigmoid(Gradient):
 
             Parameters
             ----------
-            x : numpy.array,
-                    the results of the FCM update function.
+            x : simulated data
             l : int/float
                     A parameter that determines the steepness of the sigmoid function at values around 0. 
             
@@ -45,8 +44,13 @@ class DxSigmoid(Gradient):
                     range [0,1].
         """
         sigmoid = TransferStore.get('sigmoid').transfer
-        x = kwargs['x']
-        return sigmoid(x, params = kwargs)*(1-sigmoid(x, params = kwargs))
+        state_vector = kwargs['x']
+        weight_matrix = kwargs['weight_matrix']
+        inference = kwargs['inference']
+        l = kwargs['params']['l']
+        infer = InferenceStore.get(inference).infer
+        x = infer(initial_state=state_vector, weight_matrix=weight_matrix)
+        return sigmoid(x=x, params = {'l':l})*(1-sigmoid(x=x,  params = {'l':l}))
 
 
 class DxTanh(Gradient):
@@ -60,8 +64,7 @@ class DxTanh(Gradient):
 
             Parameters
             ----------
-            x : numpy.array,
-                    the results of the FCM update function.
+            x : simulated data
             
             Return
             -------
@@ -70,8 +73,12 @@ class DxTanh(Gradient):
                     range [0,1].
         """
         tanh = TransferStore.get('tanh').transfer
-        x = kwargs['x']
-        return tanh(x)*(1-tanh(x)**2)
+        state_vector = kwargs['x']
+        weight_matrix = kwargs['weight_matrix']
+        inference = kwargs['inference']
+        infer = InferenceStore.get(inference).infer
+        x = infer(initial_state=state_vector, weight_matrix=weight_matrix)
+        return tanh(x=x)*(1-tanh(x=x)**2)
 
 
 class DxKosko(Gradient):
