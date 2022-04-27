@@ -387,4 +387,22 @@ class GradientStore(GetMethod):
         if method in GradientStore.__methods.keys():
             return GradientStore.__methods[method]
         else:
-            raise ValueError('The replace function is not defined.')
+            raise ValueError('The partial derivative function is not defined.')
+
+
+class SolverStore(GetMethod):
+    """
+        Methods of updating weight matrix W.
+    """
+    from fcmpy.ml.gradient_descent.weight_update import VanillaGd
+    from fcmpy.ml.gradient_descent.weight_update import Adam
+
+    __methods = {'regular': VanillaGd, 'adam':Adam}
+
+    @staticmethod
+    @type_check
+    def get(method:str):
+        if method in SolverStore.__methods.keys():
+            return SolverStore.__methods[method]
+        else:
+            raise ValueError('The solver is not defined.')
