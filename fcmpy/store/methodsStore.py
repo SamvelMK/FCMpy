@@ -419,7 +419,7 @@ class LossStore(GetMethod):
     @staticmethod
     @type_check
     def get(method:str):
-        if method in SolverStore.__methods.keys():
-            return SolverStore.__methods[method]
+        if method in LossStore.__methods.keys():
+            return LossStore.__methods[method]
         else:
             raise ValueError('The loss function is not defined.')
