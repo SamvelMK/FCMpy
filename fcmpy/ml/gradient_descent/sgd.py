@@ -8,6 +8,7 @@ from fcmpy.store.methodsStore import TransferStore
 from fcmpy.store.methodsStore import SolverStore
 from fcmpy.store.methodsStore import LossStore
 from fcmpy.store.methodsStore import DWStore
+from fcmpy.expert_fcm.input_validator import type_check
 
 
 class GradientDescent(ABC):
@@ -23,14 +24,15 @@ class SGD(GradientDescent):
     """
         Gradient Descent algorithm for training FCMs.
     """
-    def __init__(self, initial_matrix, data, loss = 'mse'):
+    @type_check
+    def __init__(self, initial_matrix:np.array, 
+                        data:np.array, loss = 'mse'):
         self.weight_matrix = initial_matrix
         self.__shape = self.weight_matrix.shape
         self.data = data
         self.__T = len(data[0])
         self.__delta_w = DWStore.get(method=loss).calculate
         self.__loss = LossStore.get(method=loss).compute
-        self.loss = []
     
     def __fcmSimulate(self, state_vector:np.array, weight_matrix:np.array, 
                         inference:str, transfer:str, time_steps:int, **kwargs):
@@ -67,7 +69,8 @@ class SGD(GradientDescent):
         for i in range(time_steps-1):
             data[i+1] = trans(x=infer(initial_state = data[i], weight_matrix=weight_matrix), params=kwargs)
         return data
-
+    
+    @type_check
     def run(self, batch_size:int=38, epochs:int=1000, solver='regular', transfer:str='sigmoid', inference:str='kosko',
             learning_rate:float=0.001, l=1, b1:float=0.9, b2:float=0.999, e:float=10**-9, threshold_loss:float = 0.0001, 
             threshold_change:float=0.00001):
@@ -125,6 +128,7 @@ class SGD(GradientDescent):
                                 default -> 0.00001
         """
         self.res = copy.deepcopy(self.weight_matrix)
+        self.loss = []
         mats_average = 0
         solver = SolverStore.get(method=solver).update
         pbar = tqdm(range(epochs))
