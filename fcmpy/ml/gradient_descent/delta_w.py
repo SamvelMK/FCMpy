@@ -44,7 +44,7 @@ class DeltaW(Update):
         dx_inference = GradientStore.get(method=inference).compute
         dx_transfer = GradientStore.get(method=transfer).compute
 
-        dx_error = dx_squared(observed=data, simulated=predicted)
+        dx_error = dx_squared(observed=data, predicted=predicted)
         dx_infer = dx_inference(state_vector=state_vector)
         dx_trans = dx_transfer(x=state_vector, weight_matrix = weight_matrix, inference=inference, params=kwargs)
     

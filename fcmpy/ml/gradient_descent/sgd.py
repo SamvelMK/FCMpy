@@ -142,7 +142,7 @@ class SGD(GradientDescent):
                     simulated = self.__fcmSimulate(state_vector=obs[0], weight_matrix=self.res, inference=inference, transfer=transfer, time_steps=self.__T, l=l)
                     errors_obs += self.__loss(observed=obs, predicted=simulated, n=len(batch))
                     for t in range(self.__T-1):
-                        dw = self.__delta_w(data=obs[t+1], simulated=simulated[t+1], state_vector=obs[t], 
+                        dw = self.__delta_w(data=obs[t+1], predicted=simulated[t+1], state_vector=obs[t], 
                                                 weight_matrix=self.res, transfer=transfer, inference=inference, l=l)
                         mats += solver(delta_w=dw, learning_rate=learning_rate, b1=b1, b2=b2, e=e, epoch=epoch)
 
