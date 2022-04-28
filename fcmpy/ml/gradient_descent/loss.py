@@ -24,10 +24,12 @@ class MSE(Loss):
             
             predicted: np.array
                         the predicted data
-        """
-        assert len(obs) == len(pred)
-        
+        """        
         obs = kwargs['observed']
         pred = kwargs['predicted']
         n = kwargs['n']
+
+        assert len(obs) == len(pred)
+        assert type(n)==int
+        
         return sum(sum((obs-pred)**2))/n
