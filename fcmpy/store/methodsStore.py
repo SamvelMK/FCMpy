@@ -410,7 +410,7 @@ class SolverStore(GetMethod):
 
 class LossStore(GetMethod):
     """
-        Methods of updating weight matrix W.
+        Methods of calculating the loss.
     """
     from fcmpy.ml.gradient_descent.loss import MSE
 
@@ -423,3 +423,21 @@ class LossStore(GetMethod):
             return LossStore.__methods[method]
         else:
             raise ValueError('The loss function is not defined.')
+
+
+class DWStore(GetMethod):
+    """
+        Methods of calculating the change in the 
+        parameters based on the gradients.
+    """
+    from fcmpy.ml.gradient_descent.delta_w import DeltaW
+
+    __methods = {'mse': DeltaW}
+
+    @staticmethod
+    @type_check
+    def get(method:str):
+        if method in DWStore.__methods.keys():
+            return DWStore.__methods[method]
+        else:
+            raise ValueError('The function for calculating the change in the parameters is not defined.')
