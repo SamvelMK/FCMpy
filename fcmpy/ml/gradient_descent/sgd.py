@@ -6,6 +6,7 @@ from fcmpy.store.methodsStore import InferenceStore
 from fcmpy.store.methodsStore import TransferStore
 from fcmpy.ml.gradient_descent.delta_w import DeltaW
 from fcmpy.store.methodsStore import SolverStore
+from fcmpy.store.methodsStore import LossStore
 
 class GradientDescent(ABC):
     """
@@ -17,12 +18,13 @@ class GradientDescent(ABC):
 
 
 class SGD(GradientDescent):
-    def __init__(self, initial_matrix, data):
+    def __init__(self, initial_matrix, data, loss = 'mse'):
         self.weight_matrix = initial_matrix
         self.__shape = self.weight_matrix.shape
         self.data = data
         self.__T = len(data[0])
         self.__delta_w = DeltaW
+        self.__loss = LossStore.get(method=loss).compute
         self.loss = []
     
     def __fcmSimulate(self, state_vector, weight_matrix, 
@@ -59,12 +61,12 @@ class SGD(GradientDescent):
 
                 for obs in batch:
                     simulated = self.__fcmSimulate(state_vector=obs[0], weight_matrix=self.weight_matrix, inference=inference, transfer=transfer, time_steps=self.__T, l=l)
-                    errors_obs += sum(sum((obs-simulated)**2))/len(batch)
+                    errors_obs += self.__loss(observed=obs, predicted=simulated, n=len(batch))
                     for t in range(self.__T-1):
                         dw = self.__delta_w.calculate(data=obs[t+1], simulated=simulated[t+1], state_vector=obs[t], 
                                                         weight_matrix=self.weight_matrix, transfer=transfer, inference=inference, l=l)
                         mats += solver(delta_w=dw, learning_rate=learning_rate, b1=b1, b2=b2, e=e, epoch=epoch)
-                # change = solver(delta_w=mats, learning_rate=learning_rate, b1=b1, b2=b2, e=e, epoch=epoch)
+
                 self.weight_matrix = np.clip(self.weight_matrix + (mats/(len(batch))), -1,1)
                 mats_average = sum(np.abs(sum((mats)/len(batch))))
                 errors_batch.append(errors_obs)
