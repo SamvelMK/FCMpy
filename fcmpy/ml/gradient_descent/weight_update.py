@@ -11,16 +11,54 @@ class WeightUpdate(ABC):
 
 
 class VanillaGd(WeightUpdate):
+    """
+        Parameter updates for vanilla gradient descent.
+    """
     @staticmethod
     def update(**kwargs):
+        """
+            The update function for vanilla gradient descent.
+
+            Parameters
+            ----------
+            learning_rate:float
+                            learning rate
+
+            delta_w: np.array
+                        the gradients
+            
+            Return
+            ------
+            y: np.array
+                the change of the W during learning step t+1
+        """
         delta_w = kwargs['delta_w']
         learning_rate = kwargs['learning_rate']
         return -learning_rate*delta_w
 
 
 class Adam(WeightUpdate):
+    """
+        Parameter updates for Adam solver.
+    """
     @staticmethod
     def update(**kwargs):
+        """
+            The update function for adam solver.
+
+            Parameters
+            ----------
+            learning_rate:float
+                            learning rate
+
+            delta_w: np.array
+                        the gradients
+            
+            Return
+            ------
+            y: np.array
+                the change of the W during learning step t+1
+        """
         b1 = kwargs['b1']
         b2 = kwargs['b2']
         mt = 0
