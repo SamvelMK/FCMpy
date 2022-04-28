@@ -368,6 +368,7 @@ class ReplacementStore(GetMethod):
             raise ValueError('The replace function is not defined.')
 
 
+# Methods for calculating Gradients
 class GradientStore(GetMethod):
     """
         Methods of claculating the partial derivatives w.r.t matrix W.
@@ -390,6 +391,7 @@ class GradientStore(GetMethod):
             raise ValueError('The partial derivative function is not defined.')
 
 
+# Solvers for gradient descent
 class SolverStore(GetMethod):
     """
         Methods of updating weight matrix W.
@@ -408,6 +410,7 @@ class SolverStore(GetMethod):
             raise ValueError('The solver is not defined.')
 
 
+# Loss functions for gradient descent
 class LossStore(GetMethod):
     """
         Methods of calculating the loss.
@@ -425,6 +428,7 @@ class LossStore(GetMethod):
             raise ValueError('The loss function is not defined.')
 
 
+# Functions for calculating the change in the parameters for gradient descent
 class DWStore(GetMethod):
     """
         Methods of calculating the change in the 
