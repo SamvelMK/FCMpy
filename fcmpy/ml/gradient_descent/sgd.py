@@ -24,9 +24,8 @@ class SGD(GradientDescent):
     """
         Gradient Descent algorithm for training FCMs.
     """
-    @type_check
-    def __init__(self, initial_matrix:np.array, 
-                        data:np.array, loss = 'mse'):
+    def __init__(self, initial_matrix:np.ndarray, 
+                        data:np.ndarray, loss = 'mse'):
         self.weight_matrix = initial_matrix
         self.__shape = self.weight_matrix.shape
         self.data = data
@@ -88,7 +87,7 @@ class SGD(GradientDescent):
                     default -> 1000
 
             solver: str:
-                    type of solvers to use ---> "regular", "adam", "adamax"
+                    type of solvers to use ---> "regular", "adam"
                     default -> 'regular'
 
             transfer:str:
