@@ -333,7 +333,7 @@ Output[7]
 Now we can inspect the equilibrium states of the concepts in each intervention case.
 
 ```Python
-inter.equilbriums
+inter.equilibriums
 ```
 
 ```Python
