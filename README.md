@@ -14,9 +14,14 @@ The fcmpy is Python package for automatically generating causal weights for fuzz
 
 Read more about the package at: https://arxiv.org/abs/2111.12749 
 
+
 <a href="expert_based_fcm\expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
 <a href="simulator\simulator.md"> The FcmSimulator module </a> provides methods for running simulations on top of a given FCM structure. <br>
 <a href="intervention\intervention.md"> The FcmIntervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
+
+## Tutorials and documentation
+
+Tutorials and documentation can be found at: https://maxiuw.github.io/fcmpyhtml
 
 ## Installation
 FCMpy requires python >=3.8.1 (*) and depends on:
