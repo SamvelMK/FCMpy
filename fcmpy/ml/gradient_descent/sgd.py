@@ -30,7 +30,7 @@ class SGD(GradientDescent):
         self.__shape = self.weight_matrix.shape
         self.data = data
         self.__T = len(data[0])
-        self.__delta_w = DWStore.get(method=loss).calculate
+        self.__delta_w = DWStore.get(method=loss).update
         self.__loss = LossStore.get(method=loss).compute
     
     def __fcmSimulate(self, state_vector:np.array, weight_matrix:np.array, 
@@ -145,8 +145,10 @@ class SGD(GradientDescent):
                     simulated = self.__fcmSimulate(state_vector=obs[0], weight_matrix=self.res, inference=inference, transfer=transfer, time_steps=self.__T, l=l)
                     errors_obs += self.__loss(observed=obs, predicted=simulated, n=len(batch))
                     for t in range(self.__T-1):
+                        # calculate the derivatives
                         dw = self.__delta_w(data=obs[t+1], predicted=simulated[t+1], state_vector=obs[t], 
                                                 weight_matrix=self.res, transfer=transfer, inference=inference, l=l)
+                        # calculate the update of the parameters
                         mats += solver(delta_w=dw, learning_rate=learning_rate, b1=b1, b2=b2, e=e, epoch=epoch)
 
                 self.res = np.clip(self.res + (mats/(len(batch))), -1,1)

@@ -32,4 +32,4 @@ class MSE(Loss):
         assert len(obs) == len(pred)
         assert type(n)==int
         
-        return sum(sum((obs-pred)**2))/n
+        return (1/n)*sum(sum((obs-pred)**2))

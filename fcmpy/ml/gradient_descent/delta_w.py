@@ -7,18 +7,19 @@ class Update(ABC):
         Interface for updating the parameter matrix W.
     """
     @abstractmethod
-    def calculate(**kwargs):
-        raise NotImplementedError('calculate method is not defined.')
+    def update(**kwargs):
+        raise NotImplementedError('update method is not defined.')
 
 
 class DeltaW(Update):
     """
-        Calculate the change of the parameter matrix W for MSE loss function.
+       Update the parameter matrix W for the MSE loss function.
     """
     @staticmethod
-    def calculate(data:np.array, predicted:np.array, state_vector:np.array, weight_matrix:np.array, transfer:str, inference:str, **kwargs):
+    def update(data:np.array, predicted:np.array, state_vector:np.array,
+                     weight_matrix:np.array, transfer:str, inference:str, **kwargs):
         """
-            Calculate the change of the parameter matrix W.
+            Update the parameter matrix W.
 
             Parameters
             ----------
@@ -46,6 +47,7 @@ class DeltaW(Update):
 
         dx_error = dx_squared(observed=data, predicted=predicted)
         dx_infer = dx_inference(state_vector=state_vector)
-        dx_trans = dx_transfer(x=state_vector, weight_matrix = weight_matrix, inference=inference, params=kwargs)
+        dx_trans = dx_transfer(x=state_vector, weight_matrix = weight_matrix,
+                                     inference=inference, params=kwargs)
     
         return (dx_error * dx_trans * dx_infer)*np.abs(np.sign(weight_matrix))
