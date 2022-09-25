@@ -104,12 +104,12 @@ class DxTanh(Gradient):
         inference = kwargs['inference']
         infer = InferenceStore.get(inference).infer
         x = infer(initial_state=state_vector, weight_matrix=weight_matrix)
-        return tanh(x=x)*(1-tanh(x=x)**2)
+        return (1-tanh(x=x)**2)
 
 
 class DxKosko(Gradient):
     """
-        Partial derivative of the Kosko's (modified kosko's) inference method w.r.t. matrix W.
+        Partial derivative of the Kosko's (and modified kosko's) inference method w.r.t. matrix W.
     """
     @staticmethod
     def compute(**kwargs):
