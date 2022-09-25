@@ -132,12 +132,12 @@ class DxKosko(Gradient):
 
 class DxRescaled(Gradient):
     """
-        Partial derivative of the rescaled Kosko's (modified kosko's) inference method w.r.t. matrix W.
+        Partial derivative of the rescaled inference method w.r.t. matrix W.
     """
     @staticmethod
     def compute(**kwargs):
         """
-            Compute the partial derivative of the rescaled ksoko's inference function w.r.t. matrix W.
+            Compute the partial derivative of the rescaled inference function w.r.t. matrix W.
 
             Parameters
             ----------
@@ -147,7 +147,7 @@ class DxRescaled(Gradient):
             Return
             -------
             y : np.array
-                partial derivative rescaled Kosko's inference function w.r.t matrix W.
+                partial derivative rescaled inference function w.r.t matrix W.
         """
         state_vector = kwargs['state_vector']
         x = (2 * state_vector - 1)
