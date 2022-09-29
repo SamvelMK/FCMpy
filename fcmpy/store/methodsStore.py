@@ -380,7 +380,7 @@ class GradientStore(GetMethod):
     from fcmpy.ml.gradient_descent.partials import DxRescaled
 
     __methods = {'dxSquared': DxSquaredErrors, 'sigmoid': DxSigmoid,
-                'tanh':DxTanh, 'kosko':DxKosko, 'rescaled':DxRescaled}
+                'tanh':DxTanh, 'kosko':DxKosko, 'mKokso' : DxKosko, 'rescaled':DxRescaled}
 
     @staticmethod
     @type_check
