@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+import numpy as np
 
 class Loss(ABC):
     """
@@ -32,4 +32,4 @@ class MSE(Loss):
         assert len(obs) == len(pred)
         assert type(n)==int
         
-        return (1/n)*sum(sum((obs-pred)**2))
+        return np.mean(np.mean((obs-pred)**2, axis=1))
