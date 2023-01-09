@@ -97,7 +97,7 @@ To specify an intervention case one need to pass a <em>label</em>, a dictionary 
 The add_intervention method requires one to specify the name of the intervention, the causal impact it has on the target nodes and the effectiveness of the intervention.
 
 ```Python
-add_intervention(name, weights, effectiveness):
+add_intervention(name, impact, effectiveness):
 
     Add an intervention node with the associated causal weights to the FCM.
 
@@ -114,9 +114,9 @@ add_intervention(name, weights, effectiveness):
 Let's consider three such hypothetical interventions we wish to test in our FCM. The first intervention targets concepts (nodes) C1 and C2. It negatively impacts concept C1 (-.3) while positively impacting the concept C2 (.5). We consider a case where the intervention has maximum effectiveness (1). The other two interventions follow the same logic but impact other nodes (see below). 
 
 ```Python
-inter.add_intervention('intervention_1', weights={'C1':-.3, 'C2' : .5}, effectiveness=1)
-inter.add_intervention('intervention_2', weights={'C4':-.5}, effectiveness=1)
-inter.add_intervention('intervention_3', weights={'C5':-1}, effectiveness=1)
+inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
+inter.add_intervention('intervention_2', impact={'C4':-.5}, effectiveness=1)
+inter.add_intervention('intervention_3', impact={'C5':-1}, effectiveness=1)
 ```
 
 One can also remove the added interventions by using the [remove_intervention](#remove_intervention) method.
