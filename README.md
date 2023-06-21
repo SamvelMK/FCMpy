@@ -34,7 +34,7 @@ FCMpy requires python >=3.8.1 (*) and depends on:
 
 (*) we tested our library on Python 3.8. Some of the dependencies (e.g. Tensorflow) may not work properly if you use higher version of Python. Therefore, we encourage users to create a virtual environment (e.g. Conda env) with Python 3.8 and then _pip install_ our package.
 
-and will soon be available on PyPi! The latest version can be installed by:
+FCMpy is available on PyPi! The latest version can be installed by:
 
 ```
 pip install fcmpy
