@@ -1,4 +1,4 @@
-# FCMpy: A package for Constructing and Analysing Fuzzy Cognitive Maps in Python.
+# FCMpy: A package for Constructing and Analysing Fuzzy Cognitive Maps in Python. 
 <div align = justify>
 
 The fcmpy is Python package for automatically generating causal weights for fuzzy cognitive maps based on qualitative inputs (by using fuzzy logic), optimizing the FCM connection matrix via Machine Learning Algorithms and testing <em>what-if</em> scenarios. The package includes the following submodules:
