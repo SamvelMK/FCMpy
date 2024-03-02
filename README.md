@@ -45,7 +45,7 @@ Alternatively, you can install it from source or develop this package, you can f
 ```
 py -m pip install --user --upgrade setuptools wheel
 py setup.py sdist bdist_wheel
-py -m pip install install e . 
+py -m pip install e . 
 ```
 
 You can run the unittest for the package as follows:
