@@ -195,6 +195,9 @@ class XLSX(ReadData):
             engine = 'openpyxl'
 
         data = pd.read_excel(filePath, sheet_name=None,  engine=engine)
+        # convert the missing cells with 0s
+        for expert in data.keys():
+            data[expert] = data[expert].fillna(0)
         data = collections.OrderedDict(data)
 
         ColumnsCheck.checkColumns(data=data) # check whether From -> To columns exist.
