@@ -65,10 +65,10 @@ class FcmIntervention(Intervention):
     @property
     def comparison_table(self):
         diff = {}
-        # replace 0 with 1 to avoid division by 0
-        df = pd.DataFrame(self.__equilibriums).replace(0, 1)  
+        # mult 100 to get the percentages directly
+        df = pd.DataFrame(self.__equilibriums)*100
         for i in df.columns:
-            diff[i] = ((df[i] - df.iloc[:, 0])/df.iloc[:, 0])*100
+            diff[i] =  df[i] - df.iloc[:, 0] # ((df[i] - df.iloc[:, 0])/df.iloc[:, 0])*100
         self.__comparison_table = pd.DataFrame(diff)
         return self.__comparison_table
 
