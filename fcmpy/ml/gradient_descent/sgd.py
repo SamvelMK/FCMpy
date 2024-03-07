@@ -150,14 +150,17 @@ class SGD(GradientDescent):
                                                 weight_matrix=self.res, transfer=transfer, inference=inference, l=l)
                         # calculate the update of the parameters
                         mats += solver(delta_w=dw, learning_rate=learning_rate, b1=b1, b2=b2, e=e, epoch=epoch)
-
-                self.res = np.clip(self.res + (mats/(len(batch))), -1,1)
-                mats_average = sum(np.abs(sum((mats)/len(batch))))
+                weights_updated = np.clip(self.res + (mats/(len(batch))), -1,1)
+                mats_average = np.mean(self.res - weights_updated)
+                # add the updated weights to the initial weight matrix
+                self.res = weights_updated
+                # append the loss of the batch
                 errors_batch.append(errors_obs)
+            # calculate the average loss across different batches
             self.loss.append(sum(errors_batch)/len(errors_batch))
-            
+            # in the progress bar print the current loss
             pbar.set_postfix({'loss': self.loss[-1]})
-            
+            # check convergence conditions
             if (mats_average <= threshold_change) or (self.loss[-1] <= threshold_loss):
                 return f"converged at epoch:{epoch}, loss: {self.loss[-1]}"
         
