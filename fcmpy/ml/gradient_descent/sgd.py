@@ -66,13 +66,14 @@ class SGD(GradientDescent):
         trans = TransferStore.get(method=transfer).transfer
 
         for i in range(time_steps-1):
-            data[i+1] = trans(x=infer(initial_state = data[i], weight_matrix=weight_matrix), params=kwargs)
+            data[i+1] = trans(x=infer(initial_state = data[i], 
+                                weight_matrix=weight_matrix), params=kwargs)
         return data
     
     @type_check
-    def run(self, batch_size:int=38, epochs:int=1000, solver='regular', transfer:str='sigmoid', inference:str='kosko',
-            learning_rate:float=0.001, l=1, b1:float=0.9, b2:float=0.999, e:float=10**-9, threshold_loss:float = 0.0001, 
-            threshold_change:float=0.00001):
+    def run(self, batch_size:int=38, epochs:int=1000, solver='regular', transfer:str='sigmoid',
+            inference:str='kosko', learning_rate:float=0.001, l=1, b1:float=0.9, b2:float=0.999,
+            e:float=10**-9, threshold_loss:float = 0.0001, threshold_change:float=0.00001):
         """
             Run the SGD algorithm to train FCMs.
             
@@ -127,10 +128,13 @@ class SGD(GradientDescent):
                                 default -> 0.00001
         """
         self.res = copy.deepcopy(self.weight_matrix)
-        self.loss = []
-        mats_average = 0
+        # get the requested solver
         solver = SolverStore.get(method=solver).update
         pbar = tqdm(range(epochs))
+        # create the variables for the loss and the mats_average 
+        # (to track the average change in the matrix)
+        self.loss = []
+        mats_average = 0
 
         for epoch in pbar:
             random.shuffle(self.data)
@@ -142,14 +146,18 @@ class SGD(GradientDescent):
                 batch = self.data[start:stop]
 
                 for obs in batch:
-                    simulated = self.__fcmSimulate(state_vector=obs[0], weight_matrix=self.res, inference=inference, transfer=transfer, time_steps=self.__T, l=l)
+                    simulated = self.__fcmSimulate(state_vector=obs[0], weight_matrix=self.res,
+                                                    inference=inference, transfer=transfer,
+                                                    time_steps=self.__T, l=l)
                     errors_obs += self.__loss(observed=obs, predicted=simulated, n=len(batch))
                     for t in range(self.__T-1):
                         # calculate the derivatives
-                        dw = self.__delta_w(data=obs[t+1], predicted=simulated[t+1], state_vector=obs[t], 
-                                                weight_matrix=self.res, transfer=transfer, inference=inference, l=l)
-                        # calculate the update of the parameters
-                        mats += solver(delta_w=dw, learning_rate=learning_rate, b1=b1, b2=b2, e=e, epoch=epoch)
+                        dw = self.__delta_w(data=obs[t+1], predicted=simulated[t+1], 
+                                            state_vector=obs[t], weight_matrix=self.res,
+                                            transfer=transfer, inference=inference, l=l)
+                        # calculate the update of the parameters with a given solver
+                        mats += solver(delta_w=dw, learning_rate=learning_rate, b1=b1, b2=b2,
+                                        e=e, epoch=epoch)
                 weights_updated = np.clip(self.res + (mats/(len(batch))), -1,1)
                 mats_average = np.mean(self.res - weights_updated)
                 # add the updated weights to the initial weight matrix
