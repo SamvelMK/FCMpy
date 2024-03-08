@@ -379,7 +379,7 @@ class ExpertFcm(FcmConstructor):
         cols = set(flat_data.index.get_level_values('to'))
         index = set(flat_data.index.get_level_values('from'))
         index = sorted(index.union(cols))
-        weight_matrix = pd.DataFrame(0,columns=index, index=index)
+        weight_matrix = pd.DataFrame(0.0,columns=index, index=index, dtype=float)
         # main part for calculating the weights
         for concepts in set(flat_data.index):
             # for a given pair of concepts calculate the propostions (weights) for the
@@ -405,6 +405,6 @@ class ExpertFcm(FcmConstructor):
                 # populate the empty weigtht_matrix with the defuzzified value
                 weight_matrix.loc[concepts] = value
         
-        weight_matrix = weight_matrix.fillna(0)
+        weight_matrix = weight_matrix.fillna(0.0)
 
         return weight_matrix
