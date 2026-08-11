@@ -90,15 +90,22 @@ class Continuous(InterventionConstructor):
         
         # construct a weight matrix for a given intervention
         if type(weight_matrix) == np.ndarray:
-            temp = pd.DataFrame(weight_matrix, columns=initial_state)
+            # an ndarray carries no labels at all, so columns/index must both
+            # come from initial_state, in the same order, by construction.
+            temp = pd.DataFrame(weight_matrix, columns=list(initial_state), index=list(initial_state))
         else:
             temp = weight_matrix.copy(deep=True)
+            if set(temp.index) != set(temp.columns):
+                # no meaningful row labels (e.g. the default RangeIndex produced by
+                # pd.DataFrame([...], columns=[...])) -- fall back to the documented
+                # convention that row i corresponds to columns[i].
+                temp.index = temp.columns
+            # else: the index already labels each row correctly (whatever its
+            # physical order relative to columns) -- trust it as-is instead of
+            # overwriting it positionally, which would silently misattribute edges.
 
-        temp['antecedent'] = temp.columns
-        temp.set_index('antecedent', inplace=True)
-        temp['intervention'] = 0
-        temp.loc[len(temp)] = 0
-        temp.rename(index = {temp.index[-1] : 'intervention'}, inplace = True)
+        temp['intervention'] = 0.0
+        temp.loc['intervention'] = 0.0
         
         # add the intervention impact
         for key in impact.keys():

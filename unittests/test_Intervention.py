@@ -63,6 +63,31 @@ class TestIntervention(unittest.TestCase):
         self.inter.add_intervention('intervention_1', type='single_shot', initial_state = {'C1': 0.9, 'C2' : 0.4})
         self.assertEqual(self.inter.interventions['intervention_1']['state_vector']['C1'], 0.9)
         self.assertEqual(self.inter.interventions['intervention_1']['state_vector']['C2'], 0.4)
-        
+
+    def test_continuousReorderedIndex(self):
+        # Regression test: weight_matrix whose row (index) order does not match
+        # its column order should not have its edges misattributed to the wrong
+        # concept when building a continuous intervention.
+        cols = ['A', 'B', 'C']
+        data = pd.DataFrame(
+            [[0.0, 0.9, 0.0],   # A -> B = 0.9, the only nonzero edge
+             [0.0, 0.0, 0.0],
+             [0.0, 0.0, 0.0]],
+            columns=cols, index=cols
+        )
+        wm_reordered = data.loc[['C', 'A', 'B']]  # physically reordered rows, correct labels
+
+        init_state = {'A': 0.0, 'B': 0.0, 'C': 0.0}
+        inter = FcmIntervention(FcmSimulator)
+        inter.initialize(initial_state=init_state, weight_matrix=wm_reordered, transfer='sigmoid',
+                          inference='mKosko', thresh=0.001, iterations=10, l=1)
+        inter.add_intervention('intervention_1', impact={'C': 0.5}, effectiveness=1)
+
+        built_wm = inter.interventions['intervention_1']['weight_matrix']
+        self.assertEqual(built_wm.loc['A', 'B'], 0.9, msg="A->B edge was misattributed to the wrong row!")
+        self.assertEqual(built_wm.loc['A', 'A'], 0.0)
+        self.assertEqual(built_wm.loc['A', 'C'], 0.0)
+        self.assertEqual(built_wm.loc['B'][['A', 'B', 'C']].sum(), 0.0, msg="B should have no outgoing edges!")
+
 if __name__ == '__main__':
     unittest.main()
