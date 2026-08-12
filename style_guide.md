@@ -16,7 +16,7 @@ FCMpy package follows PEP-8 style guide.
 #### Blank Lines
 
 * Top-level function and classes are separated by two blank lines
-* Method definitions inide classes should be separated by one blank line
+* Method definitions inside classes should be separated by one blank line
 
 #### Whitespaces in Expressions and Statements
 
@@ -34,8 +34,8 @@ FCMpy package follows PEP-8 style guide.
 #### Comments
 
 * Block comments -> explain more complex code
-* LIne comments -> simple lines.
-* Use docstrings for public modules, files, classes and methods start with """"""
+* Line comments -> simple lines.
+* Use docstrings for public modules, files, classes and methods; docstrings should start with `"""`
 
 #### Naming Conventions
 

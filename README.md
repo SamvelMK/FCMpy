@@ -1,7 +1,7 @@
 # FCMpy: A package for Constructing and Analysing Fuzzy Cognitive Maps in Python. 
 <div align = justify>
 
-The fcmpy is Python package for automatically generating causal weights for fuzzy cognitive maps based on qualitative inputs (by using fuzzy logic), optimizing the FCM connection matrix via Machine Learning Algorithms and testing <em>what-if</em> scenarios. The package includes the following submodules:
+The fcmpy is a Python package for automatically generating causal weights for fuzzy cognitive maps based on qualitative inputs (by using fuzzy logic), optimizing the FCM connection matrix via Machine Learning Algorithms and testing <em>what-if</em> scenarios. The package includes the following submodules:
 
 * ExpertFcm
 * Simulation
@@ -15,9 +15,9 @@ The fcmpy is Python package for automatically generating causal weights for fuzz
 Read more about the package at: https://arxiv.org/abs/2111.12749 
 
 
-<a href="expert_based_fcm\expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
-<a href="simulator\simulator.md"> The FcmSimulator module </a> provides methods for running simulations on top of a given FCM structure. <br>
-<a href="intervention\intervention.md"> The FcmIntervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
+<a href="fcmpy/expert_fcm/expert_fcm.md"> The ExpertFcm module </a> includes methods for deriving causal weights of an FCM based on qualitative data. <br> 
+<a href="fcmpy/simulator/simulator.md"> The FcmSimulator module </a> provides methods for running simulations on top of a given FCM structure. <br>
+<a href="fcmpy/intervention/intervention.md"> The FcmIntervention module </a> allows testing what-if scenarios on top of the specified FCMs. <br>
 
 ## Tutorials and documentation
 
@@ -26,10 +26,10 @@ Tutorials and documentation can be found at: https://maxiuw.github.io/fcmpyhtml
 ## Installation
 FCMpy requires python >=3.8.1 (*) and depends on:
 
-* pandas>=1.0.3
-* numpy>=numpy==1.18.2
+* pandas>=1.3.3
+* numpy>=1.13.3
 * scikit-fuzzy>=0.4.2
-* tqdm>=4.50.2
+* tqdm>=4.66.3
 * openpyxl
 
 (*) we tested our library on Python 3.8. Some of the dependencies (e.g. Tensorflow) may not work properly if you use higher version of Python. Therefore, we encourage users to create a virtual environment (e.g. Conda env) with Python 3.8 and then _pip install_ our package.
@@ -45,7 +45,7 @@ Alternatively, you can install it from source or develop this package, you can f
 ```
 py -m pip install --user --upgrade setuptools wheel
 py setup.py sdist bdist_wheel
-py -m pip install e . 
+py -m pip install -e .
 ```
 
 You can run the unittest for the package as follows:
@@ -117,7 +117,7 @@ plt.tight_layout()
 * Read data from a csv file.
 
 ```Python
-data = fcm.read_data(file_path= os.path.abspath('../unittests/test_cases/data_test.csv'), 
+data = fcm.read_data(file_path= os.path.abspath('unittests/test_cases/data_test.csv'), 
                       sep_concept='->', csv_sep=';')
 ```
 
@@ -312,7 +312,7 @@ inter.test_intervention('intervention_3')
 ```
 
 ```Python
-Output[6]
+Output[7]
 
 The values converged in the 6 state (e <= 0.001)
 The values converged in the 6 state (e <= 0.001)
@@ -326,7 +326,7 @@ inter.test_results['intervention_1']
 ```
 
 ```Python
-Output[7]
+Output[8]
 
         C1	        C2	        C3	        C4	        C5	        C6	        C7	        C8	intervention
 0	0.725885	0.790706	0.769451	0.812473	0.819294	0.839901	0.909940	0.955774	1.0
@@ -344,7 +344,7 @@ inter.equilibriums
 ```
 
 ```Python
-Output[8]
+Output[9]
 
     baseline    intervention_1  intervention_2  intervention_3
 C1  0.725885        0.644651        0.715704        0.723417
@@ -364,17 +364,17 @@ inter.comparison_table
 ```
 
 ```Python
-Output[9]
+Output[10]
 
     baseline    intervention_1  intervention_2  intervention_3
-C1       0.0      -11.191083       -1.402511       -0.339981
-C2       0.0       10.035821       -0.015968        0.000202
-C3       0.0       -1.385998       -0.171325       -0.040271
-C4       0.0       -1.664794      -13.927524       -0.049314
-C5       0.0       -0.190233       -0.016379      -31.175022
-C6       0.0       -0.184640       -1.960979        3.802010
-C7       0.0        0.116873       -0.002543       -0.017806
-C8       0.0       -0.117365       -0.036331       -0.374038
+C1       0.0       -8.123440       -1.018062       -0.246787
+C2       0.0        7.935385       -0.012626        0.000160
+C3       0.0       -1.066457       -0.131826       -0.030987
+C4       0.0       -1.352600      -11.315742       -0.040066
+C5       0.0       -0.155856       -0.013419      -25.541502
+C6       0.0       -0.155079       -1.647028        3.193311
+C7       0.0        0.106348       -0.002314       -0.016202
+C8       0.0       -0.112175       -0.034724       -0.357496
 ```
 
 ## License
