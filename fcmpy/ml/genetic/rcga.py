@@ -2,7 +2,6 @@
 ##                       RCGA fro FCMs                                   ##
 ###########################################################################
 import pandas as pd
-from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.ml.genetic.ga_interface import GA
 from fcmpy.store.methodsStore import GetMethod
 from fcmpy.ml.genetic.generational_ga import GRCGA
@@ -14,18 +13,7 @@ class RcgaStore(GetMethod):
     """
         RCGA algorithms for learning FCMs.
     """
-    __methods = {'generational':GRCGA, 'ssga' : SSGA}
-
-    @staticmethod
-    @type_check
-    def get(method:str):
-        """
-            Get the respective RCGA method based on user input.
-        """
-        if method in RcgaStore.__methods.keys():
-            return RcgaStore.__methods[method]
-        else:
-            raise ValueError('The RCGA type is not defined.')
+    _methods = {'generational':GRCGA, 'ssga' : SSGA}
 
 
 class RCGA(GA):

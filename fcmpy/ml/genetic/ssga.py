@@ -104,7 +104,7 @@ class SSGA(GA):
         
         for iteration in pbar:
             # Step 1: Selection
-            select_method = np.random.choice(list(SelectionStore._SelectionStore__methods.keys()))
+            select_method = np.random.choice(list(SelectionStore._methods.keys()))
             selection = SelectionStore.get(method=select_method)
             selected = selection.select(population=old_population, size=2,
                                             n_participants=n_participants, params=kwargs)
@@ -120,7 +120,7 @@ class SSGA(GA):
                 childOne, childTwo = selected[selected_indexes[0]], selected[selected_indexes[1]]
 
             # Step 5: Mutation
-            mutation_type =  np.random.choice(list(MutationStore._MutationStore__methods.keys())) 
+            mutation_type =  np.random.choice(list(MutationStore._methods.keys()))
             mutation = MutationStore.get(mutation_type)
             childOne = mutation.mutate(chromosome=copy.deepcopy(childOne), p_mutation=p_mutation, 
                                                         max_generations=n_iterations, nth_Iteration=iteration, b=b)
