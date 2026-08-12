@@ -32,7 +32,7 @@ class FcmIntervention(Intervention):
                                 transfer: str, inference: str, thresh: float, iterations: int, l=1, 
                                 output_concepts = None, convergence = 'absDiff',  **params)
 
-            add_intervention(self, name, weights, effectiveness)
+            add_intervention(self, name, type='continuous', **kwargs)
 
             remove_intervention(self, name)
 
@@ -64,12 +64,9 @@ class FcmIntervention(Intervention):
     
     @property
     def comparison_table(self):
-        diff = {}
         # mult 100 to get the percentages directly
         df = pd.DataFrame(self.__equilibriums)*100
-        for i in df.columns:
-            diff[i] =  df[i] - df.iloc[:, 0]
-        self.__comparison_table = pd.DataFrame(diff)
+        self.__comparison_table = df.sub(df['baseline'], axis=0)
         return self.__comparison_table
 
     @type_check
@@ -143,12 +140,27 @@ class FcmIntervention(Intervention):
 
             impact: dict
                         keys --> concepts the intervention impacts, value: the associated causal weight
+                        (required for type='continuous')
 
             effectiveness: float
                             the degree to which the intervention was delivered (should be between [0, 1])
                             default --> 1
+
+            initial_state: dict
+                            keys --> concepts to override, values --> new initial state for that concept
+                            (required for type != 'continuous', e.g. 'single_shot')
+                            Note: unlike a 'continuous' intervention -- which is applied on top of the
+                            converged baseline equilibrium -- a non-continuous intervention is applied
+                            on top of the raw initial_state originally passed to initialize().
         """
         if type != 'continuous':
+            if 'initial_state' not in kwargs:
+                raise ValueError(f"add_intervention(type={type!r}, ...) requires an 'initial_state' dict "
+                                    "of concept overrides, e.g. initial_state={'C1': 0.9}.")
+            unknown = set(kwargs['initial_state']) - set(self.__initial_state)
+            if unknown:
+                raise ValueError(f"Unknown concept(s) in initial_state override: {sorted(unknown)}. "
+                                    f"Valid concepts are {sorted(self.__initial_state)}.")
             s = self.__initial_state.copy()
             s.update(kwargs['initial_state'])
             initial_state = s.copy()
@@ -184,10 +196,7 @@ class FcmIntervention(Intervention):
             iterations: number of iterations for the FCM simulation
                             default ---> the iterations specified in the init.
         """
-        if iterations:
-            iterations = iterations
-        else:
-            iterations = self.__iterations
+        iterations = iterations if iterations is not None else self.__iterations
 
         weight_matrix = self.__interventions[name]['weight_matrix']
         state_vector = self.__interventions[name]['state_vector']
@@ -198,4 +207,6 @@ class FcmIntervention(Intervention):
                                                                 l = self.__l, output_concepts=self.__output_concepts,
                                                                 convergence=self.__convergence)
         
-        self.__equilibriums[name] = self.__test_results[name].iloc[-1][:len(self.__initial_state)]
+        # exclude the synthetic 'intervention' driver column (continuous interventions
+        # only; single_shot results have no such column, so drop is a no-op there)
+        self.__equilibriums[name] = self.__test_results[name].iloc[-1].drop('intervention', errors='ignore')

@@ -89,5 +89,31 @@ class TestIntervention(unittest.TestCase):
         self.assertEqual(built_wm.loc['A', 'C'], 0.0)
         self.assertEqual(built_wm.loc['B'][['A', 'B', 'C']].sum(), 0.0, msg="B should have no outgoing edges!")
 
+    def test_testIntervention_zeroIterations(self):
+        # Regression test: iterations=0 used to be silently replaced by the
+        # init-time default because `if iterations:` treats 0 as falsy.
+        self.inter.add_intervention('intervention_1', impact={'C1': -.3})
+        self.inter.test_intervention('intervention_1', iterations=0)
+        self.assertEqual(len(self.inter.test_results['intervention_1']), 1)
+
+    def test_addIntervention_missingImpact(self):
+        # Regression test: omitting 'impact' for a continuous intervention used
+        # to crash with a bare, unhelpful KeyError.
+        with self.assertRaises(ValueError):
+            self.inter.add_intervention('bad', effectiveness=1)
+
+    def test_addIntervention_missingInitialState(self):
+        # Regression test: omitting 'initial_state' for a single_shot
+        # intervention used to crash with a bare, unhelpful KeyError.
+        with self.assertRaises(ValueError):
+            self.inter.add_intervention('bad', type='single_shot')
+
+    def test_addIntervention_unknownConceptRaises(self):
+        # Regression test: a typo'd concept name in a single_shot initial_state
+        # override used to be silently dropped (no error, no effect, no warning)
+        # instead of failing loudly.
+        with self.assertRaises(ValueError):
+            self.inter.add_intervention('bad', type='single_shot', initial_state={'C1_TYPO': 0.9})
+
 if __name__ == '__main__':
     unittest.main()

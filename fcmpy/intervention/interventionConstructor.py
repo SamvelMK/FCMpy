@@ -22,7 +22,7 @@ class SingleShot(InterventionConstructor):
 
             Parameters
             ----------
-            state_vector: dict
+            initial_state: dict
                             keys --> concepts, values --> state of the concept.
 
             weight_matrix: pd.DataFrame
@@ -40,7 +40,10 @@ class SingleShot(InterventionConstructor):
 
 
 class Continuous(InterventionConstructor):
-    
+    """
+        Construct continuous interventions: a persistent driver node is added to the
+        FCM structure and applied on top of the converged baseline equilibrium.
+    """
     @staticmethod
     def build(**kwargs) -> dict:
         """
@@ -61,7 +64,7 @@ class Continuous(InterventionConstructor):
                         keys ---> concepts the intervention impacts, value: the associated causal weight
 
             effectiveness: float
-                            the degree to which the intervention was delivered (should be between [-1, 1])
+                            the degree to which the intervention was delivered (should be between [0, 1])
                             default --> 1
                             
             Return
@@ -71,16 +74,22 @@ class Continuous(InterventionConstructor):
         weight_matrix = kwargs['weight_matrix']
         initial_state = kwargs['initial_state']
         equilibriums = kwargs['equilibriums']
-        impact = kwargs['params']['impact']
-        
+
+        try:
+            impact = kwargs['params']['impact']
+        except KeyError:
+            raise ValueError("Continuous interventions require an 'impact' dict, "
+                                "e.g. impact={'C1': -0.3}.")
+
         # Set the intervention effectiveness to 1 if the optional parameter is not specified.
         try:
             effectiveness = kwargs['params']['effectiveness']
-        except:
+        except KeyError:
             effectiveness = 1
 
         # Check whether the passed intervention inputs are in the function's domain.
-        if (min(list(impact.values())) < -1) or (max(list(impact.values())) > 1):
+        impact_values = list(impact.values())
+        if (min(impact_values) < -1) or (max(impact_values) > 1):
             raise ValueError('the values in the causal weights are out of the domain [-1,1].')
         elif (effectiveness < 0) or (effectiveness > 1):
             raise ValueError('the values in the intervention effectiveness are out of the domain [0,1].')
