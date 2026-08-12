@@ -86,9 +86,9 @@ The FcmIntervention class implements the following methods.
 
 <div align='justify'>
 
-To specify an intervention case one need to pass a <em>label</em>, a dictionary (<em>weights</em>) where the keys represent the concepts the intervention has an impact on and the values represent the magnitude of that impact. Lastly, one must specify the effectiveness of the intervention (i.e., <em>effectiveness</em>).
+To specify an intervention case one need to pass a <em>label</em>, a dictionary (<em>impact</em>) where the keys represent the concepts the intervention has an impact on and the values represent the magnitude of that impact. Lastly, one must specify the effectiveness of the intervention (i.e., <em>effectiveness</em>).
 
-</dif>
+</div>
 
 ## add_intervention()
 
@@ -97,7 +97,7 @@ To specify an intervention case one need to pass a <em>label</em>, a dictionary 
 The add_intervention method requires one to specify the name of the intervention, the causal impact it has on the target nodes and the effectiveness of the intervention.
 
 ```Python
-add_intervention(name, impact, effectiveness):
+add_intervention(name, type='continuous', **kwargs):
 
     Add an intervention node with the associated causal weights to the FCM.
 
@@ -105,10 +105,17 @@ add_intervention(name, impact, effectiveness):
     ----------
     name: str
             name of the intervention
+    type: str
+            type of intervention --> 'continuous' (default) or 'single_shot'
     impact: dict
                 keys ---> concepts the intervention impacts, value: the associated causal weight
+                (required for type='continuous')
     effectiveness: float
-                    the degree to which the intervention was delivered (should be between [-1, 1])
+                    the degree to which the intervention was delivered (should be between [0, 1])
+                    default --> 1
+    initial_state: dict
+                    keys ---> concepts to override, values ---> new initial state for that concept
+                    (required for type='single_shot')
 ```
 
 Let's consider three such hypothetical interventions we wish to test in our FCM. The first intervention targets concepts (nodes) C1 and C2. It negatively impacts concept C1 (-.3) while positively impacting the concept C2 (.5). We consider a case where the intervention has maximum effectiveness (1). The other two interventions follow the same logic but impact other nodes (see below). 
@@ -117,6 +124,14 @@ Let's consider three such hypothetical interventions we wish to test in our FCM.
 inter.add_intervention('intervention_1', impact={'C1':-.3, 'C2' : .5}, effectiveness=1)
 inter.add_intervention('intervention_2', impact={'C4':-.5}, effectiveness=1)
 inter.add_intervention('intervention_3', impact={'C5':-1}, effectiveness=1)
+```
+
+These are all <em>continuous</em> interventions (the default `type`): each one adds a persistent driver node to the FCM structure, applied on top of the <em>converged baseline equilibrium</em>, and stays active for the whole simulation.
+
+Alternatively, a <em>single_shot</em> intervention directly overrides one or more concepts' initial states and re-runs the simulation from there -- with no persistent driver node added to the FCM structure. Importantly, a single_shot intervention is applied on top of the <em>raw initial_state</em> originally passed to <em>initialize()</em>, not the converged baseline equilibrium:
+
+```Python
+inter.add_intervention('intervention_4', type='single_shot', initial_state={'C1': 0.9, 'C2': 0.4})
 ```
 
 One can also remove the added interventions by using the [remove_intervention](#remove_intervention) method.
