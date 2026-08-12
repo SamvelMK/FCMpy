@@ -23,9 +23,9 @@ class FcmSimulator(Simulator):
         The class includes methods for running simulations on top of a defined FCM.
 
         Methods:
-            simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
-                            transfer: str, inference: str, thresh:float=0.001, iterations:int=50, 
-                            output_concepts = None, convergence = 'absDiff', **kwargs)
+            simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray],
+                            transfer: str, inference: str, thresh:float=0.001, iterations:int=50,
+                            output_concepts = None, convergence = 'absDiff', l=1, **kwargs)
     """
     @staticmethod
     @type_check
@@ -43,12 +43,7 @@ class FcmSimulator(Simulator):
             y: numpy.ndarray
                     the positions of the stable concepts (concepts with in-degree == 0)
         """
-        stables = []
-        for i in range(len(weight_matrix)):
-            if np.all(weight_matrix[i] == 0):
-                stables.append(i)
-
-        return stables
+        return np.where(np.all(weight_matrix == 0, axis=1))[0]
     
     @staticmethod
     @type_check
@@ -80,12 +75,12 @@ class FcmSimulator(Simulator):
     
     @staticmethod
     @type_check
-    def simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray], 
-                        transfer: str, inference: str, thresh:float=0.001, iterations:int=50, 
-                        output_concepts = None, convergence = 'absDiff', **kwargs) -> pd.DataFrame:
+    def simulate(initial_state: dict, weight_matrix: Union[pd.DataFrame, np.ndarray],
+                        transfer: str, inference: str, thresh:float=0.001, iterations:int=50,
+                        output_concepts = None, convergence = 'absDiff', l=1, **kwargs) -> pd.DataFrame:
         """
             Runs simulations over the passed FCM.
-            
+
             Parameters
             ----------
             initial_state: dict
@@ -107,7 +102,7 @@ class FcmSimulator(Simulator):
             iterations: int
                             number of iterations
 
-            output_concepts: bool, list
+            output_concepts: None, list
                                 the output concepts for the convergence check
                                 default --> None
 
@@ -115,13 +110,23 @@ class FcmSimulator(Simulator):
                             convergence method
                             default --> 'absDiff': absolute difference between the simulation steps
 
-            kwargs: additional parameters for the methods (e.g., lambda (l) parameter for the sigmoid function)
+            l: int, float
+                the steepness parameter for the sigmoid transfer function (only used
+                when transfer='sigmoid'; ignored otherwise)
+                default --> 1
+
+            kwargs: additional parameters for the methods
 
             Return
             ----------
             y: pandas.DataFrame
                     results of the simulation.
         """
+        # l is a named parameter (with a default) so a caller can't forget it for
+        # the sigmoid transfer, but it still needs to reach transfer.transfer()
+        # through the same 'params' dict as everything else in kwargs.
+        kwargs['l'] = l
+
         # Check the output concepts.
         FcmSimulator.__outputConceptCheck(output_concepts=output_concepts,
                                         initial_state=initial_state)

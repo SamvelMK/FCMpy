@@ -76,5 +76,13 @@ class TestSimulator(unittest.TestCase):
         self.assertLessEqual(residual, 0.001)
         self.assertEqual([0.812650, 0.726125], list(_.loc[len(_)-1].values.round(6)))
 
+    def test_sigmoidDefaultSteepness(self):
+        # Regression test: the sigmoid transfer function used to require 'l' to be
+        # passed via **kwargs with no default, crashing with a bare KeyError if
+        # omitted. l now defaults to 1 directly in simulate()'s signature.
+        res_default = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50)
+        res_explicit = self.sim.simulate(initial_state=self.init_state, weight_matrix=self.weight_matrix, transfer='sigmoid', inference='mKosko', thresh=0.001, iterations=50, l=1)
+        self.assertTrue((res_default == res_explicit).all().all())
+
 if __name__ == '__main__':
     unittest.main()

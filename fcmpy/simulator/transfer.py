@@ -35,11 +35,8 @@ class Sigmoid(Transfer):
         """
         x = kwargs['x']
         l = kwargs['params']['l']
-        e = np.exp(1)
 
-        res = 1/(1+(e**(-l*x)))
-
-        return res
+        return 1 / (1 + np.exp(-l * x))
 
 
 class Bivalent(Transfer):
@@ -64,9 +61,7 @@ class Bivalent(Transfer):
         """
         x = kwargs['x']
 
-        res = np.array([1 if i > 0 else 0 for i in x])
-
-        return res
+        return np.where(x > 0, 1, 0)
 
 
 class Trivalent(Transfer):
@@ -91,9 +86,7 @@ class Trivalent(Transfer):
         """
         x = kwargs['x']
 
-        res = np.array([1 if i > 0 else -1 if i < 0 else 0 for i in x])
-
-        return res
+        return np.sign(x)
 
 
 class HyperbolicTangent(Transfer):

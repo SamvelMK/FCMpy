@@ -96,6 +96,7 @@ class Rescaled(Inference):
         weight_matrix = kwargs['weight_matrix']
         weight_matrix = weight_matrix.T
 
-        res = weight_matrix.dot(([2*i-1 for i in initial_state])) + ([2*i-1 for i in initial_state])
-        
+        rescaled_state = 2 * initial_state - 1
+        res = weight_matrix.dot(rescaled_state) + rescaled_state
+
         return res
