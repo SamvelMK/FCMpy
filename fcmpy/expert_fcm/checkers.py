@@ -38,7 +38,7 @@ class ConsistencyCheck:
                 dat[[i for i in dat if '-' in i]] = dat[[i for i in dat if '-' in i]] * -1
                 v = dat.loc[pair].values[np.logical_not(np.isnan(dat.loc[pair].values))]
                 if len(v) > 0:
-                    val[expert] = int(v)
+                    val[expert] = int(v[0])
             if len(set(list(val.values()))) > 1:
                 incon[pair] = val
 

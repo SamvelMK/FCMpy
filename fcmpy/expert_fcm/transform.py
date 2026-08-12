@@ -30,8 +30,11 @@ class Transform:
                 keys ---> linguistic terms, values ---> proportion
                 of expert ratings.
         """
-        activation_parameter = {}
-        activation_parameter = (data.loc[conceptPair].sum()/nExperts).to_dict()
+        # data.loc[conceptPair] returns a Series (not a DataFrame) when exactly one
+        # row matches -- e.g. only one expert rated this pair -- which breaks the
+        # per-column .sum()/.to_dict() below. Wrapping the key in a list forces a
+        # DataFrame regardless of how many rows match.
+        activation_parameter = (data.loc[[conceptPair]].sum()/nExperts).to_dict()
 
         return activation_parameter
 

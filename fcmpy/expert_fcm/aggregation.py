@@ -114,7 +114,10 @@ class HamacherSum(Aggregate):
         x = kwargs['x']
         y = kwargs['y']
 
-        if x * y != 1.0:
-            return (x+y - 2.0*x*y) / (1.0 - x*y)
-        else:
-            return 1.0
+        # x, y are arrays (membership functions), so the x*y == 1.0 special case
+        # has to be handled element-wise rather than with a Python if/else, which
+        # raises on multi-element arrays. Guard the denominator against the
+        # singularity at x*y == 1.0 before dividing, to avoid a spurious
+        # divide-by-zero warning on the elements np.where discards anyway.
+        denom = np.where(x * y != 1.0, 1.0 - x * y, 1.0)
+        return np.where(x * y != 1.0, (x + y - 2.0 * x * y) / denom, 1.0)

@@ -139,11 +139,58 @@ class TestDataProcessor(unittest.TestCase):
     
     def test_build(self):
         self.fcm.fuzzy_membership = self.fcm.automf(method='trimf')
-        
+
         data = self.fcm.read_data(file_path=os.path.abspath('unittests/test_cases/data_test.xlsx'), check_consistency=False, engine='openpyxl')
         weight_matrix = self.fcm.build(data=data, implication_method='Larsen')
         self.assertLessEqual(max(weight_matrix.max()), 1)
-        self.assertGreaterEqual(min(weight_matrix.min()), -1)    
+        self.assertGreaterEqual(min(weight_matrix.min()), -1)
+
+    def test_build_hamacherAggregation(self):
+        # Regression test: HamacherSum.aggregate() used to crash with "truth value
+        # of an array with more than one element is ambiguous" on any real
+        # (multi-element) membership function array.
+        self.fcm.fuzzy_membership = self.fcm.automf(method='trimf')
+        data = self.fcm.read_data(file_path=os.path.abspath('unittests/test_cases/data_test.xlsx'), check_consistency=False, engine='openpyxl')
+        weight_matrix = self.fcm.build(data=data, aggregation_method='hSum')
+        self.assertLessEqual(max(weight_matrix.max()), 1)
+        self.assertGreaterEqual(min(weight_matrix.min()), -1)
+
+    def test_readExcel_checkConsistency(self):
+        # Regression test: ConsistencyCheck.checkConsistency() used to crash with
+        # "only 0-dimensional arrays can be converted to Python scalars" on modern
+        # numpy, whenever an inconsistency was actually found (int() on a 1-element
+        # 1-D array is no longer implicitly supported).
+        data = self.fcm.read_data(file_path=os.path.abspath('unittests/test_cases/data_test_unsure.xlsx'), check_consistency=True, engine='openpyxl')
+        self.assertIsInstance(data, collections.OrderedDict)
+        for f in os.listdir('.'):
+            if f.startswith('inconsistentRatings') and f.endswith('.xlsx'):
+                os.remove(f)
+
+    def _expertRow(self, from_c, to_c, selected_term):
+        row = {t: 0 for t in self.fcm.linguistic_terms.keys()}
+        row[selected_term] = 1
+        row['From'] = from_c
+        row['To'] = to_c
+        return row
+
+    def test_build_pairRatedByOneExpert(self):
+        # Regression test: Transform.calculateProportions() used to crash with
+        # "'numpy.float64' object has no attribute 'to_dict'" whenever every
+        # concept pair across all experts was unique (e.g. experts rating
+        # entirely disjoint sets of pairs) -- pandas .loc[pair] returns a Series
+        # (not a DataFrame) for a scalar key on a fully-unique MultiIndex,
+        # collapsing DataFrame.sum() into a single scalar instead of a per-column
+        # sum. Note: this only reproduces when NO pair repeats anywhere in the
+        # flattened index -- a single overlapping pair elsewhere changes pandas'
+        # .loc behavior for the whole index and masks the bug.
+        expert0 = pd.DataFrame([self._expertRow('C1', 'C2', '+h')])
+        expert1 = pd.DataFrame([self._expertRow('C3', 'C4', '+m')])
+        data = collections.OrderedDict([('Expert0', expert0), ('Expert1', expert1)])
+
+        weight_matrix = self.fcm.build(data=data, implication_method='Mamdani')
+        self.assertIn('C2', weight_matrix.columns)
+        self.assertNotEqual(weight_matrix.loc['C1', 'C2'], 0)
+        self.assertNotEqual(weight_matrix.loc['C3', 'C4'], 0)
 
 if __name__ == '__main__':
     unittest.main()
