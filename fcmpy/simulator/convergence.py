@@ -27,8 +27,8 @@ class AbsDifference(Convergence):
                         the dataframe with the simulation results. 
                         Each row represents the results of a simulation step
 
-            outputConcepts: None, list
-                            if only specific outputConcepts should be considered
+            output_concepts: None, list
+                            if only specific output_concepts should be considered
                             then a list of these concepts (in a string) should be passed.
 
             threshold: float, int
@@ -49,7 +49,4 @@ class AbsDifference(Convergence):
         else:
             residual = max(abs(results.loc[len(results)-1] - results.loc[len(results) - 2]))
 
-        if residual <= threshold:
-            return True
-        else:
-            return False
+        return residual <= threshold

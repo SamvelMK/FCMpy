@@ -100,7 +100,7 @@ class FcmIntervention(Intervention):
             l: 1
                 A parameter that determines the steepness of the sigmoid function at values around 0.
             
-            output_concepts: bool, list
+            output_concepts: None, list
                                 the output concepts for the convergence check
                                 default --> None
             

@@ -112,7 +112,6 @@ $$
 
 </div>
 
-One can alternatively add their own inference method and transfer function via [add_inference_methods](#add_inference_methods) and [add_transfer_func](#add_transfer_func) 
 
 
 <div align = justify>
