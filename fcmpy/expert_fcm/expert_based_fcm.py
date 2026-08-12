@@ -140,7 +140,10 @@ class ExpertFcm(FcmConstructor):
             for .xlsx files:
 
                 **check_consistency: Bool
-                                    check the consistency of raitings across the experts
+                                    check the consistency of raitings across the experts.
+                                    If True and inconsistencies are found, this writes an
+                                    'inconsistentRatings_D_M_Y.xlsx' file to the current
+                                    working directory.
                                     default --> False
 
                 **engine: str,
@@ -151,6 +154,9 @@ class ExpertFcm(FcmConstructor):
 
                 **check_consistency: Bool
                                     check the consistency of raitings across the experts.
+                                    If True and inconsistencies are found, this writes an
+                                    'inconsistentRatings_D_M_Y.xlsx' file to the current
+                                    working directory.
                                     default --> False
             
             Return
@@ -384,23 +390,25 @@ class ExpertFcm(FcmConstructor):
         for concepts in set(flat_data.index):
             # for a given pair of concepts calculate the propostions (weights) for the
             # implication rules.
-            activation_parameter = Transform.calculateProportions(data=flat_data, 
+            activation_parameter = Transform.calculateProportions(data=flat_data,
                                             conceptPair=concepts, nExperts=nExperts)
-            activated = {}
-            # for each linguistic term apply the implication rule
-            for term in self.fuzzy_membership.keys():
-                act = self.fuzzy_implication(membership_function=self.fuzzy_membership[term], 
-                                            weight=activation_parameter[term], method=implication_method)
-                activated[term] = act
-            
-            # if the 'activated' membership functions are not all zeros then aggregate 
-            # them and defuzzify them.
-            if not all(x==0 for x in activation_parameter.values()):
+            # Apply the implication rule only for terms with a nonzero proportion --
+            # both implication rules are guaranteed to return an all-zero array when
+            # weight == 0 (Mamdani: min(0, mf_x) == 0; Larsen: mf_x * 0 == 0), so
+            # computing and later aggregating those is wasted work. In a typical
+            # dataset only a few of the linguistic terms get endorsed per concept
+            # pair, so this skips the majority of implication/aggregation calls.
+            activated = {term: self.fuzzy_implication(membership_function=self.fuzzy_membership[term],
+                                                        weight=weight, method=implication_method)
+                            for term, weight in activation_parameter.items() if weight != 0}
+
+            # if at least one term was endorsed, aggregate and defuzzify the results.
+            if activated:
                 # aggregate all the activated membership functions
                 aggregated = functools.reduce(lambda x,y: self.aggregate(x=x, y=y, method=aggregation_method),
-                                                [activated[i] for i in activated.keys()])
+                                                activated.values())
 
-                # defuzzify the aggregated functions                                
+                # defuzzify the aggregated functions
                 value = self.defuzz(x=self.universe, mfx=aggregated, method=defuzz_method)
                 # populate the empty weigtht_matrix with the defuzzified value
                 weight_matrix.loc[concepts] = value
