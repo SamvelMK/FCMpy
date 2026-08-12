@@ -1,6 +1,6 @@
 import numpy as np 
 import pandas as pd 
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 from fcmpy.expert_fcm.input_validator import type_check
 from fcmpy.expert_fcm.transform import Transform
 
@@ -9,8 +9,8 @@ class Entropy(ABC):
     """
         Entropy of the expert inputs.
     """
-    @abstractclassmethod
-    def calculateEntropy(data: pd.DataFrame, activationParamter):
+    @abstractmethod
+    def calculateEntropy(data: pd.DataFrame, activationParameter):
         raise NotImplementedError('calculateEntropy method is not defined')
 
     
@@ -47,9 +47,9 @@ class InformationEntropy(Entropy):
         entropy_concept = {}
         for concept in prop.keys():
             p = prop[concept].values()
-            res = -1*sum([i*np.log2(i) for i in p if i != 0])
-            res = abs(res)
-            entropy_concept[concept] = res
+            # sum(p_i * log2(p_i)) is always <= 0 for p_i in (0, 1], so negating it
+            # already yields a non-negative entropy value -- no separate abs() needed.
+            entropy_concept[concept] = -sum(i*np.log2(i) for i in p if i != 0)
         
         # Prepare a formated dataframe
         entropy_concept = {k:[v] for k,v in entropy_concept.items()}

@@ -1,5 +1,5 @@
 import skfuzzy as fuzz
-from abc import ABC, abstractclassmethod  
+from abc import ABC, abstractmethod
 from fcmpy.expert_fcm.input_validator import type_check
 
 
@@ -7,7 +7,7 @@ class FuzzyMembership(ABC):
     """
         Fuzzy membership functions.
     """
-    @abstractclassmethod
+    @abstractmethod
     def membershipFunction() -> dict:
         raise NotImplementedError('membershipFunction method is not defined')
 
@@ -108,7 +108,10 @@ class TrapezoidalMembership(FuzzyMembership):
         universe = kwargs['universe'] 
         mfs = {}
         for term in linguisticTerms.keys():
-            assert linguisticTerms[term][0] <= linguisticTerms[term][1] <= linguisticTerms[term][2] <= linguisticTerms[term][3]
+            a, b, c, d = linguisticTerms[term]
+            if not (a <= b <= c <= d):
+                raise ValueError(f"Trapezoidal membership parameters for '{term}' must satisfy "
+                                    f"a <= b <= c <= d, got {linguisticTerms[term]}.")
             mfs[term] = fuzz.trapmf(x = universe, abcd=linguisticTerms[term])
         
         return mfs

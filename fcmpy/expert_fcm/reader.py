@@ -46,7 +46,7 @@ class CSV(ReadData):
                 keys --> antecedent, consequent, polarity
         """
         dt = {}
-        pattern = f'[a-zA-Z]+.+->.+.(\(\+\)|\(\-\))' # detect the column head pattern: antesedent -> consequent (polarity)
+        pattern = r'[a-zA-Z]+.+->.+.(\(\+\)|\(\-\))' # detect the column head pattern: antesedent -> consequent (polarity)
         patterMatch = bool(re.search(pattern, string))
         
         if patterMatch:
@@ -111,16 +111,20 @@ class CSV(ReadData):
 
             Other Parameters
             ----------------
-            **filepath : str
+            **filePath : str
 
             **linguisticTerms: dictionary
                                 dictionary of linguistic terms used to express causality between concepts.
 
-            **sepConcept: str
-                        the separation symbol (e.g., '->') that separates the antecedent from the consequent in the columns of a csv file
+            **params: dict, with the following optional keys:
 
-            **csvSep: str,
-                        separator of the csv file (read more in pandas.read_csv)
+                sep_concept: str
+                            the separation symbol (e.g., '->') that separates the antecedent from the consequent in the columns of a csv file
+                            default ---> '->'
+
+                csv_sep: str,
+                            separator of the csv file (read more in pandas.read_csv)
+                            default ---> ','
 
             Return
             -------
@@ -169,14 +173,19 @@ class XLSX(ReadData):
             ----------------
             **filePath : str
 
-            **checkConsistency: Bool
-                                check the consistency of ratings across the experts.
-                                default --> False
-            
-            **engine: str,
-                        the engine for excel reader (read more in pd.read_excel)
-                        default --> "openpyxl"
-            
+            **params: dict, with the following optional keys:
+
+                check_consistency: Bool
+                                    check the consistency of ratings across the experts.
+                                    If True and inconsistencies are found, writes an
+                                    'inconsistentRatings_D_M_Y.xlsx' file to the current
+                                    working directory (see ConsistencyCheck.checkConsistency).
+                                    default --> False
+
+                engine: str,
+                            the engine for excel reader (read more in pd.read_excel)
+                            default --> "openpyxl"
+
             Return
             -------
             data: collections.OrderedDict
@@ -222,10 +231,15 @@ class JSON(ReadData):
             ----------------
             **filePath : str, path object or file-like object
 
-            **checkConsistency: Bool
-                                check the consistency of ratings across the experts.
-                                default --> False
-            
+            **params: dict, with the following optional key:
+
+                check_consistency: Bool
+                                    check the consistency of ratings across the experts.
+                                    If True and inconsistencies are found, writes an
+                                    'inconsistentRatings_D_M_Y.xlsx' file to the current
+                                    working directory (see ConsistencyCheck.checkConsistency).
+                                    default --> False
+
             Return
             -------
             data: collections.OrderedDict

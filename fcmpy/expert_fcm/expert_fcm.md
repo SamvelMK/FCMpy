@@ -277,7 +277,7 @@ axes.set_ylim([0,1])
 
 <b>Step 3: Aggregate the Activated Membership Functions</b>
 
-Now that we have activated the respective membership functions, we need to aggregate them before we can derive the causal weights through the defuzzification process. There are several aggregation methods, namely, $f(x, y)=x + y - x \times y$, the family Einstein Sum $f(x, y) = (x + y)/(1 + x \times y)$ and the family Hamacher Sum $f(x, y) = (x + y - 2 \times x \times y)/(1 - x \times y)$. To aggregate the activated membership functions, we can use the <em>ExpertFcm.aggregate()</em> method.
+Now that we have activated the respective membership functions, we need to aggregate them before we can derive the causal weights through the defuzzification process. There are several aggregation methods, namely, the family maximum $f(x, y) = max(x, y)$ (the default, used in the example below), the family Algebraic Sum $f(x, y)=x + y - x \times y$, the family Einstein Sum $f(x, y) = (x + y)/(1 + x \times y)$ and the family Hamacher Sum $f(x, y) = (x + y - 2 \times x \times y)/(1 - x \times y)$. To aggregate the activated membership functions, we can use the <em>ExpertFcm.aggregate()</em> method.
 
 ```python
 aggregated = functools.reduce(lambda x,y: fcm.aggregate(x=x, y=y, method='fMax'),

@@ -1,13 +1,13 @@
 import numpy as np
-from abc import ABC, abstractclassmethod  
+from abc import ABC, abstractmethod
 from fcmpy.expert_fcm.input_validator import type_check
 
 
-class FuzzyImplication:
+class FuzzyImplication(ABC):
     """
         Fuzzy implication rules.
     """
-    @abstractclassmethod
+    @abstractmethod
     def implication() -> np.ndarray:
         raise NotImplementedError('implication method is not defined.')
 

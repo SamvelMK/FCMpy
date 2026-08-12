@@ -25,7 +25,9 @@ def validate_input(obj, **kwargs):
                     raise TypeError(
                         'Argument %r is not of type %s' % (attr_name, attr_type)
                     )
-            except: # for Union cases.
+            except TypeError: # attr_type is a typing construct (e.g. Union) that
+                               # isinstance() can't take directly -- retry against
+                               # its expanded member types.
                 if not isinstance(kwargs[attr_name], get_args(attr_type)):
                     raise TypeError(
                         'Argument %r is not of type %s' % (attr_name, attr_type)
